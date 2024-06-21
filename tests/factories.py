@@ -2,19 +2,46 @@
 Test Factory to make fake objects for testing
 """
 
-import factory
-from service.models import YourResourceModel
+from factory import Factory, SubFactory, Sequence, post_generation
+from factory.fuzzy import FuzzyFloat
+from service.models import Shopcart, ShopcartItem
 
 
-class YourResourceModelFactory(factory.Factory):
-    """Creates fake pets that you don't have to feed"""
+class ShopcartFactory(Factory):
+    """Creates fake Shopcarts"""
 
-    class Meta:  # pylint: disable=too-few-public-methods
+    # pylint: disable=too-few-public-methods
+    class Meta:
         """Maps factory to data model"""
+        model = Shopcart
 
-        model = YourResourceModel
+    id = Sequence(lambda n: n)
+    total_price = FuzzyFloat(0.1, 51.0)
 
-    id = factory.Sequence(lambda n: n)
-    name = factory.Faker("first_name")
+    @post_generation
+    def items(
+        self, create, extracted, **kwargs
+    ):  # pylint: disable=method-hidden, unused-argument
+        """Creates the items list"""
+        if not create:
+            return
 
-    # Todo: Add your other attributes here...
+        if extracted:
+            self.items = extracted
+
+
+class ShopcartItemFactory(Factory):
+    """Creates fake ShopcartItems"""
+
+    # pylint: disable=too-few-public-methods
+    class Meta:
+        """Maps factory to data model"""
+        model = ShopcartItem
+
+    id = Sequence(lambda n: n)
+    shopcart_id = None
+    product_id = Sequence(lambda n: n)
+    name = Sequence(lambda n: f"i-{n}")
+    quantity = Sequence(lambda n: n)
+    price = FuzzyFloat(0.1, 51.0)
+    shopcart = SubFactory(ShopcartFactory)
