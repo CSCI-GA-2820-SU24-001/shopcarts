@@ -34,7 +34,7 @@ class PersistentBase:
 
     def create(self) -> None:
         """
-        Creates a Shopcart to the database
+        Creates a Shopcart/Shopcart Item to the database
         """
         logger.info("Creating %s", self)
         # id must be none to generate next primary key
@@ -49,7 +49,7 @@ class PersistentBase:
 
     def update(self) -> None:
         """
-        Updates a Shopcart to the database
+        Updates a Shopcart/Shopcart Item to the database
         """
         logger.info("Updating %s", self)
         if not self.id:
@@ -62,7 +62,7 @@ class PersistentBase:
             raise DataValidationError(e) from e
 
     def delete(self) -> None:
-        """Removes a Shopcart from the data store"""
+        """Removes a Shopcart/Shopcart Item from the data store"""
         logger.info("Deleting %s", self)
         try:
             db.session.delete(self)

@@ -3,7 +3,7 @@ Test Factory to make fake objects for testing
 """
 
 from factory import Factory, SubFactory, Sequence, post_generation
-from factory.fuzzy import FuzzyFloat
+from factory.fuzzy import FuzzyInteger, FuzzyFloat
 from service.models import Shopcart, ShopcartItem
 
 
@@ -13,6 +13,7 @@ class ShopcartFactory(Factory):
     # pylint: disable=too-few-public-methods
     class Meta:
         """Maps factory to data model"""
+
         model = Shopcart
 
     id = Sequence(lambda n: n)
@@ -36,12 +37,13 @@ class ShopcartItemFactory(Factory):
     # pylint: disable=too-few-public-methods
     class Meta:
         """Maps factory to data model"""
+
         model = ShopcartItem
 
     id = Sequence(lambda n: n)
     shopcart_id = None
     product_id = Sequence(lambda n: n)
     name = Sequence(lambda n: f"i-{n}")
-    quantity = Sequence(lambda n: n)
+    quantity = FuzzyInteger(1, 10)
     price = FuzzyFloat(0.1, 51.0)
     shopcart = SubFactory(ShopcartFactory)

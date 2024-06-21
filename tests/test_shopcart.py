@@ -16,10 +16,10 @@ DATABASE_URI = os.getenv(
 
 
 ######################################################################
-#        S H O P C A R T   M O D E L   T E S T   C A S E S
+#  B A S E   T E S T   C A S E S
 ######################################################################
-class TestShopcart(TestCase):
-    """Shopcart Model Test Cases"""
+class TestCaseBase(TestCase):
+    """Base Test Case for common setup"""
 
     @classmethod
     def setUpClass(cls):
@@ -44,6 +44,13 @@ class TestShopcart(TestCase):
     def tearDown(self):
         """This runs after each test"""
         db.session.remove()
+
+
+######################################################################
+#        S H O P C A R T   M O D E L   T E S T   C A S E S
+######################################################################
+class TestShopcartModel(TestCaseBase):
+    """Shopcart Model CRUD Tests"""
 
     ######################################################################
     #  T E S T   C A S E S
@@ -157,6 +164,16 @@ class TestShopcart(TestCase):
         self.assertNotEqual(new_shopcart, None)
         self.assertEqual(new_shopcart.id, None)
         self.assertEqual(new_shopcart.total_price, shopcart.total_price)
+        self.assertNotEqual(new_shopcart.items, None)
+        self.assertEqual(new_shopcart.items[0].name, shopcart_item.name)
+
+    def test_models_repr_str(self):
+        """It should have the correct repr and str for Shopcart"""
+        shopcart = Shopcart()
+        self.assertEqual(
+            shopcart.__repr__(),  # pylint: disable=unnecessary-dunder-call
+            f"<Shopcart id=[{shopcart.id}]>",
+        )
 
     @patch("service.models.db.session.commit")
     def test_add_shopcart_failed(self, exception_mock):
@@ -172,6 +189,12 @@ class TestShopcart(TestCase):
         shopcart = ShopcartFactory()
         self.assertRaises(DataValidationError, shopcart.update)
 
+    def test_update_shopcart_no_id(self):
+        """It should not update a Shopcart with no id"""
+        shopcart = ShopcartFactory()
+        shopcart.id = None
+        self.assertRaises(DataValidationError, shopcart.update)
+
     @patch("service.models.db.session.commit")
     def test_delete_shopcart_failed(self, exception_mock):
         """It should not delete a Shopcart on database error"""
@@ -179,43 +202,98 @@ class TestShopcart(TestCase):
         shopcart = ShopcartFactory()
         self.assertRaises(DataValidationError, shopcart.delete)
 
-    def test_deserialize_with_key_error(self):
-        """It should not deserialize a Shopcart with a KeyError"""
-        shopcart = Shopcart()
-        self.assertRaises(DataValidationError, shopcart.deserialize, {})
 
-    def test_deserialize_with_type_error(self):
-        """It should not deserialize a Shopcart with a TypeError"""
-        shopcart = Shopcart()
-        self.assertRaises(DataValidationError, shopcart.deserialize, [])
+########################################################################
+# T E S T   D E S E R I A L I Z E   E X C E P T I O N   H A N D L E R S
+########################################################################
+class TestDeserializeExceptionHandlers(TestCaseBase):
+    """Shopcart Model Deserialize Exception Handlers"""
 
-    def test_deserialize_shopcart_key_error(self):
-        """It should not deserialize a Shopcart with a KeyError"""
-        shopcart = Shopcart()
-        self.assertRaises(DataValidationError, shopcart.deserialize, {})
+    ######################################################################
+    #  T E S T   C A S E S
+    ######################################################################
 
-    def test_deserialize_shopcart_type_error(self):
-        """It should not deserialize a Shopcart with a TypeError"""
+    def test_deserialize_missing_total_price(self):
+        """It should not deserialize a Shopcart with missing total_price"""
+        data = {"items": [{"shopcart_id": 1, "name": "Product1", "product_id": 101, "quantity": 2, "price": 20.0}]}
         shopcart = Shopcart()
-        self.assertRaises(DataValidationError, shopcart.deserialize, [])
+        self.assertRaises(DataValidationError, shopcart.deserialize, data)
 
+    def test_deserialize_missing_items(self):
+        """It should deserialize a Shopcart with missing items"""
+        data = {"total_price": 100.0}
+        shopcart = Shopcart()
+        shopcart.deserialize(data)
+        self.assertEqual(shopcart.total_price, 100.0)
+        self.assertEqual(len(shopcart.items), 0)
+
+    def test_deserialize_bad_total_price(self):
+        """It should not deserialize a bad total_price attribute"""
+        data = ShopcartFactory().serialize()
+        data["total_price"] = "fifty"
+        shopcart = Shopcart()
+        self.assertRaises(DataValidationError, shopcart.deserialize, data)
+
+    def test_deserialize_bad_item(self):
+        """It should not deserialize a bad item attribute"""
+        data = ShopcartFactory().serialize()
+        data["items"] = [{"shopcart_id": 1, "name": "Product1", "product_id": 101, "quantity": "two", "price": 20.0}]
+        shopcart = Shopcart()
+        self.assertRaises(DataValidationError, shopcart.deserialize, data)
+
+    def test_deserialize_bad_data(self):
+        """It should not deserialize bad data"""
+        data = "this is not a dictionary"
+        shopcart = Shopcart()
+        self.assertRaises(DataValidationError, shopcart.deserialize, data)
+
+    def test_deserialize_invalid_attribute(self):
+        """It should not deserialize a Shopcart with invalid attributes"""
+        data = ShopcartFactory().serialize()
+
+        # Temporarily override the __setattr__ method to simulate AttributeError
+        original_setattr = Shopcart.__setattr__
+        
+        def mock_setattr(self, name, value):
+            if name == "total_price":
+                raise AttributeError("Simulated AttributeError for testing")
+            original_setattr(self, name, value)
+        
+        Shopcart.__setattr__ = mock_setattr
+        shopcart = Shopcart()
+        try:
+            self.assertRaises(DataValidationError, shopcart.deserialize, data)
+        finally:
+            Shopcart.__setattr__ = original_setattr  # Restore original method
+
+
+######################################################################
+#  T E S T   E X C E P T I O N   H A N D L E R S
+######################################################################
+class TestExceptionHandlers(TestCaseBase):
+    """Shopcart Model Exception Handlers"""
+
+    ######################################################################
+    #  T E S T   C A S E S
+    ######################################################################
+    
     @patch("service.models.db.session.commit")
     def test_create_shopcart_exception(self, exception_mock):
-        """It should handle exception when creating a Shopcart"""
+        """It should catch a create exception"""
         exception_mock.side_effect = Exception()
         shopcart = ShopcartFactory()
         self.assertRaises(DataValidationError, shopcart.create)
 
     @patch("service.models.db.session.commit")
     def test_update_shopcart_exception(self, exception_mock):
-        """It should handle an exception when updating a Shopcart"""
+        """It should catch a update exception"""
         exception_mock.side_effect = Exception()
         shopcart = ShopcartFactory()
         self.assertRaises(DataValidationError, shopcart.update)
 
     @patch("service.models.db.session.commit")
     def test_delete_shopcart_exception(self, exception_mock):
-        """It should handle an exception when deleting a Shopcart"""
+        """It should catch a delete exception"""
         exception_mock.side_effect = Exception()
         shopcart = ShopcartFactory()
         self.assertRaises(DataValidationError, shopcart.delete)
