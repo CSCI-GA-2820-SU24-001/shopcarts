@@ -338,7 +338,7 @@ class TestModelQueries(TestCaseBase):
     ######################################################################
     #  T E S T   C A S E S
     ######################################################################
-    
+
     def test_find_shopcart_item_by_name(self):
         """It should find a ShopcartItem by name"""
         for shopcart_item in ShopcartItemFactory.create_batch(5):

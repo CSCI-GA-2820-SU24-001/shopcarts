@@ -253,12 +253,12 @@ class TestDeserializeExceptionHandlers(TestCaseBase):
 
         # Temporarily override the __setattr__ method to simulate AttributeError
         original_setattr = Shopcart.__setattr__
-        
+
         def mock_setattr(self, name, value):
             if name == "total_price":
                 raise AttributeError("Simulated AttributeError for testing")
             original_setattr(self, name, value)
-        
+
         Shopcart.__setattr__ = mock_setattr
         shopcart = Shopcart()
         try:
@@ -276,7 +276,7 @@ class TestExceptionHandlers(TestCaseBase):
     ######################################################################
     #  T E S T   C A S E S
     ######################################################################
-    
+
     @patch("service.models.db.session.commit")
     def test_create_shopcart_exception(self, exception_mock):
         """It should catch a create exception"""

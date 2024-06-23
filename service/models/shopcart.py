@@ -52,7 +52,7 @@ class Shopcart(db.Model, PersistentBase):
                     "Invalid type for int/float [total_price]: "
                     + str(type(data["total_price"]))
                 )
-            
+
             item_list = data.get("items")
             if item_list:
                 for json_item in item_list:
