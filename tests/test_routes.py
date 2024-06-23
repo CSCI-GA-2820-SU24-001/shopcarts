@@ -1,10 +1,12 @@
 """
-TestYourResourceModel API Service Test Suite
+Shopcart API Service Test Suite
 """
+
 import os
 import logging
 from unittest import TestCase
 from wsgi import app
+from tests.factories import ShopcartFactory
 from service.common import status
 from service.models import db, Shopcart
 
@@ -12,13 +14,15 @@ DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql+psycopg://postgres:postgres@localhost:5432/testdb"
 )
 
+BASE_URL = "/shopcarts"
+
 
 ######################################################################
 #  T E S T   C A S E S
 ######################################################################
 # pylint: disable=too-many-public-methods
-class TestYourResourceService(TestCase):
-    """ REST API Server Tests """
+class TestShopcartService(TestCase):
+    """Shopcart Service Tests"""
 
     @classmethod
     def setUpClass(cls):
@@ -42,16 +46,46 @@ class TestYourResourceService(TestCase):
         db.session.commit()
 
     def tearDown(self):
-        """ This runs after each test """
+        """This runs after each test"""
         db.session.remove()
 
     ######################################################################
-    #  P L A C E   T E S T   C A S E S   H E R E
+    #  S H O P C A R T   T E S T   C A S E S
     ######################################################################
 
     def test_index(self):
-        """ It should call the home page """
+        """It should call the home page"""
         resp = self.client.get("/")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
-    # Todo: Add your test cases here...
+    def test_create_shopcart(self):
+        """It should Create a new Shopcart"""
+        shopcart = ShopcartFactory()
+        resp = self.client.post(
+            BASE_URL, json=shopcart.serialize(), content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        # Make sure location header is set
+        location = resp.headers.get("Location", None)
+        self.assertIsNotNone(location)
+
+        # Check the data is correct
+        new_shopcart = resp.get_json()
+        self.assertEqual(
+            float(new_shopcart["total_price"]),
+            float(shopcart.total_price),
+            "Total Price does not match",
+        )
+        self.assertEqual(new_shopcart["items"], shopcart.items, "Items does not match")
+
+        # Check that the location header was correct by getting it
+        resp = self.client.get(location, content_type="application/json")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        new_shopcart = resp.get_json()
+        self.assertEqual(
+            float(new_shopcart["total_price"]),
+            float(shopcart.total_price),
+            "Total Price does not match",
+        )
+        self.assertEqual(new_shopcart["items"], shopcart.items, "Items does not match")
