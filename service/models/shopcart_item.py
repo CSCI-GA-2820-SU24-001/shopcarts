@@ -57,7 +57,7 @@ class ShopcartItem(db.Model, PersistentBase):
             self.shopcart_id = data["shopcart_id"]
             self.name = data["name"]
             self.product_id = data["product_id"]
-            
+
             if isinstance(data["quantity"], int):
                 self.quantity = data["quantity"]
             else:
