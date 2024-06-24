@@ -49,6 +49,23 @@ class TestShopcartService(TestCase):
         """This runs after each test"""
         db.session.remove()
 
+    ############################################################
+    # Utility function to bulk create shopcarts
+    ############################################################
+    def _create_shopcarts(self, count: int = 1) -> list:
+        """Factory method to create shopcarts in bulk"""
+        shopcarts = []
+        for _ in range(count):
+            test_shopcart = ShopcartFactory()
+            response = self.client.post(BASE_URL, json=test_shopcart.serialize())
+            self.assertEqual(
+                response.status_code, status.HTTP_201_CREATED, "Could not create test shopcart"
+            )
+            new_shopcart = response.get_json()
+            test_shopcart.id = new_shopcart["id"]
+            shopcarts.append(test_shopcart)
+        return shopcarts
+
     ######################################################################
     #  S H O P C A R T   T E S T   C A S E S
     ######################################################################
@@ -57,6 +74,21 @@ class TestShopcartService(TestCase):
         """It should call the home page"""
         resp = self.client.get("/")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
+
+    def test_get_shopcart(self):
+        """It should Get a single Shopcart"""
+        # get the id of a shopcart
+        test_shopcart = self._create_shopcarts(1)[0]
+        response = self.client.get(f"{BASE_URL}/{test_shopcart.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_get_shopcart_not_found(self):
+        """It should not Get a Shopcart thats not found"""
+        response = self.client.get(f"{BASE_URL}/0")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        data = response.get_json()
+        logging.debug("Response data = %s", data)
+        self.assertIn("was not found", data["message"])
 
     def test_create_shopcart(self):
         """It should create a new Shopcart"""
@@ -81,14 +113,14 @@ class TestShopcartService(TestCase):
 
         # Todo: Uncomment this code when get_shopcarts is implemented
         # Check that the location header was correct by getting it
-        # resp = self.client.get(location, content_type="application/json")
-        # self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        # new_shopcart = resp.get_json()
-        # self.assertEqual(
-        #     float(new_shopcart["total_price"]),
-        #     float(shopcart.total_price),
-        #     "Total Price does not match",
-        # )
+        resp = self.client.get(location, content_type="application/json")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        new_shopcart = resp.get_json()
+        self.assertEqual(
+            float(new_shopcart["total_price"]),
+            float(shopcart.total_price),
+            "Total Price does not match",
+        )
         # self.assertEqual(new_shopcart["items"], shopcart.items, "Items does not match")
 
     def test_update_shopcart(self):

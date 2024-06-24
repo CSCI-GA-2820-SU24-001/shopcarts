@@ -58,10 +58,27 @@ def index():
 # RETRIEVE A SHOPCART
 ######################################################################
 
+@app.route("/shopcarts/<int:shopcart_id>", methods=["GET"])
+def get_shopcarts(shopcart_id):
+    """
+    Retrieve a single Shopcart
+
+    This endpoint will return a Shopcart based on it's id
+    """
+    app.logger.info("Request to Retrieve a shopcart with id [%s]", shopcart_id)
+
+    # Attempt to find the Shopcart and abort if not found
+    shopcart = Shopcart.find(shopcart_id)
+    if not shopcart:
+        abort(status.HTTP_404_NOT_FOUND, f"Shopcart with id '{shopcart_id}' was not found.")
+
+    return jsonify(shopcart.serialize()), status.HTTP_200_OK
 
 ######################################################################
 # CREATE A NEW SHOPCART
 ######################################################################
+
+
 @app.route("/shopcarts", methods=["POST"])
 def create_shopcarts():
     """
@@ -78,9 +95,7 @@ def create_shopcarts():
 
     # Create a message to return
     message = shopcart.serialize()
-    # Todo: Uncomment this code when get_shopcarts is implemented
-    # location_url = url_for("get_shopcarts", shopcart_id=shopcart.id, _external=True)
-    location_url = "unknown"
+    location_url = url_for("get_shopcarts", shopcart_id=shopcart.id, _external=True)
 
     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
 
