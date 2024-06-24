@@ -28,6 +28,11 @@ from service.common import status  # HTTP Status Codes
 
 
 ######################################################################
+#  R E S T   A P I   E N D P O I N T S
+######################################################################
+
+
+######################################################################
 # GET INDEX
 ######################################################################
 @app.route("/")
@@ -39,22 +44,28 @@ def index():
     )
 
 
-######################################################################
-#  R E S T   A P I   E N D P O I N T S
-######################################################################
-
 # ---------------------------------------------------------------------
 #                S H O P C A R T   M E T H O D S
 # ---------------------------------------------------------------------
 
 
 ######################################################################
-# CREATE A NEW ACCOUNT
+# LIST ALL SHOPCARTS
+######################################################################
+
+
+######################################################################
+# RETRIEVE A SHOPCART
+######################################################################
+
+
+######################################################################
+# CREATE A NEW SHOPCART
 ######################################################################
 @app.route("/shopcarts", methods=["POST"])
 def create_shopcarts():
     """
-    Creates an Shopcart
+    Creates a Shopcart
     This endpoint will create an Shopcart based the data in the body that is posted
     """
     app.logger.info("Request to create an Shopcart")
@@ -75,6 +86,79 @@ def create_shopcarts():
 
 
 ######################################################################
+# UPDATE AN EXISTING SHOPCART
+######################################################################
+@app.route("/shopcarts/<int:shopcart_id>", methods=["PUT"])
+def update_shopcarts(shopcart_id):
+    """
+    Update a Shopcart
+
+    This endpoint will update an Shopcart based the body that is posted
+    """
+    app.logger.info("Request to update shopcart with id: %s", shopcart_id)
+    check_content_type("application/json")
+
+    # See if the shopcart exists and abort if it doesn't
+    shopcart = Shopcart.find(shopcart_id)
+    if not shopcart:
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Shopcart with id '{shopcart_id}' was not found.",
+        )
+
+    # Update from the json in the body of the request
+    shopcart.deserialize(request.get_json())
+    shopcart.id = shopcart_id
+    shopcart.update()
+
+    return jsonify(shopcart.serialize()), status.HTTP_200_OK
+
+
+######################################################################
+# DELETE A SHOPCART
+######################################################################
+
+
+# ---------------------------------------------------------------------
+#            S H O P C A R T   I T E M   M E T H O D S
+# ---------------------------------------------------------------------
+
+
+######################################################################
+# LIST ALL ITEMS IN A SHOPCART
+######################################################################
+
+
+######################################################################
+# RETRIEVE AN ITEM FROM A SHOPCART
+######################################################################
+
+
+######################################################################
+# ADD AN ITEM TO A SHOPCART
+######################################################################
+
+
+######################################################################
+# UPDATE A SHOPCART ITEM
+######################################################################
+
+
+######################################################################
+# DELETE ALL ITEMS IN A SHOPCART
+######################################################################
+
+
+######################################################################
+# DELETE AN SHOPCART ITEM
+######################################################################
+
+
+######################################################################
+# RETRIEVE AN ITEM FROM A SHOPCART
+######################################################################
+
+######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
 
@@ -85,18 +169,17 @@ def create_shopcarts():
 def check_content_type(content_type):
     """Checks that the media type is correct"""
     if "Content-Type" not in request.headers:
-        app.logger.error("No Content-Type specified.")
-        abort(
+        error(
             status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
-            f"Content-Type must be {content_type}",
+            f"No Content-Type specified, Content-Type must be {content_type}",
         )
 
     if request.headers["Content-Type"] == content_type:
         return
 
-    app.logger.error("Invalid Content-Type: %s", request.headers["Content-Type"])
-    abort(
-        status.HTTP_415_UNSUPPORTED_MEDIA_TYPE, f"Content-Type must be {content_type}"
+    error(
+        status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+        f"Invalid Content-Type {request.headers['Content-Type']}, Content-Type must be {content_type}",
     )
 
 
