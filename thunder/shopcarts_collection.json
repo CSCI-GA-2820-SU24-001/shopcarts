@@ -1,0 +1,242 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "Shopcarts Collection",
+    "collectionId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
+    "dateExported": "2024-06-24T09:09:51.362Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "fd20f2c5-e180-403a-bdfc-f5b895b03921",
+            "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
+            "containerId": "",
+            "name": "Root URL",
+            "url": "http://localhost:8000/",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2024-06-24T09:04:06.057Z",
+            "modified": "2024-06-24T09:04:06.057Z",
+            "headers": []
+        },
+        {
+            "_id": "34627551-6268-4295-bd49-ad99dd3437e8",
+            "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
+            "containerId": "",
+            "name": "Create Shopcart",
+            "url": "http://localhost:8000/shopcarts",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-06-24T09:04:06.058Z",
+            "modified": "2024-06-24T09:04:38.352Z",
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"total_price\": 200\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "131e29cd-0a61-403d-9752-102c2bc807cb",
+            "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
+            "containerId": "",
+            "name": "Read Shopcart",
+            "url": "http://localhost:8000/shopcarts/1234",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2024-06-24T09:04:06.059Z",
+            "modified": "2024-06-24T09:08:53.699Z",
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ]
+        },
+        {
+            "_id": "2d01ad0e-3591-4701-97a0-97adbb8d9d29",
+            "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
+            "containerId": "",
+            "name": "List Shopcarts",
+            "url": "http://localhost:8000/shopcarts",
+            "method": "GET",
+            "sortNum": 40000,
+            "created": "2024-06-24T09:04:06.060Z",
+            "modified": "2024-06-24T09:05:04.928Z",
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ]
+        },
+        {
+            "_id": "8632715e-e7b9-4850-bc20-e2928ccf0bd5",
+            "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
+            "containerId": "",
+            "name": "Update Shopcart",
+            "url": "http://localhost:8000/shopcarts/1234",
+            "method": "PUT",
+            "sortNum": 50000,
+            "created": "2024-06-24T09:04:06.061Z",
+            "modified": "2024-06-24T09:08:59.129Z",
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"total_price\": 100\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "c7b12501-209d-4ed2-8ed9-61c3ce9c12ab",
+            "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
+            "containerId": "",
+            "name": "Delete Shopcart",
+            "url": "http://localhost:8000/shopcarts/1234",
+            "method": "DELETE",
+            "sortNum": 60000,
+            "created": "2024-06-24T09:04:06.062Z",
+            "modified": "2024-06-24T09:09:02.288Z",
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ]
+        },
+        {
+            "_id": "0ed8f32d-4dbe-4a78-a70a-c9594b35f9a2",
+            "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
+            "containerId": "",
+            "name": "Add Shopcart Item",
+            "url": "http://localhost:8000/shopcarts/1234/items",
+            "method": "POST",
+            "sortNum": 70000,
+            "created": "2024-06-24T09:04:06.063Z",
+            "modified": "2024-06-24T09:08:19.895Z",
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"shopcart_id\": 1234,\n    \"product_id\": 11,\n    \"name\": \"Apple\",\n    \"quantity\": 5,\n    \"price\": 200\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "928542cd-2661-474b-8fd2-b00a65e5a1ee",
+            "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
+            "containerId": "",
+            "name": "Read a specific Item in a Shopcart",
+            "url": "http://localhost:8000/shopcarts/1234/items/11",
+            "method": "GET",
+            "sortNum": 80000,
+            "created": "2024-06-24T09:04:06.064Z",
+            "modified": "2024-06-24T09:08:33.807Z",
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ]
+        },
+        {
+            "_id": "9df7b149-38b4-4f50-94ed-829bd4300b7f",
+            "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
+            "containerId": "",
+            "name": "List all Items in a Shopcart",
+            "url": "http://localhost:8000/shopcarts/1293",
+            "method": "GET",
+            "sortNum": 90000,
+            "created": "2024-06-24T09:04:06.065Z",
+            "modified": "2024-06-24T09:04:06.065Z",
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": ""
+            }
+        },
+        {
+            "_id": "ab59453f-5033-40a8-b258-d922a108e1c1",
+            "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
+            "containerId": "",
+            "name": "Update an Item in a Shopcart",
+            "url": "http://localhost:8000/shopcarts/1293/items/11",
+            "method": "PUT",
+            "sortNum": 100000,
+            "created": "2024-06-24T09:04:06.066Z",
+            "modified": "2024-06-24T09:09:17.388Z",
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"quantity\": 1\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "a9a0f123-24b2-4d8b-b700-e10bd02e2834",
+            "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
+            "containerId": "",
+            "name": "Delete all item from a Shopcart",
+            "url": "http://localhost:8000/shopcarts/1293/items",
+            "method": "DELETE",
+            "sortNum": 110000,
+            "created": "2024-06-24T09:04:06.067Z",
+            "modified": "2024-06-24T09:04:06.067Z",
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": ""
+            }
+        },
+        {
+            "_id": "a763f3f5-9ec0-4d05-9f07-0ab1a3390d85",
+            "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
+            "containerId": "",
+            "name": "Delete a specific item from a Shopcart Copy",
+            "url": "http://localhost:8000/shopcarts/1293/items/11",
+            "method": "DELETE",
+            "sortNum": 120000,
+            "created": "2024-06-24T09:04:06.069Z",
+            "modified": "2024-06-24T09:04:06.069Z",
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": ""
+            }
+        }
+    ],
+    "ref": "IZWv-R7g-Oo6rldkg_QV_s8QLvKH-8J6HFUfxWZ_Zy6HomeaC_uGwsVteYRZqg9a8ty_EYRtdScVJ-Czv_n1ug"
+}
