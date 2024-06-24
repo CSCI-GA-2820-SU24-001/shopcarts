@@ -59,7 +59,7 @@ class TestShopcartService(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
     def test_create_shopcart(self):
-        """It should Create a new Shopcart"""
+        """It should create a new Shopcart"""
         shopcart = ShopcartFactory()
         resp = self.client.post(
             BASE_URL, json=shopcart.serialize(), content_type="application/json"
@@ -90,3 +90,64 @@ class TestShopcartService(TestCase):
         #     "Total Price does not match",
         # )
         # self.assertEqual(new_shopcart["items"], shopcart.items, "Items does not match")
+
+    def test_update_shopcart(self):
+        """It should update an existing Shopcart"""
+        # create a Shopcart to update
+        test_shopcart = ShopcartFactory()
+        resp = self.client.post(BASE_URL, json=test_shopcart.serialize())
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        # update the shopcart
+        new_shopcart = resp.get_json()
+        new_shopcart["total_price"] = test_shopcart.total_price + 100
+        new_shopcart_id = new_shopcart["id"]
+        resp = self.client.put(f"{BASE_URL}/{new_shopcart_id}", json=new_shopcart)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        updated_shopcart = resp.get_json()
+        self.assertEqual(
+            updated_shopcart["total_price"], test_shopcart.total_price + 100
+        )
+
+    def test_update_shopcart__with_invalid_id(self):
+        """It should not update a non-existing Shopcart"""
+        # create a Shopcart to update
+        test_shopcart = ShopcartFactory()
+
+        resp = self.client.put(
+            f"{BASE_URL}/{test_shopcart.id}", content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+        print(resp.data.decode())
+        self.assertIn(
+            f"Shopcart with id '{test_shopcart.id}' was not found.",
+            resp.data.decode(),
+        )
+
+    #####################################################################
+    #  S H O P C A R T   I T E M   T E S T   C A S E S
+    #####################################################################
+
+    # Todo: Add shopcart item test cases here
+
+    ######################################################################
+    #  U T I L I T Y   F U N C T I O N   T E S T   C A S E S
+    ######################################################################
+
+    def test_invalid_content_type(self):
+        """It should return 415 if an invalid Content-Type header is present"""
+        # create a Shopcart to update
+        test_shopcart = ShopcartFactory()
+
+        resp = self.client.put(
+            f"{BASE_URL}/{test_shopcart.id}", content_type="text/plain"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+
+    def test_missing_content_type(self):
+        """It should return 415 if an Content-Type header is not present"""
+        # create a Shopcart to update
+        test_shopcart = ShopcartFactory()
+
+        resp = self.client.put(f"{BASE_URL}/{test_shopcart.id}")
+        self.assertEqual(resp.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
