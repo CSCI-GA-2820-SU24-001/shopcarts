@@ -23,7 +23,7 @@ and Delete Shopcarts
 
 from flask import jsonify, request, url_for, abort
 from flask import current_app as app  # Import Flask application
-from service.models import Shopcart, ShopcartItem
+from service.models import Shopcart
 from service.common import status  # HTTP Status Codes
 
 
@@ -57,7 +57,6 @@ def index():
 ######################################################################
 # RETRIEVE A SHOPCART
 ######################################################################
-
 @app.route("/shopcarts/<int:shopcart_id>", methods=["GET"])
 def get_shopcarts(shopcart_id):
     """
@@ -70,19 +69,22 @@ def get_shopcarts(shopcart_id):
     # Attempt to find the Shopcart and abort if not found
     shopcart = Shopcart.find(shopcart_id)
     if not shopcart:
-        abort(status.HTTP_404_NOT_FOUND, f"Shopcart with id '{shopcart_id}' was not found.")
+        error(
+            status.HTTP_404_NOT_FOUND,
+            f"Shopcart with id '{shopcart_id}' was not found."
+        )
 
     return jsonify(shopcart.serialize()), status.HTTP_200_OK
+
 
 ######################################################################
 # CREATE A NEW SHOPCART
 ######################################################################
-
-
 @app.route("/shopcarts", methods=["POST"])
 def create_shopcarts():
     """
     Creates a Shopcart
+
     This endpoint will create an Shopcart based the data in the body that is posted
     """
     app.logger.info("Request to create an Shopcart")
@@ -116,9 +118,9 @@ def update_shopcarts(shopcart_id):
     # See if the shopcart exists and abort if it doesn't
     shopcart = Shopcart.find(shopcart_id)
     if not shopcart:
-        abort(
+        error(
             status.HTTP_404_NOT_FOUND,
-            f"Shopcart with id '{shopcart_id}' was not found.",
+            f"Shopcart with id '{shopcart_id}' was not found."
         )
 
     # Update from the json in the body of the request
@@ -186,7 +188,7 @@ def check_content_type(content_type):
     if "Content-Type" not in request.headers:
         error(
             status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
-            f"No Content-Type specified, Content-Type must be {content_type}",
+            f"No Content-Type specified, Content-Type must be {content_type}"
         )
 
     if request.headers["Content-Type"] == content_type:
@@ -194,7 +196,7 @@ def check_content_type(content_type):
 
     error(
         status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
-        f"Invalid Content-Type {request.headers['Content-Type']}, Content-Type must be {content_type}",
+        f"Invalid Content-Type {request.headers['Content-Type']}, Content-Type must be {content_type}"
     )
 
 

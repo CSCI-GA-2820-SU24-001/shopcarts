@@ -49,9 +49,10 @@ class TestShopcartService(TestCase):
         """This runs after each test"""
         db.session.remove()
 
-    ############################################################
-    # Utility function to bulk create shopcarts
-    ############################################################
+    ######################################################################
+    #  H E L P E R   M E T H O D S
+    ######################################################################
+
     def _create_shopcarts(self, count: int = 1) -> list:
         """Factory method to create shopcarts in bulk"""
         shopcarts = []
@@ -76,14 +77,14 @@ class TestShopcartService(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
     def test_get_shopcart(self):
-        """It should Get a single Shopcart"""
+        """It should get a single Shopcart"""
         # get the id of a shopcart
         test_shopcart = self._create_shopcarts(1)[0]
         response = self.client.get(f"{BASE_URL}/{test_shopcart.id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_shopcart_not_found(self):
-        """It should not Get a Shopcart thats not found"""
+        """It should not get a Shopcart thats not found"""
         response = self.client.get(f"{BASE_URL}/0")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         data = response.get_json()
@@ -111,7 +112,6 @@ class TestShopcartService(TestCase):
         )
         self.assertEqual(new_shopcart["items"], shopcart.items, "Items does not match")
 
-        # Todo: Uncomment this code when get_shopcarts is implemented
         # Check that the location header was correct by getting it
         resp = self.client.get(location, content_type="application/json")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
@@ -121,7 +121,7 @@ class TestShopcartService(TestCase):
             float(shopcart.total_price),
             "Total Price does not match",
         )
-        # self.assertEqual(new_shopcart["items"], shopcart.items, "Items does not match")
+        self.assertEqual(new_shopcart["items"], shopcart.items, "Items does not match")
 
     def test_update_shopcart(self):
         """It should update an existing Shopcart"""
