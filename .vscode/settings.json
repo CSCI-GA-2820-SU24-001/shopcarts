@@ -1,9 +1,13 @@
 {
     "cSpell.words": [
+        "Rofrano",
         "Shopcart",
         "Shopcarts",
         "sqlalchemy",
         "psycopg",
-        "testdb"
+        "testdb",
+        "jsonify",
+        "dunder",
+        "backref"
     ]
 }
