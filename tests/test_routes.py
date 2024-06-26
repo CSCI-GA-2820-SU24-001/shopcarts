@@ -180,11 +180,10 @@ class TestShopcartService(TestCase):
         data = response.get_json()
         self.assertEqual(len(data), 3)
 
-
     ######################################################################
     #  U T I L I T Y   F U N C T I O N   T E S T   C A S E S
     ######################################################################
-    
+
     def test_invalid_content_type(self):
         """It should return 415 if an invalid Content-Type header is present"""
         # create a Shopcart to update

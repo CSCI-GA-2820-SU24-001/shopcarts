@@ -23,7 +23,7 @@ and Delete Shopcarts
 
 from flask import jsonify, request, url_for, abort
 from flask import current_app as app  # Import Flask application
-from service.models import Shopcart, ShopcartItem
+from service.models import Shopcart
 from service.common import status  # HTTP Status Codes
 
 
@@ -82,7 +82,10 @@ def get_shopcarts(shopcart_id):
     # Attempt to find the Shopcart and abort if not found
     shopcart = Shopcart.find(shopcart_id)
     if not shopcart:
-        abort(status.HTTP_404_NOT_FOUND, f"Shopcart with id '{shopcart_id}' was not found.")
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Shopcart with id '{shopcart_id}' was not found.",
+        )
 
     return jsonify(shopcart.serialize()), status.HTTP_200_OK
 
@@ -158,17 +161,17 @@ def list_shopcart_items(shopcart_id):
     """
     Retrieve all items in a Shopcart
     """
-    import time
-    start_time=time.time()
     app.logger.info("Request to list items in a shopcart with id [%s]", shopcart_id)
 
     # Attempt to find the Shopcart and abort if not found
     shopcart = Shopcart.find(shopcart_id)
     if not shopcart:
-        error(status.HTTP_404_NOT_FOUND, f"Shopcart with id '{shopcart_id}' was not found.")
+        error(
+            status.HTTP_404_NOT_FOUND,
+            f"Shopcart with id '{shopcart_id}' was not found.",
+        )
 
     items = [item.serialize() for item in shopcart.items]
-    app.logger.info("List operation completed in %s seconds.", time.time()-start_time)
     return jsonify(items), status.HTTP_200_OK
 
 
