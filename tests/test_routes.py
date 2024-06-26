@@ -165,14 +165,13 @@ def test_list_all_items(self):
     """It should return a list of all Shopcart Items"""
     # create a Shopcart to update
     test_shopcart = ShopcartFactory()
-    resp = self.client.put(f"{BASE_URL}/{test_shopcart.id}/items",content_type="application/json")
+    resp = self.client.get(f"{BASE_URL}/{test_shopcart.id}/items",content_type="application/json")
 
     self.assertEqual(resp.status_code, status.HTTP_200_OK)
     self.assertEqual(resp.content_type, "application/json")
-    self.assertEuqal(resp.get_json(), test_shopcart.items)
+    self.assertEqual(resp.get_json(), test_shopcart.items)
     data = resp.data.decode("utf-8")
-    print(data)
-
+    #print(data)
 
 
     ######################################################################
