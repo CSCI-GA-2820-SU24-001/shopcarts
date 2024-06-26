@@ -168,8 +168,11 @@ def test_list_all_items(self):
     resp = self.client.put(f"{BASE_URL}/{test_shopcart.id}/items",content_type="application/json")
 
     self.assertEqual(resp.status_code, status.HTTP_200_OK)
+    self.assertEqual(resp.content_type, "application/json")
+    self.assertIn("items", resp.get_json())
     data = resp.data.decode("utf-8")
     print(data)
+
 
 
     ######################################################################
