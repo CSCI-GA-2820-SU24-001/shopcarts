@@ -52,12 +52,24 @@ def index():
 ######################################################################
 # LIST ALL SHOPCARTS
 ######################################################################
+@app.route("/shopcarts", methods=["GET"])
+def list_shopcarts():
+    """Returns all of the Shopcarts"""
+    app.logger.info("Request for shopcart list")
+
+    shopcarts = []
+
+    app.logger.info("Find all")
+    shopcarts = Shopcart.all()
+
+    results = [shopcart.serialize() for shopcart in shopcarts]
+    app.logger.info("Returning %d shopcarts", len(results))
+    return jsonify(results), status.HTTP_200_OK
 
 
 ######################################################################
 # RETRIEVE A SHOPCART
 ######################################################################
-
 @app.route("/shopcarts/<int:shopcart_id>", methods=["GET"])
 def get_shopcarts(shopcart_id):
     """
@@ -74,11 +86,10 @@ def get_shopcarts(shopcart_id):
 
     return jsonify(shopcart.serialize()), status.HTTP_200_OK
 
+
 ######################################################################
 # CREATE A NEW SHOPCART
 ######################################################################
-
-
 @app.route("/shopcarts", methods=["POST"])
 def create_shopcarts():
     """
