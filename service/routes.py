@@ -173,40 +173,6 @@ def list_shopcart_items(shopcart_id):
 ######################################################################
 # UPDATE A SHOPCART ITEM
 ######################################################################
-@app.route("/shopcarts/<int:shopcart_id>/items/<int:item_id>", methods=["PUT"])
-def update_shopcart_item(shopcart_id, item_id):
-    """
-    Update a Shopcart Item
-
-    This endpoint will update an Shopcart Item based the body that is posted
-    """
-    app.logger.info("Request to update shopcart item with id: %s", item_id)
-    check_content_type("application/json")
-    import time
-    start_time=time.time()
-    # See if the shopcart exists and abort if it doesn't
-    shopcart = Shopcart.find(shopcart_id)
-    if not shopcart:
-        abort(
-            status.HTTP_404_NOT_FOUND,
-            f"Shopcart with id '{shopcart_id}' was not found.",
-        )
-
-    # See if the item exists and abort if it doesn't
-    item = ShopcartItem.find(item_id)
-    if not item:
-        abort(
-            status.HTTP_404_NOT_FOUND,
-            f"Item with id '{item_id}' was not found.",
-        )
-
-    # Update from the json in the body of the request
-    item.deserialize(request.get_json())
-    item.id = item_id
-    item.update()
-
-    app.logger.info("Update operation completed in %s seconds.", time.time()-start_time)
-    return jsonify(item.serialize()), status.HTTP_200_OK
 
 ######################################################################
 # DELETE ALL ITEMS IN A SHOPCART
