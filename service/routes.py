@@ -52,12 +52,24 @@ def index():
 ######################################################################
 # LIST ALL SHOPCARTS
 ######################################################################
+@app.route("/shopcarts", methods=["GET"])
+def list_shopcarts():
+    """Returns all of the Shopcarts"""
+    app.logger.info("Request for shopcart list")
+
+    shopcarts = []
+
+    app.logger.info("Find all")
+    shopcarts = Shopcart.all()
+
+    results = [shopcart.serialize() for shopcart in shopcarts]
+    app.logger.info("Returning %d shopcarts", len(results))
+    return jsonify(results), status.HTTP_200_OK
 
 
 ######################################################################
 # RETRIEVE A SHOPCART
 ######################################################################
-
 @app.route("/shopcarts/<int:shopcart_id>", methods=["GET"])
 def get_shopcarts(shopcart_id):
     """
@@ -74,11 +86,10 @@ def get_shopcarts(shopcart_id):
 
     return jsonify(shopcart.serialize()), status.HTTP_200_OK
 
+
 ######################################################################
 # CREATE A NEW SHOPCART
 ######################################################################
-
-
 @app.route("/shopcarts", methods=["POST"])
 def create_shopcarts():
     """
@@ -154,11 +165,12 @@ def list_shopcart_items(shopcart_id):
     # Attempt to find the Shopcart and abort if not found
     shopcart = Shopcart.find(shopcart_id)
     if not shopcart:
-        abort(status.HTTP_404_NOT_FOUND, f"Shopcart with id '{shopcart_id}' was not found.")
+        error(status.HTTP_404_NOT_FOUND, f"Shopcart with id '{shopcart_id}' was not found.")
 
     items = [item.serialize() for item in shopcart.items]
     app.logger.info("List operation completed in %s seconds.", time.time()-start_time)
     return jsonify(items), status.HTTP_200_OK
+
 
 ######################################################################
 # RETRIEVE AN ITEM FROM A SHOPCART
@@ -173,6 +185,7 @@ def list_shopcart_items(shopcart_id):
 ######################################################################
 # UPDATE A SHOPCART ITEM
 ######################################################################
+
 
 ######################################################################
 # DELETE ALL ITEMS IN A SHOPCART

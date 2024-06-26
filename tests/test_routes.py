@@ -6,7 +6,7 @@ import os
 import logging
 from unittest import TestCase
 from wsgi import app
-from tests.factories import ShopcartFactory
+from tests.factories import ShopcartFactory, ShopcartItemFactory
 from service.common import status
 from service.models import db, Shopcart
 
@@ -59,7 +59,9 @@ class TestShopcartService(TestCase):
             test_shopcart = ShopcartFactory()
             response = self.client.post(BASE_URL, json=test_shopcart.serialize())
             self.assertEqual(
-                response.status_code, status.HTTP_201_CREATED, "Could not create test shopcart"
+                response.status_code,
+                status.HTTP_201_CREATED,
+                "Could not create test shopcart",
             )
             new_shopcart = response.get_json()
             test_shopcart.id = new_shopcart["id"]
@@ -160,24 +162,29 @@ class TestShopcartService(TestCase):
     #  S H O P C A R T   I T E M   T E S T   C A S E S
     #####################################################################
 
-    # Todo: Add shopcart item test cases here
-def test_list_all_items(self):
-    """It should return a list of all Shopcart Items"""
-    # create a Shopcart to update
-    test_shopcart = ShopcartFactory()
-    resp = self.client.get(f"{BASE_URL}/{test_shopcart.id}/items",content_type="application/json")
-
-    self.assertEqual(resp.status_code, status.HTTP_200_OK)
-    self.assertEqual(resp.content_type, "application/json")
-    self.assertEqual(resp.get_json(), test_shopcart.items)
-    data = resp.data.decode("utf-8")
-    #print(data)
+    def test_list_all_items_in_shopcart(self):
+        """It should return a list of all items in a Shopcart"""
+        # Create a shopcart with items
+        test_shopcart = self._create_shopcarts(1)[0]
+        test_shopcart.create()
+        items = ShopcartItemFactory.create_batch(3, shopcart_id=test_shopcart.id)
+        for item in items:
+            item.create()
+            test_shopcart.items.append(item)
+        test_shopcart.update()
+        # Ensure the shopcart has items
+        self.assertEqual(len(test_shopcart.items), 3)
+        # List all items
+        response = self.client.get(BASE_URL / {test_shopcart.id} / items)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), 3)
 
 
     ######################################################################
     #  U T I L I T Y   F U N C T I O N   T E S T   C A S E S
     ######################################################################
-
+    
     def test_invalid_content_type(self):
         """It should return 415 if an invalid Content-Type header is present"""
         # create a Shopcart to update
