@@ -169,7 +169,7 @@ def test_list_all_items(self):
 
     self.assertEqual(resp.status_code, status.HTTP_200_OK)
     self.assertEqual(resp.content_type, "application/json")
-    self.assertIn("items", resp.get_json())
+    self.assertEuqal(resp.get_json(), test_shopcart.items)
     data = resp.data.decode("utf-8")
     print(data)
 
