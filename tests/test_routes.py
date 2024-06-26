@@ -134,7 +134,7 @@ class TestShopcartService(TestCase):
     def test_update_shopcart(self):
         """It should update an existing Shopcart"""
         # create a Shopcart to update
-        test_shopcart = ShopcartFactory()
+        test_shopcart = self._create_shopcarts(1)[0]
         resp = self.client.post(BASE_URL, json=test_shopcart.serialize())
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
 
@@ -171,7 +171,7 @@ class TestShopcartService(TestCase):
     def test_delete_all_items_in_shopcart(self):
         """It should delete all items in a Shopcart"""
         # Create a shopcart with items
-        test_shopcart = ShopcartFactory()
+        test_shopcart = self._create_shopcarts(1)[0]
         test_shopcart.create()
         items = ShopcartItemFactory.create_batch(3, shopcart_id=test_shopcart.id)
         for item in items:
@@ -211,7 +211,7 @@ class TestShopcartService(TestCase):
     def test_invalid_content_type(self):
         """It should return 415 if an invalid Content-Type header is present"""
         # create a Shopcart to update
-        test_shopcart = ShopcartFactory()
+        test_shopcart = self._create_shopcarts(1)[0]
 
         resp = self.client.put(
             f"{BASE_URL}/{test_shopcart.id}", content_type="text/plain"
@@ -221,7 +221,7 @@ class TestShopcartService(TestCase):
     def test_missing_content_type(self):
         """It should return 415 if an Content-Type header is not present"""
         # create a Shopcart to update
-        test_shopcart = ShopcartFactory()
+        test_shopcart = self._create_shopcarts(1)[0]
 
         resp = self.client.put(f"{BASE_URL}/{test_shopcart.id}")
         self.assertEqual(resp.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
