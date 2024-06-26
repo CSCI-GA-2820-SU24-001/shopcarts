@@ -90,6 +90,14 @@ class TestShopcartService(TestCase):
         data = response.get_json()
         logging.debug("Response data = %s", data)
         self.assertIn("was not found", data["message"])
+    
+    def test_get_shopcart_list(self):
+        """It should Get a list of Shopcarts"""
+        self._create_shopcarts(5)
+        response = self.client.get(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), 5)
 
     def test_create_shopcart(self):
         """It should create a new Shopcart"""
@@ -183,3 +191,4 @@ class TestShopcartService(TestCase):
 
         resp = self.client.put(f"{BASE_URL}/{test_shopcart.id}")
         self.assertEqual(resp.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+
