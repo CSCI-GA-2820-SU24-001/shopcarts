@@ -167,6 +167,18 @@ class TestShopcartModel(TestCaseBase):
         self.assertNotEqual(new_shopcart.items, None)
         self.assertEqual(new_shopcart.items[0].name, shopcart_item.name)
 
+    def test_calculate_total_price(self):
+        """It should calculate the total price of the Shopcart correctly"""
+        shopcart = ShopcartFactory()
+        items = [
+            ShopcartItemFactory(price=10, quantity=1),
+            ShopcartItemFactory(price=20, quantity=2)
+        ]
+        shopcart.items.extend(items)
+        shopcart.calculate_total_price()
+
+        self.assertEqual(shopcart.total_price, 10 + 20*2)
+
     def test_models_repr_str(self):
         """It should have the correct repr and str for Shopcart"""
         shopcart = Shopcart()
