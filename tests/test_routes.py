@@ -78,7 +78,6 @@ class TestShopcartService(TestCase):
 
     def test_get_shopcart(self):
         """It should get a single Shopcart"""
-        # get the id of a shopcart
         test_shopcart = self._create_shopcarts(1)[0]
         response = self.client.get(f"{BASE_URL}/{test_shopcart.id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
