@@ -161,6 +161,16 @@ class TestShopcartService(TestCase):
     #####################################################################
 
     # Todo: Add shopcart item test cases here
+def test_list_all_items(self):
+    """It should return a list of all Shopcart Items"""
+    # create a Shopcart to update
+    test_shopcart = ShopcartFactory()
+    resp = self.client.put(f"{BASE_URL}/{test_shopcart.id}/items",content_type="application/json")
+
+    self.assertEqual(resp.status_code, status.HTTP_200_OK)
+    data = resp.data.decode("utf-8")
+    print(data)
+
 
     ######################################################################
     #  U T I L I T Y   F U N C T I O N   T E S T   C A S E S
