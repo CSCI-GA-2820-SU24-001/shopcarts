@@ -6,7 +6,7 @@ import os
 import logging
 from unittest import TestCase
 from wsgi import app
-from tests.factories import ShopcartFactory
+from tests.factories import ShopcartFactory, ShopcartItemFactory
 from service.common import status
 from service.models import db, Shopcart
 
@@ -90,9 +90,9 @@ class TestShopcartService(TestCase):
         data = response.get_json()
         logging.debug("Response data = %s", data)
         self.assertIn("was not found", data["message"])
-    
+
     def test_get_shopcart_list(self):
-        """It should Get a list of Shopcarts"""
+        """It should get a list of Shopcarts"""
         self._create_shopcarts(5)
         response = self.client.get(BASE_URL)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -149,7 +149,7 @@ class TestShopcartService(TestCase):
             updated_shopcart["total_price"], test_shopcart.total_price + 100
         )
 
-    def test_update_shopcart__with_invalid_id(self):
+    def test_update_shopcart_with_invalid_id(self):
         """It should not update a non-existing Shopcart"""
         # create a Shopcart to update
         test_shopcart = ShopcartFactory()
@@ -168,7 +168,41 @@ class TestShopcartService(TestCase):
     #  S H O P C A R T   I T E M   T E S T   C A S E S
     #####################################################################
 
-    # Todo: Add shopcart item test cases here
+    def test_delete_all_items_in_shopcart(self):
+        """It should delete all items in a Shopcart"""
+        # Create a shopcart with items
+        test_shopcart = ShopcartFactory()
+        test_shopcart.create()
+        items = ShopcartItemFactory.create_batch(3, shopcart_id=test_shopcart.id)
+        for item in items:
+            item.create()
+            test_shopcart.items.append(item)
+        test_shopcart.update()
+
+        # Ensure the shopcart has items
+        self.assertEqual(len(test_shopcart.items), 3)
+
+        # Delete all items
+        response = self.client.delete(f"{BASE_URL}/{test_shopcart.id}/items")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        # Fetch the shopcart and ensure items are deleted
+        updated_shopcart = Shopcart.find(test_shopcart.id)
+        self.assertEqual(len(updated_shopcart.items), 0)
+        self.assertEqual(updated_shopcart.total_price, 0)
+
+    def test_delete_all_items_in_shopcart_with_invalid_id(self):
+        """It should not delete all items in a non-existing Shopcart"""
+        # Create a shopcart to delete
+        test_shopcart = ShopcartFactory()
+
+        resp = self.client.delete(f"{BASE_URL}/{test_shopcart.id}/items")
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+        print(resp.data.decode())
+        self.assertIn(
+            f"Shopcart with id '{test_shopcart.id}' was not found.",
+            resp.data.decode(),
+        )
 
     ######################################################################
     #  U T I L I T Y   F U N C T I O N   T E S T   C A S E S
@@ -191,4 +225,3 @@ class TestShopcartService(TestCase):
 
         resp = self.client.put(f"{BASE_URL}/{test_shopcart.id}")
         self.assertEqual(resp.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
-

@@ -177,6 +177,31 @@ def update_shopcarts(shopcart_id):
 ######################################################################
 # DELETE ALL ITEMS IN A SHOPCART
 ######################################################################
+@app.route("/shopcarts/<int:shopcart_id>/items", methods=["DELETE"])
+def delete_addresses(shopcart_id):
+    """
+    Delete all Items in a Shopcart
+
+    This endpoint will delete all Items from a Shopcart based the id specified in the path
+    """
+    app.logger.info(
+        "Request to delete all items for Shopcart id: %s",
+        (shopcart_id),
+    )
+
+    # See if the shopcart exists and abort if it doesn't
+    shopcart = Shopcart.find(shopcart_id)
+    if not shopcart:
+        error(
+            status.HTTP_404_NOT_FOUND,
+            f"Shopcart with id '{shopcart_id}' was not found."
+        )
+
+    for item in shopcart.items:
+        item.delete()
+    shopcart.calculate_total_price()
+
+    return "", status.HTTP_204_NO_CONTENT
 
 
 ######################################################################
