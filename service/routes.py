@@ -142,24 +142,6 @@ def update_shopcarts(shopcart_id):
 ######################################################################
 # LIST ALL ITEMS IN A SHOPCART
 ######################################################################
-@app.route("/shopcarts/<int:shopcart_id>/items", methods=["GET"])
-def list_shopcart_items(shopcart_id):
-    """
-    Retrieve all items in a Shopcart
-    """
-    import time
-    start_time=time.time()
-    app.logger.info("Request to list items in a shopcart with id [%s]", shopcart_id)
-
-    # Attempt to find the Shopcart and abort if not found
-    shopcart = Shopcart.find(shopcart_id)
-    if not shopcart:
-        abort(status.HTTP_404_NOT_FOUND, f"Shopcart with id '{shopcart_id}' was not found.")
-
-    items = [item.serialize() for item in shopcart.items]
-    app.logger.info("List operation completed in %s seconds.", time.time()-start_time)
-    return jsonify(items), status.HTTP_200_OK
-
 
 
 ######################################################################
