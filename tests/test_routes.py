@@ -60,7 +60,9 @@ class TestShopcartService(TestCase):
             test_shopcart = ShopcartFactory()
             response = self.client.post(BASE_URL, json=test_shopcart.serialize())
             self.assertEqual(
-                response.status_code, status.HTTP_201_CREATED, "Could not create test shopcart"
+                response.status_code,
+                status.HTTP_201_CREATED,
+                "Could not create test shopcart",
             )
             new_shopcart = response.get_json()
             test_shopcart.id = new_shopcart["id"]
@@ -174,6 +176,36 @@ class TestShopcartService(TestCase):
     #####################################################################
     #  S H O P C A R T   I T E M   T E S T   C A S E S
     #####################################################################
+
+    def test_list_all_items_in_shopcart(self):
+        """It should return a list of all items in a Shopcart"""
+        # Create a shopcart with items
+        test_shopcart = self._create_shopcarts(1)[0]
+        test_shopcart.create()
+        items = ShopcartItemFactory.create_batch(3, shopcart_id=test_shopcart.id)
+        for item in items:
+            item.create()
+            test_shopcart.items.append(item)
+        test_shopcart.update()
+        # Ensure the shopcart has items
+        self.assertEqual(len(test_shopcart.items), 3)
+        # List all items
+        response = self.client.get(f"{BASE_URL}/{test_shopcart.id}/items")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), 3)
+
+    def test_list_all_items_in_shopcart_with_invalid_id(self):
+        """It should not list all items in a non-existing Shopcart"""
+        # Create a shopcart
+        test_shopcart = ShopcartFactory()
+        resp = self.client.get(f"{BASE_URL}/{test_shopcart.id}/items")
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+        print(resp.data.decode())
+        self.assertIn(
+            f"Shopcart with id '{test_shopcart.id}' was not found.",
+            resp.data.decode(),
+        )
 
     def test_delete_all_items_in_shopcart(self):
         """It should delete all items in a Shopcart"""
