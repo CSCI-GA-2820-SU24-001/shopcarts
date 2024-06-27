@@ -175,10 +175,22 @@ class TestShopcartService(TestCase):
         # Ensure the shopcart has items
         self.assertEqual(len(test_shopcart.items), 3)
         # List all items
-        response = self.client.get(BASE_URL / {test_shopcart.id} / items)
+        response = self.client.get(f"{BASE_URL}/{test_shopcart.id}/items")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
         self.assertEqual(len(data), 3)
+
+    def test_list_all_items_in_shopcart_with_invalid_id(self):
+        """It should not list all items in a non-existing Shopcart"""
+        # Create a shopcart
+        test_shopcart = ShopcartFactory()
+        resp = self.client.get(f"{BASE_URL}/{test_shopcart.id}/items")
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+        print(resp.data.decode())
+        self.assertIn(
+            f"Shopcart with id '{test_shopcart.id}' was not found.",
+            resp.data.decode(),
+        )
 
     ######################################################################
     #  U T I L I T Y   F U N C T I O N   T E S T   C A S E S
