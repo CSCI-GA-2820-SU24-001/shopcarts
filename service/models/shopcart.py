@@ -72,3 +72,13 @@ class Shopcart(db.Model, PersistentBase):
             ) from error
 
         return self
+
+    def calculate_total_price(self):
+        """Update the total price of a ShopCart"""
+        total_price = 0
+        for item in self.items:
+            if item.price is not None and item.quantity is not None:
+                total_price += item.price * item.quantity
+
+        self.total_price = total_price
+        self.update()
