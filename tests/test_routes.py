@@ -163,7 +163,15 @@ class TestShopcartService(TestCase):
             f"Shopcart with id '{test_shopcart.id}' was not found.",
             resp.data.decode(),
         )
+    
 
+    def test_delete_shopcart(self):
+        """It should Delete a Shopcart"""
+        # get the id of an shopcart
+        shopcart = self._create_shopcarts(1)[0]
+        resp = self.client.delete(f"{BASE_URL}/{shopcart.id}")
+        self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
+        
     #####################################################################
     #  S H O P C A R T   I T E M   T E S T   C A S E S
     #####################################################################
