@@ -185,15 +185,13 @@ def list_shopcart_items(shopcart_id):
 # ADD AN ITEM TO A SHOPCART
 ######################################################################
 @app.route("/shopcarts/<int:shopcart_id>/items", methods=["POST"])
-def add_item(shopcart_id):
+def add_shopcart_items(shopcart_id):
     """
     Create an item
-
     This endpoint will create an Item in a Shopcart based the data in the body that is posted
     """
     app.logger.info("Request to Create an Item for Shopcart id: %s", (shopcart_id))
     check_content_type("application/json")
-
     # See if the shopcart exists and abort if it doesn't
     shopcart = Shopcart.find(shopcart_id)
     if not shopcart:
@@ -201,31 +199,38 @@ def add_item(shopcart_id):
             status.HTTP_404_NOT_FOUND,
             f"Shopcart with id '{shopcart_id}' was not found.",
         )
-
     item = ShopcartItem()
-
     # Get the data from the request and deserialize it
     data = request.get_json()
     app.logger.info("Processing: %s", data)
     item.deserialize(data)
 
-    # Save the new Item to the database
-    print(f"before: {shopcart.items}")
-    shopcart.items.append(item)
-    print(f"after: {shopcart.items}")
+    # Append item to the shopcart
+    existing_item = ShopcartItem.find_by_name(item.name)
+    if existing_item:
+        # Update quantity if the item exists in the shopcart
+        existing_item.quantity = existing_item.quantity + item.quantity
+        existing_item.update()
+        item = existing_item
+    else:
+        # Add a new item if the item does not exist in the shopcart
+        shopcart.items.append(item)
+        shopcart.update()
+
+    # update the total price of the shopcart
     shopcart.calculate_total_price()
     app.logger.info("Item with new id [%s] saved!", item.id)
 
-    # Return the location of the new item
-    location_url = url_for(
-        "add_item", item_id=item.id, shopcart_id=shopcart_id, _external=True
-    )
+    # Prepare a message to return
+    message = item.serialize()
 
-    return (
-        jsonify(item.serialize()),
-        status.HTTP_201_CREATED,
-        {"Location": location_url},
-    )
+    # todo - uncomment when "get_shopcart_items" is implemented
+    # Return the location of the new item
+    # location_url = url_for(
+    #     "get_shopcart_items", item_id=item.id, shopcart_id=shopcart_id, _external=True
+    # )
+    location_url = "unknown"
+    return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
 
 
 ######################################################################
