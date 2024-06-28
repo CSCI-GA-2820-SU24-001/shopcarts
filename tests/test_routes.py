@@ -280,7 +280,7 @@ class TestShopcartService(TestCase):
         )
 
     def test_create_multiple_item(self):
-        """It should Create a new Item"""
+        """It should Create multiple new Items"""
         test_shopcart = ShopcartFactory()
         test_shopcart.create()
 
@@ -301,6 +301,14 @@ class TestShopcartService(TestCase):
             total_price += new_item["price"] * new_item["quantity"]
 
         self.assertEqual(total_price, test_shopcart.total_price)
+
+    def test_create_item_to_non_existing_shopcart(self):
+        """It should return 404 if create item in a non-existing shopcart"""
+        test_shopcart = ShopcartFactory()
+        test_shopcart.create()
+        test_item = ShopcartItemFactory(shopcart=test_shopcart)
+        response = self.client.post(f"{BASE_URL}/100/items", json=test_item.serialize())
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     ######################################################################
     #  U T I L I T Y   F U N C T I O N   T E S T   C A S E S
