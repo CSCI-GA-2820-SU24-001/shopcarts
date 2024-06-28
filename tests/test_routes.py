@@ -91,17 +91,9 @@ class TestShopcartService(TestCase):
         data = response.get_json()
         logging.debug("Response data = %s", data)
         self.assertIn("was not found", data["message"])
-    
-    def test_get_shopcart_list(self):
-        """It should Get a list of Shopcarts"""
-        self._create_shopcarts(5)
-        response = self.client.get(BASE_URL)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = response.get_json()
-        self.assertEqual(len(data), 5)
 
     def test_get_shopcart_list(self):
-        """It should get a list of Shopcarts"""
+        """It should Get a list of Shopcarts"""
         self._create_shopcarts(5)
         response = self.client.get(BASE_URL)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -243,6 +235,73 @@ class TestShopcartService(TestCase):
             resp.data.decode(),
         )
 
+    def test_create_item(self):
+        """It should Create a new Item"""
+        test_shopcart = ShopcartFactory()
+        test_shopcart.create()
+
+        test_item = ShopcartItemFactory(shopcart=test_shopcart)
+        logging.debug("Test Item: %s", test_item.serialize())
+        response = self.client.post(
+            f"{BASE_URL}/{test_shopcart.id}/items", json=test_item.serialize()
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # Make sure location header is set
+        location = response.headers.get("Location", None)
+        self.assertIsNotNone(location)
+
+        # Check the data is correct
+        new_item = response.get_json()
+        self.assertEqual(new_item["name"], test_item.name)
+        self.assertEqual(new_item["product_id"], test_item.product_id)
+        self.assertEqual(new_item["quantity"], test_item.quantity)
+        self.assertEqual(new_item["price"], test_item.price)
+        self.assertEqual(new_item["shopcart_id"], test_item.shopcart_id)
+
+        # Check total price is correct
+        self.assertEqual(
+            new_item["quantity"] * new_item["price"], test_shopcart.total_price
+        )
+
+        # Check that the location header was correct
+        response = self.client.get(location)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        new_item = response.get_json()[0]
+        self.assertEqual(new_item["name"], test_item.name)
+        self.assertEqual(new_item["product_id"], test_item.product_id)
+        self.assertEqual(new_item["quantity"], test_item.quantity)
+        self.assertEqual(new_item["price"], test_item.price)
+        self.assertEqual(new_item["shopcart_id"], test_item.shopcart_id)
+
+        # Check total price is correct
+        self.assertEqual(
+            new_item["quantity"] * new_item["price"], test_shopcart.total_price
+        )
+
+    def test_create_multiple_item(self):
+        """It should Create a new Item"""
+        test_shopcart = ShopcartFactory()
+        test_shopcart.create()
+
+        test_items = ShopcartItemFactory.create_batch(3, shopcart_id=test_shopcart.id)
+        total_price = 0
+        for test_item in test_items:
+            logging.debug("Test Item: %s", test_item.serialize())
+            response = self.client.post(
+                f"{BASE_URL}/{test_shopcart.id}/items", json=test_item.serialize()
+            )
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+            location = response.headers.get("Location", None)
+            self.assertIsNotNone(location)
+
+            new_item = response.get_json()
+
+            total_price += new_item["price"] * new_item["quantity"]
+
+        self.assertEqual(total_price, test_shopcart.total_price)
+
     ######################################################################
     #  U T I L I T Y   F U N C T I O N   T E S T   C A S E S
     ######################################################################
@@ -264,4 +323,3 @@ class TestShopcartService(TestCase):
 
         resp = self.client.put(f"{BASE_URL}/{test_shopcart.id}")
         self.assertEqual(resp.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
-
