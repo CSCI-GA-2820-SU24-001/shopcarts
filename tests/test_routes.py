@@ -237,7 +237,7 @@ class TestShopcartService(TestCase):
 
     def test_add_shopcart_item(self):
         """It should Create a new Item"""
-        test_shopcart = ShopcartFactory()
+        test_shopcart = self._create_shopcarts(1)[0]
         test_shopcart.create()
 
         test_item = ShopcartItemFactory(shopcart=test_shopcart)
@@ -282,7 +282,7 @@ class TestShopcartService(TestCase):
 
     def test_add_multiple_shopcart_items(self):
         """It should Create multiple new Items"""
-        test_shopcart = ShopcartFactory()
+        test_shopcart = self._create_shopcarts(1)[0]
         test_shopcart.create()
 
         test_items = ShopcartItemFactory.create_batch(3, shopcart_id=test_shopcart.id)
@@ -321,7 +321,7 @@ class TestShopcartService(TestCase):
     def test_add_existing_shopcart_item(self):
         """It should update the quantity if an existing item is added to a Shopcart"""
         # Create a shopcart and add an item to it
-        test_shopcart = ShopcartFactory()
+        test_shopcart = self._create_shopcarts(1)[0]
         test_shopcart.create()
 
         # Add an item to the shopcart
