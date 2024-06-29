@@ -187,7 +187,8 @@ def list_shopcart_items(shopcart_id):
 @app.route("/shopcarts/<int:shopcart_id>/items", methods=["POST"])
 def add_shopcart_items(shopcart_id):
     """
-    Create an item
+    Add an Item in a Shopcart
+
     This endpoint will create an Item in a Shopcart based the data in the body that is posted
     """
     app.logger.info("Request to Create an Item for Shopcart id: %s", (shopcart_id))
@@ -199,21 +200,20 @@ def add_shopcart_items(shopcart_id):
             status.HTTP_404_NOT_FOUND,
             f"Shopcart with id '{shopcart_id}' was not found.",
         )
-    item = ShopcartItem()
-    # Get the data from the request and deserialize it
+
     data = request.get_json()
     app.logger.info("Processing: %s", data)
-    item.deserialize(data)
 
-    # Append item to the shopcart
-    existing_item = ShopcartItem.find_by_name(item.name)
-    if existing_item:
+    item = ShopcartItem.find_by_product_id_shopcart_id(data["product_id"], shopcart_id)
+    if item:
         # Update quantity if the item exists in the shopcart
-        existing_item.quantity = existing_item.quantity + item.quantity
-        existing_item.update()
-        item = existing_item
+        item.quantity += data["quantity"]
+        item.update()
     else:
         # Add a new item if the item does not exist in the shopcart
+        item = ShopcartItem()
+        data["shopcart_id"] = shopcart_id
+        item.deserialize(data)
         shopcart.items.append(item)
         shopcart.update()
 
@@ -226,9 +226,7 @@ def add_shopcart_items(shopcart_id):
 
     # todo - uncomment when "get_shopcart_items" is implemented
     # Return the location of the new item
-    # location_url = url_for(
-    #     "get_shopcart_items", item_id=item.id, shopcart_id=shopcart_id, _external=True
-    # )
+    # location_url = url_for("get_shopcart_items", item_id=item.id, shopcart_id=shopcart_id, _external=True)
     location_url = "unknown"
     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
 
@@ -242,7 +240,7 @@ def add_shopcart_items(shopcart_id):
 # DELETE ALL ITEMS IN A SHOPCART
 ######################################################################
 @app.route("/shopcarts/<int:shopcart_id>/items", methods=["DELETE"])
-def delete_addresses(shopcart_id):
+def delete_all_shopcart_items(shopcart_id):
     """
     Delete all Items in a Shopcart
 
@@ -269,13 +267,9 @@ def delete_addresses(shopcart_id):
 
 
 ######################################################################
-# DELETE AN SHOPCART ITEM
+# DELETE A SHOPCART ITEM
 ######################################################################
 
-
-######################################################################
-# RETRIEVE AN ITEM FROM A SHOPCART
-######################################################################
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S

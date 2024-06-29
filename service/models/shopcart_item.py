@@ -112,6 +112,17 @@ class ShopcartItem(db.Model, PersistentBase):
         return cls.query.filter(cls.product_id == product_id).first()
 
     @classmethod
+    def find_by_product_id_shopcart_id(cls, product_id, shopcart_id):
+        """Returns all ShopcartItems with the given product_id and shopcart_id
+
+        Args:
+            product_id (string): the product_id of the ShopcartItem you want to match
+            shopcart_id (string): the shopcart_id of the ShopcartItem you want to match
+        """
+        logger.info("Processing product_id query for %s", product_id)
+        return cls.query.filter(cls.product_id == product_id, cls.shopcart_id == shopcart_id).first()
+
+    @classmethod
     def find_by_name(cls, name):
         """Returns all ShopcartItems with the given name
 
