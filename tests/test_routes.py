@@ -151,7 +151,7 @@ class TestShopcartService(TestCase):
     def test_update_shopcart(self):
         """It should update an existing Shopcart"""
         # create a Shopcart to update
-        test_shopcart = self._create_shopcarts(1)[0]
+        test_shopcart = ShopcartFactory()
         resp = self.client.post(BASE_URL, json=test_shopcart.serialize())
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
 
@@ -195,19 +195,7 @@ class TestShopcartService(TestCase):
         """It should return a list of all items in a Shopcart"""
         # Create a shopcart with items
         shopcart = self._create_shopcarts(1)[0]
-        items = ShopcartItemFactory.create_batch(2)
-
-        # Create item 1
-        resp = self.client.post(
-            f"{BASE_URL}/{shopcart.id}/items", json=items[0].serialize()
-        )
-        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
-
-        # Create item 2
-        resp = self.client.post(
-            f"{BASE_URL}/{shopcart.id}/items", json=items[1].serialize()
-        )
-        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        items = self._create_items(shopcart.id, 2)
 
         # List all items
         response = self.client.get(f"{BASE_URL}/{shopcart.id}/items")
@@ -342,19 +330,7 @@ class TestShopcartService(TestCase):
         """It should delete all items in a Shopcart"""
         # Create a shopcart with items
         shopcart = self._create_shopcarts(1)[0]
-        items = ShopcartItemFactory.create_batch(2)
-
-        # Create item 1
-        resp = self.client.post(
-            f"{BASE_URL}/{shopcart.id}/items", json=items[0].serialize()
-        )
-        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
-
-        # Create item 2
-        resp = self.client.post(
-            f"{BASE_URL}/{shopcart.id}/items", json=items[1].serialize()
-        )
-        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        items = self._create_items(shopcart.id, 2)
 
         # Delete all items
         response = self.client.delete(f"{BASE_URL}/{shopcart.id}/items")
