@@ -163,7 +163,6 @@ def delete_shopcart(shopcart_id):
     return "", status.HTTP_204_NO_CONTENT
 
 
-
 # ---------------------------------------------------------------------
 #            S H O P C A R T   I T E M   M E T H O D S
 # ---------------------------------------------------------------------
@@ -284,6 +283,23 @@ def delete_all_shopcart_items(shopcart_id):
 ######################################################################
 # DELETE A SHOPCART ITEM
 ######################################################################
+@app.route("/shopcarts/<int:shopcart_id>/items/<int:item_id>", methods=["DELETE"])
+def delete_item(shopcart_id, item_id):
+    """
+    Delete an Item in Shopcart
+
+    This endpoint will delete an Item based the id specified in the path
+    """
+    app.logger.info(
+        "Request to delete Address %s for Account id: %s", (item_id, shopcart_id)
+    )
+
+    # See if the address exists and delete it if it does
+    item = Shopcart.find(item_id)
+    if item:
+        item.delete()
+
+    return "", status.HTTP_204_NO_CONTENT
 
 
 ######################################################################

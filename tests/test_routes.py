@@ -163,7 +163,6 @@ class TestShopcartService(TestCase):
             f"Shopcart with id '{test_shopcart.id}' was not found.",
             resp.data.decode(),
         )
-    
 
     def test_delete_shopcart(self):
         """It should Delete a Shopcart"""
@@ -171,7 +170,7 @@ class TestShopcartService(TestCase):
         shopcart = self._create_shopcarts(1)[0]
         resp = self.client.delete(f"{BASE_URL}/{shopcart.id}")
         self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
-        
+
     #####################################################################
     #  S H O P C A R T   I T E M   T E S T   C A S E S
     #####################################################################
@@ -218,7 +217,9 @@ class TestShopcartService(TestCase):
         logging.debug("Test Item: %s", item.serialize())
 
         response = self.client.post(
-            f"{BASE_URL}/{shopcart.id}/items", json=item.serialize(), content_type="application/json"
+            f"{BASE_URL}/{shopcart.id}/items",
+            json=item.serialize(),
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -253,7 +254,9 @@ class TestShopcartService(TestCase):
         logging.debug("Test Item: %s", item.serialize())
 
         response = self.client.post(
-            f"{BASE_URL}/{shopcart.id}/items", json=item.serialize(), content_type="application/json"
+            f"{BASE_URL}/{shopcart.id}/items",
+            json=item.serialize(),
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -266,7 +269,9 @@ class TestShopcartService(TestCase):
         updated_quantity = 3
         item.quantity = updated_quantity
         response = self.client.post(
-            f"{BASE_URL}/{shopcart.id}/items", json=item.serialize(), content_type="application/json"
+            f"{BASE_URL}/{shopcart.id}/items",
+            json=item.serialize(),
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -335,6 +340,34 @@ class TestShopcartService(TestCase):
             f"Shopcart with id '{test_shopcart.id}' was not found.",
             resp.data.decode(),
         )
+
+    def test_delete_address(self):
+        """It should Delete an Address"""
+        test_shopcart = self._create_shopcarts(1)[0]
+        test_item = ShopcartItemFactory()
+        resp = self.client.post(
+            f"{BASE_URL}/{test_shopcart.id}/items",
+            json=test_item.serialize(),
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        data = resp.get_json()
+        logging.debug(data)
+        item_id = data["id"]
+
+        # send delete request
+        resp = self.client.delete(
+            f"{BASE_URL}/{test_shopcart.id}/items/{item_id}",
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
+
+        # retrieve it back and make sure address is not there
+        resp = self.client.get(
+            f"{BASE_URL}/{test_shopcart.id}/addresses/{item_id}",
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
     ######################################################################
     #  U T I L I T Y   F U N C T I O N   T E S T   C A S E S
