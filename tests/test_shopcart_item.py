@@ -378,3 +378,15 @@ class TestModelQueries(TestCaseBase):
         found_shopcart_item = ShopcartItem.find_by_shopcart_id(shopcart.id)
         self.assertEqual(found_shopcart_item.id, shopcart_item.id)
         self.assertEqual(found_shopcart_item.quantity, shopcart_item.quantity)
+
+    def test_find_shopcart_item_by_product_id_shopcart_id(self):
+        """It should find a ShopcartItem by product ID and shopcart ID"""
+        shopcart = ShopcartFactory()
+        shopcart_item = ShopcartItemFactory(shopcart=shopcart)
+        shopcart.items.append(shopcart_item)
+        shopcart.create()
+
+        # Read it back
+        found_shopcart_item = ShopcartItem.find_by_product_id_shopcart_id(shopcart_item.product_id, shopcart.id)
+        self.assertEqual(found_shopcart_item.id, shopcart_item.id)
+        self.assertEqual(found_shopcart_item.quantity, shopcart_item.quantity)
