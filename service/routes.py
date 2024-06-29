@@ -195,6 +195,32 @@ def list_shopcart_items(shopcart_id):
 # RETRIEVE AN ITEM FROM A SHOPCART
 ######################################################################
 
+@app.route("/shopcarts/<int:shopcart_id>/items/<int:item_id>", methods=["GET"])
+def get_shopcart_items(shopcart_id, item_id):
+    """
+    Retrieve a single item from Shopcart
+
+    This endpoint will return a item from Shopcart based on it's id
+    """
+    app.logger.info("Request to Retrieve a item with id [%s] from shopcart [%s]", item_id, shopcart_id)
+
+    # Attempt to find the Shopcart and abort if not found
+    shopcart = Shopcart.find(shopcart_id)
+    if not shopcart:
+        error(
+            status.HTTP_404_NOT_FOUND,
+            f"Shopcart with id '{shopcart_id}' was not found.",
+        )
+
+    item = ShopcartItem.find(item_id)
+    if not item or item.shopcart_id != shopcart_id:
+        error(
+            status.HTTP_404_NOT_FOUND,
+            f"Item with id '{item_id}' was not found in shopcart '{shopcart_id}."
+        )
+
+    return jsonify(item.serialize()), status.HTTP_200_OK
+
 
 ######################################################################
 # ADD AN ITEM TO A SHOPCART
@@ -239,10 +265,9 @@ def add_shopcart_items(shopcart_id):
     # Prepare a message to return
     message = item.serialize()
 
-    # todo - uncomment when "get_shopcart_items" is implemented
     # Return the location of the new item
-    # location_url = url_for("get_shopcart_items", item_id=item.id, shopcart_id=shopcart_id, _external=True)
-    location_url = "unknown"
+    location_url = url_for("get_shopcart_items", item_id=item.id, shopcart_id=shopcart_id, _external=True)
+    #location_url = "unknown"
     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
 
 
