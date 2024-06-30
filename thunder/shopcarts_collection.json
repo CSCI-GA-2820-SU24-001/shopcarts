@@ -2,7 +2,7 @@
     "clientName": "Thunder Client",
     "collectionName": "Shopcarts Collection",
     "collectionId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
-    "dateExported": "2024-06-24T09:09:51.362Z",
+    "dateExported": "2024-06-30T06:07:58.733Z",
     "version": "1.2",
     "folders": [],
     "requests": [
@@ -27,7 +27,7 @@
             "method": "POST",
             "sortNum": 20000,
             "created": "2024-06-24T09:04:06.058Z",
-            "modified": "2024-06-24T09:04:38.352Z",
+            "modified": "2024-06-30T05:54:19.581Z",
             "headers": [
                 {
                     "name": "Content-Type",
@@ -36,7 +36,7 @@
             ],
             "body": {
                 "type": "json",
-                "raw": "{\n    \"total_price\": 200\n}",
+                "raw": "{\n    \"total_price\": 0\n}",
                 "form": []
             }
         },
@@ -45,11 +45,11 @@
             "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
             "containerId": "",
             "name": "Read Shopcart",
-            "url": "http://localhost:8000/shopcarts/1234",
+            "url": "http://localhost:8000/shopcarts/1837",
             "method": "GET",
             "sortNum": 30000,
             "created": "2024-06-24T09:04:06.059Z",
-            "modified": "2024-06-24T09:08:53.699Z",
+            "modified": "2024-06-27T03:28:41.738Z",
             "headers": [
                 {
                     "name": "Content-Type",
@@ -79,11 +79,11 @@
             "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
             "containerId": "",
             "name": "Update Shopcart",
-            "url": "http://localhost:8000/shopcarts/1234",
+            "url": "http://localhost:8000/shopcarts/1296",
             "method": "PUT",
             "sortNum": 50000,
             "created": "2024-06-24T09:04:06.061Z",
-            "modified": "2024-06-24T09:08:59.129Z",
+            "modified": "2024-06-25T02:24:43.368Z",
             "headers": [
                 {
                     "name": "Content-Type",
@@ -101,11 +101,11 @@
             "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
             "containerId": "",
             "name": "Delete Shopcart",
-            "url": "http://localhost:8000/shopcarts/1234",
+            "url": "http://localhost:8000/shopcarts/2800",
             "method": "DELETE",
             "sortNum": 60000,
             "created": "2024-06-24T09:04:06.062Z",
-            "modified": "2024-06-24T09:09:02.288Z",
+            "modified": "2024-06-28T23:05:34.540Z",
             "headers": [
                 {
                     "name": "Content-Type",
@@ -118,11 +118,11 @@
             "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
             "containerId": "",
             "name": "Add Shopcart Item",
-            "url": "http://localhost:8000/shopcarts/1234/items",
+            "url": "http://localhost:8000/shopcarts/3358/items",
             "method": "POST",
             "sortNum": 70000,
             "created": "2024-06-24T09:04:06.063Z",
-            "modified": "2024-06-24T09:08:19.895Z",
+            "modified": "2024-06-29T05:14:19.251Z",
             "headers": [
                 {
                     "name": "Content-Type",
@@ -131,7 +131,7 @@
             ],
             "body": {
                 "type": "json",
-                "raw": "{\n    \"shopcart_id\": 1234,\n    \"product_id\": 11,\n    \"name\": \"Apple\",\n    \"quantity\": 5,\n    \"price\": 200\n}",
+                "raw": "{\n    \"shopcart_id\": 3358,\n    \"product_id\": 45,\n    \"name\": \"i-45\",\n    \"quantity\": 1,\n    \"price\": 200\n}",
                 "form": []
             }
         },
@@ -157,21 +157,17 @@
             "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
             "containerId": "",
             "name": "List all Items in a Shopcart",
-            "url": "http://localhost:8000/shopcarts/1293",
+            "url": "http://localhost:8000/shopcarts/1837/items",
             "method": "GET",
             "sortNum": 90000,
             "created": "2024-06-24T09:04:06.065Z",
-            "modified": "2024-06-24T09:04:06.065Z",
+            "modified": "2024-06-27T03:28:52.195Z",
             "headers": [
                 {
                     "name": "Content-Type",
                     "value": "application/json"
                 }
-            ],
-            "body": {
-                "type": "json",
-                "raw": ""
-            }
+            ]
         },
         {
             "_id": "ab59453f-5033-40a8-b258-d922a108e1c1",
@@ -199,44 +195,36 @@
             "_id": "a9a0f123-24b2-4d8b-b700-e10bd02e2834",
             "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
             "containerId": "",
-            "name": "Delete all item from a Shopcart",
-            "url": "http://localhost:8000/shopcarts/1293/items",
+            "name": "Delete all items from a Shopcart",
+            "url": "http://localhost:8000/shopcarts/4147/items",
             "method": "DELETE",
             "sortNum": 110000,
             "created": "2024-06-24T09:04:06.067Z",
-            "modified": "2024-06-24T09:04:06.067Z",
+            "modified": "2024-06-30T06:07:22.729Z",
             "headers": [
                 {
                     "name": "Content-Type",
                     "value": "application/json"
                 }
-            ],
-            "body": {
-                "type": "json",
-                "raw": ""
-            }
+            ]
         },
         {
             "_id": "a763f3f5-9ec0-4d05-9f07-0ab1a3390d85",
             "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
             "containerId": "",
             "name": "Delete a specific item from a Shopcart Copy",
-            "url": "http://localhost:8000/shopcarts/1293/items/11",
+            "url": "http://localhost:8000/shopcarts/4041/items/50",
             "method": "DELETE",
             "sortNum": 120000,
             "created": "2024-06-24T09:04:06.069Z",
-            "modified": "2024-06-24T09:04:06.069Z",
+            "modified": "2024-06-30T05:48:46.806Z",
             "headers": [
                 {
                     "name": "Content-Type",
                     "value": "application/json"
                 }
-            ],
-            "body": {
-                "type": "json",
-                "raw": ""
-            }
+            ]
         }
     ],
-    "ref": "IZWv-R7g-Oo6rldkg_QV_s8QLvKH-8J6HFUfxWZ_Zy6HomeaC_uGwsVteYRZqg9a8ty_EYRtdScVJ-Czv_n1ug"
+    "ref": "IZWv-R7g-Oo6rldkg_QV_vmt9Ci_lkrpfEUJZTYgekG3A0h4N8wQhGMb3DJMBey6acrS40ZmI2pKS70RoS8cOw"
 }
