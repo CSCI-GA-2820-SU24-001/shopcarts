@@ -402,6 +402,22 @@ class TestShopcartService(TestCase):
         updated_shopcart = Shopcart.find(test_shopcart.id)
         self.assertEqual(len(updated_shopcart.items), 1)
 
+    def test_delete_item_in_shopcart_not_found(self):
+        """It should not delete an Items in a Shopcart that's not found"""
+        # Create a shopcart to delete
+        test_shopcart = ShopcartFactory()
+        test_item = ShopcartItemFactory()
+
+        resp = self.client.delete(
+            f"{BASE_URL}/{test_shopcart.id}/items/{test_item.id}",
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertIn(
+            f"Shopcart with id '{test_shopcart.id}' was not found.",
+            resp.data.decode(),
+        )
+
     ######################################################################
     #  U T I L I T Y   F U N C T I O N   T E S T   C A S E S
     ######################################################################

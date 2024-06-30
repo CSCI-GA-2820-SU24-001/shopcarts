@@ -352,10 +352,19 @@ def delete_shopcart_items(shopcart_id, item_id):
         (item_id, shopcart_id),
     )
 
+    # See if the shopcart exists and abort if it doesn't
+    shopcart = Shopcart.find(shopcart_id)
+    if not shopcart:
+        error(
+            status.HTTP_404_NOT_FOUND,
+            f"Shopcart with id '{shopcart_id}' was not found.",
+        )
+
     # See if the item exists and delete it if it does
     item = ShopcartItem.find(item_id)
     if item:
         item.delete()
+        shopcart.calculate_total_price()
         app.logger.info("Item with id [%s] deleted!", item.id)
 
     app.logger.info("Item with id [%s] not found!", item.id)
