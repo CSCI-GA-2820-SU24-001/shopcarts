@@ -404,7 +404,7 @@ class TestShopcartService(TestCase):
 
     def test_delete_item_in_shopcart_not_found(self):
         """It should not delete an Items in a Shopcart that's not found"""
-        # Create a shopcart to delete
+        # Create a shopcart and item to delete
         test_shopcart = ShopcartFactory()
         test_item = ShopcartItemFactory()
 

@@ -246,6 +246,32 @@ def get_shopcart_items(shopcart_id, item_id):
 
     return jsonify(item.serialize()), status.HTTP_200_OK
 
+@app.route("/shopcarts/<int:shopcart_id>/items/<int:item_id>", methods=["GET"])
+def get_shopcart_items(shopcart_id, item_id):
+    """
+    Retrieve a single item from Shopcart
+
+    This endpoint will return a item from Shopcart based on it's id
+    """
+    app.logger.info("Request to Retrieve a item with id [%s] from shopcart [%s]", item_id, shopcart_id)
+
+    # Attempt to find the Shopcart and abort if not found
+    shopcart = Shopcart.find(shopcart_id)
+    if not shopcart:
+        error(
+            status.HTTP_404_NOT_FOUND,
+            f"Shopcart with id '{shopcart_id}' was not found.",
+        )
+
+    item = ShopcartItem.find(item_id)
+    if not item or item.shopcart_id != shopcart_id:
+        error(
+            status.HTTP_404_NOT_FOUND,
+            f"Item with id '{item_id}' was not found in shopcart '{shopcart_id}."
+        )
+
+    return jsonify(item.serialize()), status.HTTP_200_OK
+
 
 ######################################################################
 # ADD AN ITEM TO A SHOPCART
