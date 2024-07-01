@@ -275,6 +275,43 @@ def add_shopcart_items(shopcart_id):
 # UPDATE A SHOPCART ITEM
 ######################################################################
 
+@app.route("/shopcarts/<int:shopcart_id>/items/<int:item_id>", methods=["PUT"])
+def update_item_in_shopcart(shopcart_id, item_id):
+    """
+    Update an item in shopcart
+
+    This endpoint will update a item in a specific shopcart
+    """
+    app.logger.info("Request to update an item with id [%s] in shopcart with id [%s]", item_id, shopcart_id)
+    check_content_type("application/json")
+
+    #Check if shopcart exists
+    shopcart = Shopcart.find(shopcart_id)
+    if not shopcart:
+        error(
+            status.HTTP_404_NOT_FOUND,
+            f"Shopcart item with id '{item_id}' was not found in shopcart '{shopcart_id}.",
+        )
+
+    data = request.get_json()
+    app.logger.info("Processing: %s", data)
+
+    # Attempt to find the item and abort if not found
+    item = ShopcartItem.find_by_product_id_shopcart_id(data["product_id"], shopcart_id)
+    if not item:
+        abort(
+            status.HTTP_404_NOT_FOUND, 
+            f"Item with id '{item_id}' was not found in shopcart '{shopcart_id}'."
+        )
+    
+    # Update the item with the new data
+    item.deserialize(data)
+
+    # Save the updates to the database
+    item.update()
+
+    app.logger.info("Item with ID: %d in shopcart %d updated.", item_id, shopcart_id)
+    return jsonify(item.serialize()), status.HTTP_200_OK
 
 ######################################################################
 # DELETE ALL ITEMS IN A SHOPCART

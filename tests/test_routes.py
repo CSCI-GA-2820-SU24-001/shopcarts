@@ -353,6 +353,53 @@ class TestShopcartService(TestCase):
             resp.data.decode(),
         )
 
+    def test_update_shopcart_item(self):
+        """It should Update an existing item in a shopcart"""
+        # create a shopcart and item to update
+        test_shopcart = self._create_shopcarts(1)[0]
+        test_item = self._create_items(test_shopcart.id, 1)[0]
+        test_shopcart.items.append(test_item)
+        test_shopcart.update()
+        logging.debug("Test item: %s", test_item.serialize())
+        response = self.client.post(f"{BASE_URL}/{test_shopcart.id}/items", json=test_item.serialize())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # update the item
+        updated_quantity = 999
+        test_item.quantity = updated_quantity
+        response = self.client.put(
+            f"{BASE_URL}/{test_shopcart.id}/items/{test_item.id}", json=test_item.serialize(), content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # check quantity was updated
+        updated_item = response.get_json()
+        logging.debug(updated_item)
+        self.assertEqual(updated_item["name"], test_item.name)
+        self.assertEqual(updated_item["quantity"], updated_quantity)
+
+        # Fetch updated shopcart item and verify
+        response = self.client.get(f"{BASE_URL}/{test_shopcart.id}/items/{test_item.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        item = response.get_json()
+        self.assertEqual(item["name"], test_item.name)
+        self.assertEqual(item["quantity"], updated_quantity)
+
+    def test_update_shopcart_item_not_found(self):
+        """It should not update a Shopcart item that's not found"""
+        # create a Shopcart and item to update
+        test_shopcart = ShopcartFactory()
+        test_item = ShopcartItemFactory(shopcart=test_shopcart)
+
+        resp = self.client.put(
+            f"{BASE_URL}/{test_shopcart.id}/items/{test_item.id}", content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertIn(
+            f"Shopcart item with id '{test_item.id}' was not found in shopcart '{test_shopcart.id}.",
+            resp.data.decode(),
+        )
+
     ######################################################################
     #  U T I L I T Y   F U N C T I O N   T E S T   C A S E S
     ######################################################################
@@ -374,3 +421,13 @@ class TestShopcartService(TestCase):
 
         resp = self.client.put(f"{BASE_URL}/{test_shopcart.id}")
         self.assertEqual(resp.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+
+    def test_bad_request(self):
+        """It should not create when sending the wrong data"""
+        resp = self.client.post(BASE_URL, json={"name": "not enough data"})
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        
+    def test_method_not_allowed(self):
+        """It should not allow an illegal method call"""
+        resp = self.client.put(BASE_URL, json={"not": "today"})
+        self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
