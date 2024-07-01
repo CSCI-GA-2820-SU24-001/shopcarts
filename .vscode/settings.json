@@ -1,13 +1,16 @@
 {
     "cSpell.words": [
+        "backref",
+        "CSCI",
+        "devcontainers",
+        "dunder",
+        "jsonify",
+        "psycopg",
+        "pyproject",
         "Rofrano",
         "Shopcart",
         "Shopcarts",
         "sqlalchemy",
-        "psycopg",
-        "testdb",
-        "jsonify",
-        "dunder",
-        "backref"
+        "testdb"
     ]
 }
