@@ -10,6 +10,7 @@ from wsgi import app
 from service.models import Shopcart, ShopcartItem, DataValidationError, db
 from tests.factories import ShopcartFactory, ShopcartItemFactory
 
+# pylint: disable=duplicate-code
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql+psycopg://postgres:postgres@localhost:5432/postgres"
 )
