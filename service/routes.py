@@ -336,7 +336,7 @@ def update_shopcart_items(shopcart_id, item_id):
     if not item:
         error(
             status.HTTP_404_NOT_FOUND,
-            f"Item with id '{item_id}' was not found in Shopcart with id '{shopcart_id}'."
+            f"Item with id '{item_id}' was not found in Shopcart with id '{shopcart_id}'.",
         )
 
     # Update the item with the new data
@@ -348,7 +348,9 @@ def update_shopcart_items(shopcart_id, item_id):
     # update the total price of the shopcart
     shopcart.calculate_total_price()
 
-    app.logger.info("Item with id [%s] in Shopcart with id [%s] updated!", item_id, shopcart.id)
+    app.logger.info(
+        "Item with id [%s] in Shopcart with id [%s] updated!", item_id, shopcart.id
+    )
 
     return jsonify(item.serialize()), status.HTTP_200_OK
 

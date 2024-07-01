@@ -388,6 +388,8 @@ class TestModelQueries(TestCaseBase):
         shopcart.create()
 
         # Read it back
-        found_shopcart_item = ShopcartItem.find_by_product_id_shopcart_id(shopcart_item.product_id, shopcart.id)
+        found_shopcart_item = ShopcartItem.find_by_product_id_shopcart_id(
+            shopcart_item.product_id, shopcart.id
+        )
         self.assertEqual(found_shopcart_item.id, shopcart_item.id)
         self.assertEqual(found_shopcart_item.quantity, shopcart_item.quantity)
