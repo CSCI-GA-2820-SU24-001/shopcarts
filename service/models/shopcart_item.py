@@ -31,9 +31,7 @@ class ShopcartItem(db.Model, PersistentBase):
         return f"<ShopcartItem {self.name} id=[{self.id}] shopcart_id=[{self.shopcart_id}]>"
 
     def __str__(self):
-        return (
-            f"{self.name}: {self.product_id}, {self.quantity}, {self.price}"
-        )
+        return f"{self.name}: {self.product_id}, {self.quantity}, {self.price}"
 
     def serialize(self) -> dict:
         """Converts a ShopcartItem into a dictionary"""
@@ -62,16 +60,14 @@ class ShopcartItem(db.Model, PersistentBase):
                 self.quantity = data["quantity"]
             else:
                 raise TypeError(
-                    "Invalid type for int [quantity]: "
-                    + str(type(data["quantity"]))
+                    "Invalid type for int [quantity]: " + str(type(data["quantity"]))
                 )
 
             if isinstance(data["price"], (int, float)):
                 self.price = data["price"]
             else:
                 raise TypeError(
-                    "Invalid type for int/float [price]: "
-                    + str(type(data["price"]))
+                    "Invalid type for int/float [price]: " + str(type(data["price"]))
                 )
         except AttributeError as error:
             raise DataValidationError("Invalid attribute: " + error.args[0]) from error
@@ -120,7 +116,9 @@ class ShopcartItem(db.Model, PersistentBase):
             shopcart_id (string): the shopcart_id of the ShopcartItem you want to match
         """
         logger.info("Processing product_id query for %s", product_id)
-        return cls.query.filter(cls.product_id == product_id, cls.shopcart_id == shopcart_id).first()
+        return cls.query.filter(
+            cls.product_id == product_id, cls.shopcart_id == shopcart_id
+        ).first()
 
     @classmethod
     def find_by_name(cls, name):

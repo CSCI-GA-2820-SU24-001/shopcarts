@@ -427,14 +427,18 @@ class TestShopcartService(TestCase):
         test_shopcart.items.append(test_item)
         test_shopcart.update()
         logging.debug("Test item: %s", test_item.serialize())
-        response = self.client.post(f"{BASE_URL}/{test_shopcart.id}/items", json=test_item.serialize())
+        response = self.client.post(
+            f"{BASE_URL}/{test_shopcart.id}/items", json=test_item.serialize()
+        )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # update the item
         updated_quantity = 999
         test_item.quantity = updated_quantity
         response = self.client.put(
-            f"{BASE_URL}/{test_shopcart.id}/items/{test_item.id}", json=test_item.serialize(), content_type="application/json"
+            f"{BASE_URL}/{test_shopcart.id}/items/{test_item.id}",
+            json=test_item.serialize(),
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -445,7 +449,9 @@ class TestShopcartService(TestCase):
         self.assertEqual(updated_item["quantity"], updated_quantity)
 
         # Fetch updated shopcart item and verify
-        response = self.client.get(f"{BASE_URL}/{test_shopcart.id}/items/{test_item.id}")
+        response = self.client.get(
+            f"{BASE_URL}/{test_shopcart.id}/items/{test_item.id}"
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         item = response.get_json()
         self.assertEqual(item["name"], test_item.name)
@@ -458,7 +464,9 @@ class TestShopcartService(TestCase):
         test_item = ShopcartItemFactory()
 
         resp = self.client.put(
-            f"{BASE_URL}/{test_shopcart.id}/items/{test_item.id}", json=test_item.serialize(), content_type="application/json"
+            f"{BASE_URL}/{test_shopcart.id}/items/{test_item.id}",
+            json=test_item.serialize(),
+            content_type="application/json",
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         self.assertIn(
@@ -473,7 +481,9 @@ class TestShopcartService(TestCase):
         test_item = ShopcartItemFactory()
 
         resp = self.client.put(
-            f"{BASE_URL}/{test_shopcart.id}/items/{test_item.id}", json=test_item.serialize(), content_type="application/json"
+            f"{BASE_URL}/{test_shopcart.id}/items/{test_item.id}",
+            json=test_item.serialize(),
+            content_type="application/json",
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         self.assertIn(

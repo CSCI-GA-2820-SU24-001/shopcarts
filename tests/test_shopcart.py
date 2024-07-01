@@ -173,12 +173,12 @@ class TestShopcartModel(TestCaseBase):
         shopcart = ShopcartFactory()
         items = [
             ShopcartItemFactory(price=10, quantity=1),
-            ShopcartItemFactory(price=20, quantity=2)
+            ShopcartItemFactory(price=20, quantity=2),
         ]
         shopcart.items.extend(items)
         shopcart.calculate_total_price()
 
-        self.assertEqual(shopcart.total_price, 10 + 20*2)
+        self.assertEqual(shopcart.total_price, 10 + 20 * 2)
 
     def test_models_repr_str(self):
         """It should have the correct repr and str for Shopcart"""
@@ -228,7 +228,17 @@ class TestDeserializeExceptionHandlers(TestCaseBase):
 
     def test_deserialize_missing_total_price(self):
         """It should not deserialize a Shopcart with missing total_price"""
-        data = {"items": [{"shopcart_id": 1, "name": "Product1", "product_id": 101, "quantity": 2, "price": 20.0}]}
+        data = {
+            "items": [
+                {
+                    "shopcart_id": 1,
+                    "name": "Product1",
+                    "product_id": 101,
+                    "quantity": 2,
+                    "price": 20.0,
+                }
+            ]
+        }
         shopcart = Shopcart()
         self.assertRaises(DataValidationError, shopcart.deserialize, data)
 
@@ -250,7 +260,15 @@ class TestDeserializeExceptionHandlers(TestCaseBase):
     def test_deserialize_bad_item(self):
         """It should not deserialize a bad item attribute"""
         data = ShopcartFactory().serialize()
-        data["items"] = [{"shopcart_id": 1, "name": "Product1", "product_id": 101, "quantity": "two", "price": 20.0}]
+        data["items"] = [
+            {
+                "shopcart_id": 1,
+                "name": "Product1",
+                "product_id": 101,
+                "quantity": "two",
+                "price": 20.0,
+            }
+        ]
         shopcart = Shopcart()
         self.assertRaises(DataValidationError, shopcart.deserialize, data)
 
