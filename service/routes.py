@@ -38,9 +38,6 @@ from service.common import status  # HTTP Status Codes
 @app.route("/")
 def index():
     """Root URL response"""
-
-
-
     return (
         jsonify(
             name="Shopcart REST API Service",
