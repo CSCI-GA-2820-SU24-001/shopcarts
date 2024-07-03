@@ -1,4 +1,4 @@
-# NYU DevOps Project Template
+# NYU DevOps Project - Shopcarts Squad
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/Language-Python-blue.svg)](https://python.org/)
@@ -71,7 +71,7 @@ This command will run the test suite using `pytest` and ensure that all the test
 To run the shopcarts service locally, you can use the following command:
 
 ```bash
-flask run
+honcho start
 ```
 
 The service will start and be accessible at `http://localhost:8000`. To change the port, update the environment variable in the `.flaskenv` file.
