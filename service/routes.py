@@ -175,8 +175,8 @@ def delete_shopcarts(shopcart_id):
     if shopcart:
         shopcart.delete()
         app.logger.info("Shopcart with id [%s] deleted!", shopcart_id)
-
-    app.logger.info("Shopcart with id [%s] not found!", shopcart_id)
+    else:
+        app.logger.info("Shopcart with id [%s] not found!", shopcart_id)
 
     return "", status.HTTP_204_NO_CONTENT
 
@@ -416,8 +416,8 @@ def delete_shopcart_items(shopcart_id, item_id):
         item.delete()
         shopcart.calculate_total_price()
         app.logger.info("Item with id [%s] deleted from Shopcart with id [%s]!", item_id, shopcart_id)
-
-    app.logger.info("Item with id [%s] not found in Shopcart with id [%s]!", item_id, shopcart_id)
+    else:
+        app.logger.info("Item with id [%s] not found in Shopcart with id [%s]!", item_id, shopcart_id)
 
     return "", status.HTTP_204_NO_CONTENT
 
