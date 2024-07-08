@@ -153,7 +153,7 @@ def update_shopcarts(shopcart_id):
     shopcart.id = shopcart_id
     shopcart.update()
 
-    app.logger.info("Shopcart with id [%s] updated!", shopcart.id)
+    app.logger.info("Shopcart with id [%s] updated!", shopcart_id)
 
     return jsonify(shopcart.serialize()), status.HTTP_200_OK
 
@@ -174,9 +174,9 @@ def delete_shopcarts(shopcart_id):
     shopcart = Shopcart.find(shopcart_id)
     if shopcart:
         shopcart.delete()
-        app.logger.info("Shopcart with id [%s] deleted!", shopcart.id)
+        app.logger.info("Shopcart with id [%s] deleted!", shopcart_id)
 
-    app.logger.info("Shopcart with id [%s] not found!", shopcart.id)
+    app.logger.info("Shopcart with id [%s] not found!", shopcart_id)
 
     return "", status.HTTP_204_NO_CONTENT
 
@@ -207,7 +207,7 @@ def list_shopcart_items(shopcart_id):
     items = [item.serialize() for item in shopcart.items]
 
     app.logger.info(
-        "Returning [%s] Items in Shopcart with id [%s]", len(items), shopcart.id
+        "Returning [%s] Items in Shopcart with id [%s]", len(items), shopcart_id
     )
 
     return jsonify(items), status.HTTP_200_OK
@@ -245,7 +245,7 @@ def get_shopcart_items(shopcart_id, item_id):
         )
 
     app.logger.info(
-        "Returning Item with id [%s] in Shopcart with id [%s]", item.id, shopcart_id
+        "Returning Item with id [%s] in Shopcart with id [%s]", item_id, shopcart_id
     )
 
     return jsonify(item.serialize()), status.HTTP_200_OK
@@ -291,7 +291,7 @@ def add_shopcart_items(shopcart_id):
 
     # update the total price of the shopcart
     shopcart.calculate_total_price()
-    app.logger.info("Item with id [%s] saved!", item.id)
+    app.logger.info("Item with id [%s] saved in Shopcart with id [%s]!", item.id, shopcart_id)
 
     # Prepare a message to return
     message = item.serialize()
@@ -349,7 +349,7 @@ def update_shopcart_items(shopcart_id, item_id):
     shopcart.calculate_total_price()
 
     app.logger.info(
-        "Item with id [%s] in Shopcart with id [%s] updated!", item_id, shopcart.id
+        "Item with id [%s] in Shopcart with id [%s] updated!", item_id, shopcart_id
     )
 
     return jsonify(item.serialize()), status.HTTP_200_OK
@@ -382,7 +382,7 @@ def delete_all_shopcart_items(shopcart_id):
         item.delete()
     shopcart.calculate_total_price()
 
-    app.logger.info("Items in Shopcart with id [%s] deleted!", shopcart.id)
+    app.logger.info("Items in Shopcart with id [%s] deleted!", shopcart_id)
 
     return "", status.HTTP_204_NO_CONTENT
 
@@ -415,9 +415,9 @@ def delete_shopcart_items(shopcart_id, item_id):
     if item:
         item.delete()
         shopcart.calculate_total_price()
-        app.logger.info("Item with id [%s] deleted!", item.id)
+        app.logger.info("Item with id [%s] deleted from Shopcart with id [%s]!", item_id, shopcart_id)
 
-    app.logger.info("Item with id [%s] not found!", item.id)
+    app.logger.info("Item with id [%s] not found in Shopcart with id [%s]!", item_id, shopcart_id)
 
     return "", status.HTTP_204_NO_CONTENT
 

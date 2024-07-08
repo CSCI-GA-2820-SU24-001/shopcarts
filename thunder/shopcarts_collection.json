@@ -2,7 +2,7 @@
     "clientName": "Thunder Client",
     "collectionName": "Shopcarts Collection",
     "collectionId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
-    "dateExported": "2024-06-30T06:07:58.733Z",
+    "dateExported": "2024-07-08T18:09:44.205Z",
     "version": "1.2",
     "folders": [],
     "requests": [
@@ -11,11 +11,11 @@
             "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
             "containerId": "",
             "name": "Root URL",
-            "url": "http://localhost:8000/",
+            "url": "http://localhost:8080/",
             "method": "GET",
             "sortNum": 10000,
             "created": "2024-06-24T09:04:06.057Z",
-            "modified": "2024-06-24T09:04:06.057Z",
+            "modified": "2024-07-08T18:08:49.079Z",
             "headers": []
         },
         {
@@ -23,11 +23,11 @@
             "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
             "containerId": "",
             "name": "Create Shopcart",
-            "url": "http://localhost:8000/shopcarts",
+            "url": "http://localhost:8080/shopcarts",
             "method": "POST",
             "sortNum": 20000,
             "created": "2024-06-24T09:04:06.058Z",
-            "modified": "2024-06-30T05:54:19.581Z",
+            "modified": "2024-07-07T23:35:55.560Z",
             "headers": [
                 {
                     "name": "Content-Type",
@@ -45,11 +45,11 @@
             "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
             "containerId": "",
             "name": "Read Shopcart",
-            "url": "http://localhost:8000/shopcarts/1837",
+            "url": "http://localhost:8000/shopcarts/4957",
             "method": "GET",
             "sortNum": 30000,
             "created": "2024-06-24T09:04:06.059Z",
-            "modified": "2024-06-27T03:28:41.738Z",
+            "modified": "2024-07-01T05:46:13.128Z",
             "headers": [
                 {
                     "name": "Content-Type",
@@ -62,11 +62,11 @@
             "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
             "containerId": "",
             "name": "List Shopcarts",
-            "url": "http://localhost:8000/shopcarts",
+            "url": "http://localhost:8080/shopcarts",
             "method": "GET",
             "sortNum": 40000,
             "created": "2024-06-24T09:04:06.060Z",
-            "modified": "2024-06-24T09:05:04.928Z",
+            "modified": "2024-07-08T18:08:15.926Z",
             "headers": [
                 {
                     "name": "Content-Type",
@@ -79,11 +79,11 @@
             "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
             "containerId": "",
             "name": "Update Shopcart",
-            "url": "http://localhost:8000/shopcarts/1296",
+            "url": "http://localhost:8000/shopcarts/506",
             "method": "PUT",
             "sortNum": 50000,
             "created": "2024-06-24T09:04:06.061Z",
-            "modified": "2024-06-25T02:24:43.368Z",
+            "modified": "2024-07-07T20:05:13.186Z",
             "headers": [
                 {
                     "name": "Content-Type",
@@ -101,11 +101,11 @@
             "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
             "containerId": "",
             "name": "Delete Shopcart",
-            "url": "http://localhost:8000/shopcarts/2800",
+            "url": "http://localhost:8080/shopcarts/524",
             "method": "DELETE",
             "sortNum": 60000,
             "created": "2024-06-24T09:04:06.062Z",
-            "modified": "2024-06-28T23:05:34.540Z",
+            "modified": "2024-07-08T17:13:33.856Z",
             "headers": [
                 {
                     "name": "Content-Type",
@@ -118,11 +118,11 @@
             "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
             "containerId": "",
             "name": "Add Shopcart Item",
-            "url": "http://localhost:8000/shopcarts/3358/items",
+            "url": "http://localhost:8000/shopcarts/5067/items",
             "method": "POST",
             "sortNum": 70000,
             "created": "2024-06-24T09:04:06.063Z",
-            "modified": "2024-06-29T05:14:19.251Z",
+            "modified": "2024-07-03T22:58:35.132Z",
             "headers": [
                 {
                     "name": "Content-Type",
@@ -131,7 +131,7 @@
             ],
             "body": {
                 "type": "json",
-                "raw": "{\n    \"shopcart_id\": 3358,\n    \"product_id\": 45,\n    \"name\": \"i-45\",\n    \"quantity\": 1,\n    \"price\": 200\n}",
+                "raw": "{\n    \"shopcart_id\": 5067,\n    \"product_id\": 46,\n    \"name\": \"Orange\",\n    \"quantity\": 4,\n    \"price\": 2\n}",
                 "form": []
             }
         },
@@ -140,11 +140,11 @@
             "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
             "containerId": "",
             "name": "Read a specific Item in a Shopcart",
-            "url": "http://localhost:8000/shopcarts/1234/items/11",
+            "url": "http://localhost:8000/shopcarts/5066/items/4117",
             "method": "GET",
             "sortNum": 80000,
             "created": "2024-06-24T09:04:06.064Z",
-            "modified": "2024-06-24T09:08:33.807Z",
+            "modified": "2024-07-03T19:46:37.436Z",
             "headers": [
                 {
                     "name": "Content-Type",
@@ -157,11 +157,11 @@
             "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
             "containerId": "",
             "name": "List all Items in a Shopcart",
-            "url": "http://localhost:8000/shopcarts/1837/items",
+            "url": "http://localhost:8080/shopcarts/5066/items",
             "method": "GET",
             "sortNum": 90000,
             "created": "2024-06-24T09:04:06.065Z",
-            "modified": "2024-06-27T03:28:52.195Z",
+            "modified": "2024-07-07T23:37:52.485Z",
             "headers": [
                 {
                     "name": "Content-Type",
@@ -174,11 +174,11 @@
             "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
             "containerId": "",
             "name": "Update an Item in a Shopcart",
-            "url": "http://localhost:8000/shopcarts/1293/items/11",
+            "url": "http://localhost:8000/shopcarts/5066/items/4117",
             "method": "PUT",
             "sortNum": 100000,
             "created": "2024-06-24T09:04:06.066Z",
-            "modified": "2024-06-24T09:09:17.388Z",
+            "modified": "2024-07-03T19:47:15.515Z",
             "headers": [
                 {
                     "name": "Content-Type",
@@ -187,7 +187,7 @@
             ],
             "body": {
                 "type": "json",
-                "raw": "{\n    \"quantity\": 1\n}",
+                "raw": "{\n    \"name\": \"Apple\",\n    \"price\": 4.0,\n    \"product_id\": 45,\n    \"quantity\": 1,\n    \"shopcart_id\": 5066\n}",
                 "form": []
             }
         },
@@ -196,11 +196,11 @@
             "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
             "containerId": "",
             "name": "Delete all items from a Shopcart",
-            "url": "http://localhost:8000/shopcarts/4147/items",
+            "url": "http://localhost:8080/shopcarts/49/items",
             "method": "DELETE",
             "sortNum": 110000,
             "created": "2024-06-24T09:04:06.067Z",
-            "modified": "2024-06-30T06:07:22.729Z",
+            "modified": "2024-07-08T18:08:05.905Z",
             "headers": [
                 {
                     "name": "Content-Type",
@@ -213,11 +213,11 @@
             "colId": "a0812dcb-8424-4047-bd66-e8d968f5e7e3",
             "containerId": "",
             "name": "Delete a specific item from a Shopcart Copy",
-            "url": "http://localhost:8000/shopcarts/4041/items/50",
+            "url": "http://localhost:8080/shopcarts/5321/items/53",
             "method": "DELETE",
             "sortNum": 120000,
             "created": "2024-06-24T09:04:06.069Z",
-            "modified": "2024-06-30T05:48:46.806Z",
+            "modified": "2024-07-08T18:08:40.623Z",
             "headers": [
                 {
                     "name": "Content-Type",
@@ -226,5 +226,5 @@
             ]
         }
     ],
-    "ref": "IZWv-R7g-Oo6rldkg_QV_vmt9Ci_lkrpfEUJZTYgekG3A0h4N8wQhGMb3DJMBey6acrS40ZmI2pKS70RoS8cOw"
+    "ref": "IZWv-R7g-Oo6rldkg_QV_pkfBZhyhuisHCpDYxB-1FrF2BOBdxEE3XdSiN5sPBa4nBMJ39pj1CHb5Bq89XsJ6w"
 }
