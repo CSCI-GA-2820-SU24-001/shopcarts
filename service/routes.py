@@ -23,8 +23,46 @@ and Delete Shopcarts
 
 from flask import jsonify, request, url_for, abort
 from flask import current_app as app  # Import Flask application
+from flask_restx import reqparse
 from service.models import Shopcart, ShopcartItem
 from service.common import status  # HTTP Status Codes
+
+
+######################################################################
+#  Q U E R Y  S T R I N G  A R G U M E N T S
+######################################################################
+
+shopcart_args = reqparse.RequestParser()
+shopcart_args.add_argument(
+    "product_id",
+    type=int,
+    location="args",
+    required=False,
+    help="Product ID of the Items in the Shopcart",
+)
+shopcart_args.add_argument(
+    "name",
+    type=str,
+    location="args",
+    required=False,
+    help="Name of the Items in the Shopcart"
+)
+
+shopcartItem_args = reqparse.RequestParser()
+shopcartItem_args.add_argument(
+    "product_id",
+    type=int,
+    location="args",
+    required=False,
+    help="Product ID of the Item",
+)
+shopcartItem_args.add_argument(
+    "name",
+    type=str,
+    location="args",
+    required=False,
+    help="Name of the Item",
+)
 
 
 ######################################################################
@@ -204,7 +242,18 @@ def list_shopcart_items(shopcart_id):
             f"Shopcart with id '{shopcart_id}' was not found.",
         )
 
-    items = [item.serialize() for item in shopcart.items]
+    # Get the query parameters
+    args = shopcartItem_args.parse_args()
+    product_id = args.get("product_id")
+    name = args.get("name")
+
+    items = shopcart.items
+    if product_id:
+        items = [item for item in items if item.product_id == product_id]
+    if name:
+        items = [item for item in items if item.name == name]
+
+    items = [item.serialize() for item in items]
 
     app.logger.info(
         "Returning [%s] Items in Shopcart with id [%s]", len(items), shopcart_id

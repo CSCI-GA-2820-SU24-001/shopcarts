@@ -103,7 +103,7 @@ class TestShopcartService(TestCase):
         response = self.client.get(f"{BASE_URL}/{test_shopcart.id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_get_shopcart_not_found(self):
+    def test_get_shopcart_when_shopcart_not_found(self):
         """It should not get a Shopcart that's not found"""
         response = self.client.get(f"{BASE_URL}/0")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
@@ -169,7 +169,7 @@ class TestShopcartService(TestCase):
             updated_shopcart["total_price"], test_shopcart.total_price + 100
         )
 
-    def test_update_shopcart_not_found(self):
+    def test_update_shopcart_when_shopcart_not_found(self):
         """It should not update a Shopcart that's not found"""
         # create a Shopcart to update
         test_shopcart = ShopcartFactory()
@@ -206,7 +206,7 @@ class TestShopcartService(TestCase):
         data = response.get_json()
         self.assertEqual(len(data), 2)
 
-    def test_list_all_items_in_shopcart_not_found(self):
+    def test_list_all_items_in_shopcart_when_shopcart_not_found(self):
         """It should not list all Items in a Shopcart that's not found"""
         # Create a shopcart
         test_shopcart = ShopcartFactory()
@@ -216,6 +216,51 @@ class TestShopcartService(TestCase):
             f"Shopcart with id '{test_shopcart.id}' was not found.",
             resp.data.decode(),
         )
+
+    def test_get_item_in_shopcart(self):
+        """It should get a single Item in a Shopcart"""
+        # get the id of an item in a shopcart
+        test_shopcart = self._create_shopcarts(1)[0]
+        test_item = self._create_items(test_shopcart.id, 1)[0]
+        test_shopcart.items.append(test_item)
+        test_shopcart.update()
+
+        response = self.client.get(
+            f"{BASE_URL}/{test_shopcart.id}/items/{test_item.id}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(data["name"], test_item.name)
+
+    def test_get_item_in_shopcart_when_shopcart_not_found(self):
+        """It should not get a Item from a Shopcart that's not found"""
+        # Create a shopcart
+        test_shopcart = ShopcartFactory()
+        # Create an item but not in shopcart
+        test_item = ShopcartItemFactory()
+        response = self.client.get(
+            f"{BASE_URL}/{test_shopcart.id}/items/{test_item.id}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        data = response.get_json()
+        logging.debug("Response data = %s", data)
+        print("Response data = %s", data)
+        print("TEST")
+        self.assertIn("was not found", data["message"])
+
+    def test_get_item_in_shopcart_when_item_not_found(self):
+        """It should not get a Item that's not found"""
+        # Create a shopcart
+        test_shopcart = self._create_shopcarts(1)[0]
+        # Create an item but not in shopcart
+        test_item = ShopcartItemFactory()
+        response = self.client.get(
+            f"{BASE_URL}/{test_shopcart.id}/items/{test_item.id}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        data = response.get_json()
+        logging.debug("Response data = %s", data)
+        self.assertIn("was not found", data["message"])
 
     def test_add_shopcart_item(self):
         """It should add an Item to a Shopcart"""
@@ -251,51 +296,6 @@ class TestShopcartService(TestCase):
         self.assertEqual(new_item["quantity"], item.quantity)
         self.assertEqual(new_item["price"], item.price)
         self.assertEqual(new_item["shopcart_id"], shopcart.id)
-
-    def test_get_item_in_shopcart(self):
-        """It should get a single Item in a Shopcart"""
-        # get the id of an item in a shopcart
-        test_shopcart = self._create_shopcarts(1)[0]
-        test_item = self._create_items(test_shopcart.id, 1)[0]
-        test_shopcart.items.append(test_item)
-        test_shopcart.update()
-
-        response = self.client.get(
-            f"{BASE_URL}/{test_shopcart.id}/items/{test_item.id}"
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = response.get_json()
-        self.assertEqual(data["name"], test_item.name)
-
-    def test_get_item_in_shopcart_not_found(self):
-        """It should not get a Item from a Shopcart that's not found"""
-        # Create a shopcart
-        test_shopcart = ShopcartFactory()
-        # Create an item but not in shopcart
-        test_item = ShopcartItemFactory()
-        response = self.client.get(
-            f"{BASE_URL}/{test_shopcart.id}/items/{test_item.id}"
-        )
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        data = response.get_json()
-        logging.debug("Response data = %s", data)
-        print("Response data = %s", data)
-        print("TEST")
-        self.assertIn("was not found", data["message"])
-
-    def test_get_item_in_shopcart_item_not_found(self):
-        """It should not get a Item that's not found"""
-        # Create a shopcart
-        test_shopcart = self._create_shopcarts(1)[0]
-        # Create an item but not in shopcart
-        test_item = ShopcartItemFactory()
-        response = self.client.get(
-            f"{BASE_URL}/{test_shopcart.id}/items/{test_item.id}"
-        )
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        data = response.get_json()
-        logging.debug("Response data = %s", data)
-        self.assertIn("was not found", data["message"])
 
     def test_add_existing_shopcart_item(self):
         """It should update the quantity if an existing Item is added to a Shopcart"""
@@ -339,79 +339,13 @@ class TestShopcartService(TestCase):
         self.assertEqual(items[0]["name"], item.name)
         self.assertEqual(items[0]["quantity"], initial_quantity + updated_quantity)
 
-    def test_add_shopcart_item_not_found(self):
+    def test_add_shopcart_item_when_shopcart_not_found(self):
         """It should not delete all Items in a Shopcart that's not found"""
         # Create a shopcart to delete
         test_shopcart = ShopcartFactory()
         test_item = ShopcartItemFactory(shopcart=test_shopcart)
         resp = self.client.post(
             f"{BASE_URL}/{test_shopcart.id}/items", json=test_item.serialize()
-        )
-        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
-        self.assertIn(
-            f"Shopcart with id '{test_shopcart.id}' was not found.",
-            resp.data.decode(),
-        )
-
-    def test_delete_all_items_in_shopcart(self):
-        """It should delete all Items in a Shopcart"""
-        # Create a shopcart with items
-        shopcart = self._create_shopcarts(1)[0]
-        self._create_items(shopcart.id, 2)
-
-        # Delete all items
-        response = self.client.delete(f"{BASE_URL}/{shopcart.id}/items")
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-
-        # Fetch the shopcart and ensure items are deleted
-        updated_shopcart = Shopcart.find(shopcart.id)
-        self.assertEqual(len(updated_shopcart.items), 0)
-        self.assertEqual(updated_shopcart.total_price, 0)
-
-    def test_delete_all_items_in_shopcart_not_found(self):
-        """It should not delete all Items in a Shopcart that's not found"""
-        # Create a shopcart to delete
-        test_shopcart = ShopcartFactory()
-
-        resp = self.client.delete(f"{BASE_URL}/{test_shopcart.id}/items")
-        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
-        self.assertIn(
-            f"Shopcart with id '{test_shopcart.id}' was not found.",
-            resp.data.decode(),
-        )
-
-    def test_delete_item_in_shopcart(self):
-        """It should delete an Item from a Shopcart"""
-        test_shopcart = self._create_shopcarts(1)[0]
-        test_item = self._create_items(test_shopcart.id, 2)[0]
-
-        # send delete request
-        resp = self.client.delete(
-            f"{BASE_URL}/{test_shopcart.id}/items/{test_item.id}",
-            content_type="application/json",
-        )
-        self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
-
-        # retrieve it back and make sure item is not there
-        resp = self.client.get(
-            f"{BASE_URL}/{test_shopcart.id}/items/{test_item.id}",
-            content_type="application/json",
-        )
-        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
-
-        # Fetch the shopcart and ensure item is deleted
-        updated_shopcart = Shopcart.find(test_shopcart.id)
-        self.assertEqual(len(updated_shopcart.items), 1)
-
-    def test_delete_item_in_shopcart_not_found(self):
-        """It should not delete an Item in a Shopcart that's not found"""
-        # Create a shopcart and item to delete
-        test_shopcart = ShopcartFactory()
-        test_item = ShopcartItemFactory()
-
-        resp = self.client.delete(
-            f"{BASE_URL}/{test_shopcart.id}/items/{test_item.id}",
-            content_type="application/json",
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         self.assertIn(
@@ -457,7 +391,7 @@ class TestShopcartService(TestCase):
         self.assertEqual(item["name"], test_item.name)
         self.assertEqual(item["quantity"], updated_quantity)
 
-    def test_update_shopcart_item_not_found(self):
+    def test_update_shopcart_item_when_shopcart_not_found(self):
         """It should not update an Item in a Shopcart that's not found"""
         # create a Shopcart and item to update
         test_shopcart = ShopcartFactory()
@@ -490,6 +424,109 @@ class TestShopcartService(TestCase):
             f"Item with id '{test_item.id}' was not found in Shopcart with id '{test_shopcart.id}'.",
             resp.data.decode(),
         )
+
+    def test_delete_all_items_in_shopcart(self):
+        """It should delete all Items in a Shopcart"""
+        # Create a shopcart with items
+        shopcart = self._create_shopcarts(1)[0]
+        self._create_items(shopcart.id, 2)
+
+        # Delete all items
+        response = self.client.delete(f"{BASE_URL}/{shopcart.id}/items")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        # Fetch the shopcart and ensure items are deleted
+        updated_shopcart = Shopcart.find(shopcart.id)
+        self.assertEqual(len(updated_shopcart.items), 0)
+        self.assertEqual(updated_shopcart.total_price, 0)
+
+    def test_delete_all_items_in_shopcart_when_shopcart_not_found(self):
+        """It should not delete all Items in a Shopcart that's not found"""
+        # Create a shopcart to delete
+        test_shopcart = ShopcartFactory()
+
+        resp = self.client.delete(f"{BASE_URL}/{test_shopcart.id}/items")
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertIn(
+            f"Shopcart with id '{test_shopcart.id}' was not found.",
+            resp.data.decode(),
+        )
+
+    def test_delete_item_in_shopcart(self):
+        """It should delete an Item from a Shopcart"""
+        test_shopcart = self._create_shopcarts(1)[0]
+        test_item = self._create_items(test_shopcart.id, 2)[0]
+
+        # send delete request
+        resp = self.client.delete(
+            f"{BASE_URL}/{test_shopcart.id}/items/{test_item.id}",
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
+
+        # retrieve it back and make sure item is not there
+        resp = self.client.get(
+            f"{BASE_URL}/{test_shopcart.id}/items/{test_item.id}",
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+        # Fetch the shopcart and ensure item is deleted
+        updated_shopcart = Shopcart.find(test_shopcart.id)
+        self.assertEqual(len(updated_shopcart.items), 1)
+
+    def test_delete_item_in_shopcart_when_shopcart_not_found(self):
+        """It should not delete an Item in a Shopcart that's not found"""
+        # Create a shopcart and item to delete
+        test_shopcart = ShopcartFactory()
+        test_item = ShopcartItemFactory()
+
+        resp = self.client.delete(
+            f"{BASE_URL}/{test_shopcart.id}/items/{test_item.id}",
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertIn(
+            f"Shopcart with id '{test_shopcart.id}' was not found.",
+            resp.data.decode(),
+        )
+
+    def test_query_shopcart_items_with_product_id(self):
+        """It should return a list of all Items in a Shopcart filtered by product_id"""
+        # Create a shopcart with items
+        shopcart = self._create_shopcarts(1)[0]
+        items = self._create_items(shopcart.id, 5)
+
+        response = self.client.get(f"{BASE_URL}/{shopcart.id}/items?product_id={items[0].product_id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]["product_id"], items[0].product_id)
+
+    def test_query_shopcart_items_with_name(self):
+        """It should return a list of all Items in a Shopcart filtered by name"""
+        # Create a shopcart with items
+        shopcart = self._create_shopcarts(1)[0]
+        items = self._create_items(shopcart.id, 5)
+
+        response = self.client.get(f"{BASE_URL}/{shopcart.id}/items?name={items[0].name}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]["name"], items[0].name)
+
+    def test_query_shopcart_items_with_product_id_and_name(self):
+        """It should return a list of all Items in a Shopcart filtered by product_id and name"""
+        # Create a shopcart with items
+        shopcart = self._create_shopcarts(1)[0]
+        items = self._create_items(shopcart.id, 5)
+
+        response = self.client.get(f"{BASE_URL}/{shopcart.id}/items?product_id={items[0].product_id}&name={items[0].name}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]["product_id"], items[0].product_id)
+        self.assertEqual(data[0]["name"], items[0].name)
 
     ######################################################################
     #  U T I L I T Y   F U N C T I O N   T E S T   C A S E S

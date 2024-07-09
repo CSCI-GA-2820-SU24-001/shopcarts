@@ -7,6 +7,8 @@
         "jsonify",
         "psycopg",
         "pyproject",
+        "reqparse",
+        "restx",
         "Rofrano",
         "Shopcart",
         "Shopcarts",
