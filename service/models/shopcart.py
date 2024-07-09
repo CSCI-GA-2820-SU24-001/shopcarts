@@ -20,7 +20,7 @@ class Shopcart(db.Model, PersistentBase):
     # Table Schema
     ##################################################
     id = db.Column(db.Integer, primary_key=True)
-    total_price = db.Column(db.Float())
+    total_price = db.Column(db.Numeric(scale=2))
     items = db.relationship("ShopcartItem", backref="shopcart", passive_deletes=True)
 
     def __repr__(self):
@@ -46,6 +46,11 @@ class Shopcart(db.Model, PersistentBase):
         """
         try:
             if isinstance(data["total_price"], (int, float)):
+                if data["total_price"] < 0:
+                    raise ValueError(
+                        "Invalid value for [total_price], must be non-negative: "
+                        + str(data["total_price"])
+                    )
                 self.total_price = data["total_price"]
             else:
                 raise TypeError(
@@ -66,6 +71,11 @@ class Shopcart(db.Model, PersistentBase):
                 "Invalid Shopcart: missing " + error.args[0]
             ) from error
         except TypeError as error:
+            raise DataValidationError(
+                "Invalid Shopcart: body of request contained bad or no data "
+                + str(error)
+            ) from error
+        except ValueError as error:
             raise DataValidationError(
                 "Invalid Shopcart: body of request contained bad or no data "
                 + str(error)

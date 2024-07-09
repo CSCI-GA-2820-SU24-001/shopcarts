@@ -17,7 +17,7 @@ class ShopcartFactory(Factory):
         model = Shopcart
 
     id = Sequence(lambda n: n)
-    total_price = FuzzyFloat(0.1, 51.0)
+    total_price = FuzzyFloat(0, 200, precision=2)
 
     @post_generation
     def items(
@@ -45,5 +45,5 @@ class ShopcartItemFactory(Factory):
     product_id = Sequence(lambda n: n)
     name = Sequence(lambda n: f"i-{n}")
     quantity = FuzzyInteger(1, 10)
-    price = FuzzyFloat(0.1, 51.0)
+    price = FuzzyFloat(0, 20, precision=2)
     shopcart = SubFactory(ShopcartFactory)

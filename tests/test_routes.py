@@ -134,8 +134,8 @@ class TestShopcartService(TestCase):
         # Check the data is correct
         new_shopcart = resp.get_json()
         self.assertEqual(
-            float(new_shopcart["total_price"]),
-            float(shopcart.total_price),
+            new_shopcart["total_price"],
+            shopcart.total_price,
             "Total Price does not match",
         )
         self.assertEqual(new_shopcart["items"], shopcart.items, "Items does not match")
@@ -145,8 +145,8 @@ class TestShopcartService(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         new_shopcart = resp.get_json()
         self.assertEqual(
-            float(new_shopcart["total_price"]),
-            float(shopcart.total_price),
+            new_shopcart["total_price"],
+            shopcart.total_price,
             "Total Price does not match",
         )
         self.assertEqual(new_shopcart["items"], shopcart.items, "Items does not match")
@@ -497,7 +497,9 @@ class TestShopcartService(TestCase):
         shopcart = self._create_shopcarts(1)[0]
         items = self._create_items(shopcart.id, 5)
 
-        response = self.client.get(f"{BASE_URL}/{shopcart.id}/items?product_id={items[0].product_id}")
+        response = self.client.get(
+            f"{BASE_URL}/{shopcart.id}/items?product_id={items[0].product_id}"
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
         self.assertEqual(len(data), 1)
@@ -509,7 +511,9 @@ class TestShopcartService(TestCase):
         shopcart = self._create_shopcarts(1)[0]
         items = self._create_items(shopcart.id, 5)
 
-        response = self.client.get(f"{BASE_URL}/{shopcart.id}/items?name={items[0].name}")
+        response = self.client.get(
+            f"{BASE_URL}/{shopcart.id}/items?name={items[0].name}"
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
         self.assertEqual(len(data), 1)
@@ -521,7 +525,9 @@ class TestShopcartService(TestCase):
         shopcart = self._create_shopcarts(1)[0]
         items = self._create_items(shopcart.id, 5)
 
-        response = self.client.get(f"{BASE_URL}/{shopcart.id}/items?product_id={items[0].product_id}&name={items[0].name}")
+        response = self.client.get(
+            f"{BASE_URL}/{shopcart.id}/items?product_id={items[0].product_id}&name={items[0].name}"
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
         self.assertEqual(len(data), 1)
