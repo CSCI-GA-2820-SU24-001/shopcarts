@@ -59,7 +59,7 @@ jobs:
       - name: Run unit tests with PyTest
         run: |
           export FLASK_APP=service:app
-          pytest --pspec --cov=service --cov-fail-under=95
+          pytest --pspec --cov=service --cov-fail-under=95 --disable-warnings
         env:
           DATABASE_URI: "postgresql+psycopg://postgres:pgs3cr3t@postgres:5432/testdb"
 
