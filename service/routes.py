@@ -45,7 +45,7 @@ shopcart_args.add_argument(
     type=str,
     location="args",
     required=False,
-    help="Name of the Items in the Shopcart"
+    help="Name of the Items in the Shopcart",
 )
 
 shopcartItem_args = reqparse.RequestParser()
@@ -340,7 +340,9 @@ def add_shopcart_items(shopcart_id):
 
     # update the total price of the shopcart
     shopcart.calculate_total_price()
-    app.logger.info("Item with id [%s] saved in Shopcart with id [%s]!", item.id, shopcart_id)
+    app.logger.info(
+        "Item with id [%s] saved in Shopcart with id [%s]!", item.id, shopcart_id
+    )
 
     # Prepare a message to return
     message = item.serialize()
@@ -464,9 +466,17 @@ def delete_shopcart_items(shopcart_id, item_id):
     if item:
         item.delete()
         shopcart.calculate_total_price()
-        app.logger.info("Item with id [%s] deleted from Shopcart with id [%s]!", item_id, shopcart_id)
+        app.logger.info(
+            "Item with id [%s] deleted from Shopcart with id [%s]!",
+            item_id,
+            shopcart_id,
+        )
     else:
-        app.logger.info("Item with id [%s] not found in Shopcart with id [%s]!", item_id, shopcart_id)
+        app.logger.info(
+            "Item with id [%s] not found in Shopcart with id [%s]!",
+            item_id,
+            shopcart_id,
+        )
 
     return "", status.HTTP_204_NO_CONTENT
 

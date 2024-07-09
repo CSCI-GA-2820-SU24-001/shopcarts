@@ -25,7 +25,7 @@ class ShopcartItem(db.Model, PersistentBase):
     product_id = db.Column(db.Integer)
     name = db.Column(db.String(64))
     quantity = db.Column(db.Integer)
-    price = db.Column(db.Float())
+    price = db.Column(db.Numeric(scale=2))
 
     def __repr__(self):
         return f"<ShopcartItem {self.name} id=[{self.id}] shopcart_id=[{self.shopcart_id}]>"
@@ -57,6 +57,11 @@ class ShopcartItem(db.Model, PersistentBase):
             self.product_id = data["product_id"]
 
             if isinstance(data["quantity"], int):
+                if data["quantity"] < 0:
+                    raise ValueError(
+                        "Invalid value for [quantity], must be non-negative: "
+                        + str(data["quantity"])
+                    )
                 self.quantity = data["quantity"]
             else:
                 raise TypeError(
@@ -64,6 +69,11 @@ class ShopcartItem(db.Model, PersistentBase):
                 )
 
             if isinstance(data["price"], (int, float)):
+                if data["price"] < 0:
+                    raise ValueError(
+                        "Invalid value for [price], must be non-negative: "
+                        + str(type(data["price"]))
+                    )
                 self.price = data["price"]
             else:
                 raise TypeError(
@@ -76,6 +86,11 @@ class ShopcartItem(db.Model, PersistentBase):
                 "Invalid ShopcartItem: missing " + error.args[0]
             ) from error
         except TypeError as error:
+            raise DataValidationError(
+                "Invalid ShopcartItem: body of request contained bad or no data "
+                + str(error)
+            ) from error
+        except ValueError as error:
             raise DataValidationError(
                 "Invalid ShopcartItem: body of request contained bad or no data "
                 + str(error)

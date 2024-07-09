@@ -143,7 +143,7 @@ class TestShopcartModel(TestCaseBase):
         shopcart.items.append(shopcart_item)
         serial_shopcart = shopcart.serialize()
         self.assertEqual(serial_shopcart["id"], shopcart.id)
-        self.assertEqual(serial_shopcart["total_price"], float(shopcart.total_price))
+        self.assertEqual(serial_shopcart["total_price"], shopcart.total_price)
         self.assertEqual(len(serial_shopcart["items"]), 1)
         items = serial_shopcart["items"]
         self.assertEqual(items[0]["id"], shopcart_item.id)
@@ -151,7 +151,7 @@ class TestShopcartModel(TestCaseBase):
         self.assertEqual(items[0]["product_id"], shopcart_item.product_id)
         self.assertEqual(items[0]["name"], shopcart_item.name)
         self.assertEqual(items[0]["quantity"], shopcart_item.quantity)
-        self.assertEqual(items[0]["price"], float(shopcart_item.price))
+        self.assertEqual(items[0]["price"], shopcart_item.price)
 
     def test_deserialize_a_shopcart(self):
         """It should deserialize a Shopcart"""
@@ -254,6 +254,10 @@ class TestDeserializeExceptionHandlers(TestCaseBase):
         """It should not deserialize a bad total_price attribute"""
         data = ShopcartFactory().serialize()
         data["total_price"] = "fifty"
+        shopcart = Shopcart()
+        self.assertRaises(DataValidationError, shopcart.deserialize, data)
+
+        data["total_price"] = -1
         shopcart = Shopcart()
         self.assertRaises(DataValidationError, shopcart.deserialize, data)
 
