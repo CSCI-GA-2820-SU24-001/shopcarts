@@ -4,7 +4,7 @@ Models for Shopcarts
 The models for Shopcarts are stored in this module
 """
 
-from .persistent_base import db, PersistentBase, DataValidationError
+from .persistent_base import db, logger, PersistentBase, DataValidationError
 from .shopcart_item import ShopcartItem
 
 
@@ -20,7 +20,7 @@ class Shopcart(db.Model, PersistentBase):
     # Table Schema
     ##################################################
     id = db.Column(db.Integer, primary_key=True)
-    total_price = db.Column(db.Numeric(scale=2))
+    total_price = db.Column(db.Float())
     items = db.relationship("ShopcartItem", backref="shopcart", passive_deletes=True)
 
     def __repr__(self):
@@ -92,3 +92,40 @@ class Shopcart(db.Model, PersistentBase):
 
         self.total_price = total_price
         self.update()
+
+    ##################################################
+    # Class Methods
+    ##################################################
+
+    @classmethod
+    def find_by_item_product_id(cls, product_id):
+        """Returns all Shopcarts containing ShopcartItems with the given product_id
+
+        Args:
+            product_id (string): the product_id of the ShopcartItem you want to match
+        """
+        logger.info(
+            "Processing query for shopcarts containing items with product_id %s",
+            product_id,
+        )
+
+        items = ShopcartItem.query.filter(ShopcartItem.product_id == product_id).all()
+        shopcarts = [item.shopcart_id for item in items]
+
+        return cls.query.filter(cls.id.in_(shopcarts)).all()
+
+    @classmethod
+    def find_by_item_name(cls, name):
+        """Returns all Shopcarts containing ShopcartItems with the given name
+
+        Args:
+            name (string): the name of the ShopcartItem you want to match
+        """
+        logger.info(
+            "Processing query for shopcarts containing items with name %s", name
+        )
+
+        items = ShopcartItem.query.filter(ShopcartItem.name == name).all()
+        shopcarts = [item.shopcart_id for item in items]
+
+        return cls.query.filter(cls.id.in_(shopcarts)).all()

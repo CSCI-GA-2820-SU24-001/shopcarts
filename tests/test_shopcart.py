@@ -332,3 +332,66 @@ class TestExceptionHandlers(TestCaseBase):
         exception_mock.side_effect = Exception()
         shopcart = ShopcartFactory()
         self.assertRaises(DataValidationError, shopcart.delete)
+
+
+######################################################################
+#  Q U E R Y   T E S T   C A S E S
+######################################################################
+class TestModelQueries(TestCaseBase):
+    """Shopcart Model Query Tests"""
+
+    ######################################################################
+    #  T E S T   C A S E S
+    ######################################################################
+
+    def test_find_shopcart_by_item_product_id(self):
+        """It should find Shopcarts containing ShopcartItems with the given product_id"""
+        product_id = 1
+
+        shopcart1 = ShopcartFactory()
+        shopcart_item1 = ShopcartItemFactory(product_id=product_id, shopcart=shopcart1)
+        shopcart1.items.append(shopcart_item1)
+        shopcart1.create()
+
+        shopcart2 = ShopcartFactory()
+        shopcart_item2 = ShopcartItemFactory(product_id=product_id, shopcart=shopcart2)
+        shopcart2.items.append(shopcart_item2)
+        shopcart2.create()
+
+        shopcart3 = ShopcartFactory()
+        shopcart_item3 = ShopcartItemFactory(product_id=2, shopcart=shopcart2)
+        shopcart3.items.append(shopcart_item3)
+        shopcart3.create()
+
+        # Assert that there are 3 Shopcarts in the database
+        shopcarts = Shopcart.all()
+        self.assertEqual(len(shopcarts), 3)
+
+        # find the shopcarts with 2nd shopcartItem
+        shopcarts = Shopcart.find_by_item_product_id(product_id)
+        self.assertEqual(len(shopcarts), 2)
+
+    def test_find_shopcart_by_item_name(self):
+        """It should find Shopcarts containing ShopcartItems with the given name"""
+        shopcart1 = ShopcartFactory()
+        shopcart_item1 = ShopcartItemFactory(name="name", shopcart=shopcart1)
+        shopcart1.items.append(shopcart_item1)
+        shopcart1.create()
+
+        shopcart2 = ShopcartFactory()
+        shopcart_item2 = ShopcartItemFactory(name="name", shopcart=shopcart2)
+        shopcart2.items.append(shopcart_item2)
+        shopcart2.create()
+
+        shopcart3 = ShopcartFactory()
+        shopcart_item3 = ShopcartItemFactory(name="other", shopcart=shopcart2)
+        shopcart3.items.append(shopcart_item3)
+        shopcart3.create()
+
+        # Assert that there are 3 Shopcarts in the database
+        shopcarts = Shopcart.all()
+        self.assertEqual(len(shopcarts), 3)
+
+        # find the shopcarts with 2nd shopcartItem
+        shopcarts = Shopcart.find_by_item_name("name")
+        self.assertEqual(len(shopcarts), 2)
