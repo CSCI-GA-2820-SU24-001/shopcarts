@@ -20,7 +20,7 @@ class Shopcart(db.Model, PersistentBase):
     # Table Schema
     ##################################################
     id = db.Column(db.Integer, primary_key=True)
-    total_price = db.Column(db.Float())
+    total_price = db.Column(db.Numeric(scale=2))
     items = db.relationship("ShopcartItem", backref="shopcart", passive_deletes=True)
 
     def __repr__(self):
