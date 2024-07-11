@@ -2,7 +2,7 @@
     "clientName": "Thunder Client",
     "collectionName": "Shopcarts Collection",
     "collectionId": "b68c4ea6-4d74-4569-b96e-8e58cf78f03b",
-    "dateExported": "2024-07-09T05:35:36.168Z",
+    "dateExported": "2024-07-11T00:12:36.353Z",
     "version": "1.2",
     "folders": [],
     "requests": [
@@ -27,7 +27,7 @@
             "method": "POST",
             "sortNum": 20000,
             "created": "2024-07-09T05:04:28.853Z",
-            "modified": "2024-07-09T05:04:28.853Z",
+            "modified": "2024-07-10T23:06:49.264Z",
             "headers": [
                 {
                     "name": "Content-Type",
@@ -58,6 +58,23 @@
             ]
         },
         {
+            "_id": "13f38e83-6ed7-4e9c-bbf6-58963901e418",
+            "colId": "b68c4ea6-4d74-4569-b96e-8e58cf78f03b",
+            "containerId": "",
+            "name": "Checkout Shopcart",
+            "url": "http://localhost:8080/shopcarts/10604/checkout",
+            "method": "GET",
+            "sortNum": 35000,
+            "created": "2024-07-10T23:22:33.060Z",
+            "modified": "2024-07-11T00:09:35.263Z",
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ]
+        },
+        {
             "_id": "70129127-db00-4b84-9857-7b1128935f6c",
             "colId": "b68c4ea6-4d74-4569-b96e-8e58cf78f03b",
             "containerId": "",
@@ -79,15 +96,27 @@
             "colId": "b68c4ea6-4d74-4569-b96e-8e58cf78f03b",
             "containerId": "",
             "name": "Query Shopcarts",
-            "url": "http://localhost:8080/shopcarts",
+            "url": "http://localhost:8080/shopcarts?product_id=89&name=Orange",
             "method": "GET",
             "sortNum": 45000,
             "created": "2024-07-09T05:34:31.069Z",
-            "modified": "2024-07-09T05:34:31.069Z",
+            "modified": "2024-07-11T00:12:32.166Z",
             "headers": [
                 {
                     "name": "Content-Type",
                     "value": "application/json"
+                }
+            ],
+            "params": [
+                {
+                    "name": "product_id",
+                    "value": "89",
+                    "isPath": false
+                },
+                {
+                    "name": "name",
+                    "value": "Orange",
+                    "isPath": false
                 }
             ]
         },
@@ -118,11 +147,11 @@
             "colId": "b68c4ea6-4d74-4569-b96e-8e58cf78f03b",
             "containerId": "",
             "name": "Delete Shopcart",
-            "url": "http://localhost:8080/shopcarts/524",
+            "url": "http://localhost:8080/shopcarts/8762",
             "method": "DELETE",
             "sortNum": 60000,
             "created": "2024-07-09T05:04:28.858Z",
-            "modified": "2024-07-09T05:04:28.858Z",
+            "modified": "2024-07-10T23:06:44.264Z",
             "headers": [
                 {
                     "name": "Content-Type",
@@ -135,11 +164,11 @@
             "colId": "b68c4ea6-4d74-4569-b96e-8e58cf78f03b",
             "containerId": "",
             "name": "Add Shopcart Item",
-            "url": "http://localhost:8080/shopcarts/6196/items",
+            "url": "http://localhost:8080/shopcarts/8763/items",
             "method": "POST",
             "sortNum": 70000,
             "created": "2024-07-09T05:04:28.859Z",
-            "modified": "2024-07-09T05:05:09.140Z",
+            "modified": "2024-07-10T23:07:11.258Z",
             "headers": [
                 {
                     "name": "Content-Type",
@@ -148,7 +177,7 @@
             ],
             "body": {
                 "type": "json",
-                "raw": "{\n    \"shopcart_id\": 6196,\n    \"product_id\": 47,\n    \"name\": \"Apple\",\n    \"quantity\": 4,\n    \"price\": 4\n}",
+                "raw": "{\n    \"shopcart_id\": 8763,\n    \"product_id\": 2,\n    \"name\": \"Apple\",\n    \"quantity\": 4,\n    \"price\": 2\n}",
                 "form": []
             }
         },
@@ -174,11 +203,11 @@
             "colId": "b68c4ea6-4d74-4569-b96e-8e58cf78f03b",
             "containerId": "",
             "name": "List all Items in a Shopcart",
-            "url": "http://localhost:8080/shopcarts/6235/items",
+            "url": "http://localhost:8080/shopcarts/8118/items",
             "method": "GET",
             "sortNum": 90000,
             "created": "2024-07-09T05:04:28.861Z",
-            "modified": "2024-07-09T05:34:15.437Z",
+            "modified": "2024-07-10T22:21:51.928Z",
             "headers": [
                 {
                     "name": "Content-Type",
@@ -191,11 +220,11 @@
             "colId": "b68c4ea6-4d74-4569-b96e-8e58cf78f03b",
             "containerId": "",
             "name": "Query Items in a Shopcart",
-            "url": "http://localhost:8080/shopcarts/6196/items?product_id=46&name=Orange",
+            "url": "http://localhost:8080/shopcarts/8763/items?product_id=2&name=Apple",
             "method": "GET",
             "sortNum": 95000,
             "created": "2024-07-09T05:33:34.320Z",
-            "modified": "2024-07-09T05:33:34.320Z",
+            "modified": "2024-07-11T00:08:34.381Z",
             "headers": [
                 {
                     "name": "Content-Type",
@@ -205,12 +234,12 @@
             "params": [
                 {
                     "name": "product_id",
-                    "value": "46",
+                    "value": "2",
                     "isPath": false
                 },
                 {
                     "name": "name",
-                    "value": "Orange",
+                    "value": "Apple",
                     "isPath": false
                 }
             ]
@@ -272,5 +301,5 @@
             ]
         }
     ],
-    "ref": "3uyldd1SpZG8YrtAvHiL-4fDbIa7NI3YCocyO1RAB3UQ5HQo_7zGAiwKKZkm4Mm0fOI-mXS7eJAz07YtkUtMMQ"
+    "ref": "3uyldd1SpZG8YrtAvHiL-1wSgE-V4vP_53A4KsOYysdherbVint69COOC_2b9713TdARtR1YxmQ19D01gDbudA"
 }
