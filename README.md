@@ -3,6 +3,8 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/Language-Python-blue.svg)](https://python.org/)
 [![Build Status](https://github.com/CSCI-GA-2820-SU24-001/shopcarts/actions/workflows/workflow.yml/badge.svg)](https://github.com/CSCI-GA-2820-SU24-001/shopcarts/actions) 
+[![codecov](https://codecov.io/gh/CSCI-GA-2820-SU24-001/shopcarts/graph/badge.svg?token=ML2KBQH422)](https://codecov.io/gh/CSCI-GA-2820-SU24-001/shopcarts)
+
 ## Overview
 
 This project implements the shopcarts service, which allows customers to make a collection of products they want to purchase. The service includes a REST API that provides CRUD operations for managing shopcarts and the items within them.
