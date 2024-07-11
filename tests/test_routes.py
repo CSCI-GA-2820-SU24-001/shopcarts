@@ -191,7 +191,70 @@ class TestShopcartService(TestCase):
 
     #####################################################################
     #  S H O P C A R T   I T E M   T E S T   C A S E S
-    #####################################################################
+    ####################################################################
+    def test_query_shopcart_with_item_product_id(self):
+        """It should return a list of all Shopcarts filtered by Item product_id"""
+        # Create a shopcart with items
+        shopcarts = self._create_shopcarts(2)
+        items = self._create_items(shopcarts[0].id, 5)
+        response = self.client.post(
+            f"{BASE_URL}/{shopcarts[1].id}/items", json=items[0].serialize()
+        )
+        response = self.client.get(f"{BASE_URL}?product_id={items[0].product_id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), 2)
+        self.assertEqual(data[0]["id"], shopcarts[0].id)
+        self.assertEqual(data[1]["id"], shopcarts[1].id)
+        response = self.client.get(f"{BASE_URL}?product_id={items[1].product_id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]["id"], shopcarts[0].id)
+
+    def test_query_shopcart_with_item_name(self):
+        """It should return a list of all Shopcarts filtered by Item name"""
+        # Create a shopcart with items
+        shopcarts = self._create_shopcarts(2)
+        items = self._create_items(shopcarts[0].id, 5)
+        response = self.client.post(
+            f"{BASE_URL}/{shopcarts[1].id}/items", json=items[0].serialize()
+        )
+        response = self.client.get(f"{BASE_URL}?name={items[0].name}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), 2)
+        self.assertEqual(data[0]["id"], shopcarts[0].id)
+        self.assertEqual(data[1]["id"], shopcarts[1].id)
+        response = self.client.get(f"{BASE_URL}?name={items[1].name}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]["id"], shopcarts[0].id)
+
+    def test_query_shopcart_with__item_product_id_and_name(self):
+        """It should return a list of all Shopcarts filtered by Item product_id and name"""
+        # Create a shopcart with items
+        shopcarts = self._create_shopcarts(2)
+        items = self._create_items(shopcarts[0].id, 5)
+        response = self.client.post(
+            f"{BASE_URL}/{shopcarts[1].id}/items", json=items[0].serialize()
+        )
+        response = self.client.get(
+            f"{BASE_URL}?product_id={items[0].product_id}&name={items[0].name}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), 2)
+        self.assertEqual(data[0]["id"], shopcarts[0].id)
+        self.assertEqual(data[1]["id"], shopcarts[1].id)
+        response = self.client.get(
+            f"{BASE_URL}?product_id={items[1].product_id}&name={items[1].name}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]["id"], shopcarts[0].id)
 
     def test_list_all_items_in_shopcart(self):
         """It should return a list of all Items in a Shopcart"""
