@@ -99,12 +99,23 @@ def list_shopcarts():
     """Returns all of the Shopcarts"""
     app.logger.info("Request for Shopcarts list")
 
-    shopcarts = Shopcart.all()
-    results = [shopcart.serialize() for shopcart in shopcarts]
+    # Get the query parameters
+    args = shopcart_args.parse_args()
+    product_id = args.get("product_id")
+    name = args.get("name")
 
-    app.logger.info("Returning %d shopcarts", len(results))
+    shopcarts = []
+    if product_id:
+        shopcarts = Shopcart.find_by_item_product_id(product_id)
+    elif name:
+        shopcarts = Shopcart.find_by_item_name(name)
+    else:
+        shopcarts = Shopcart.all()
+    shopcarts = [shopcart.serialize() for shopcart in shopcarts]
 
-    return jsonify(results), status.HTTP_200_OK
+    app.logger.info("Returning %d shopcarts", len(shopcarts))
+
+    return jsonify(shopcarts), status.HTTP_200_OK
 
 
 ######################################################################
