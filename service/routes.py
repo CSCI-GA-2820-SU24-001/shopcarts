@@ -219,6 +219,35 @@ def delete_shopcarts(shopcart_id):
     return "", status.HTTP_204_NO_CONTENT
 
 
+######################################################################
+# CHECKOUT A SHOPCART
+######################################################################
+@app.route("/shopcarts/<int:shopcart_id>/checkout", methods=["GET"])
+def checkout_shopcart(shopcart_id):
+    """
+    Checkout a Shopcart
+
+    This endpoint will checkout a Shopcart based on its id
+    """
+    app.logger.info("Request to checkout Shopcart with id: %s", shopcart_id)
+
+    # Attempt to find the Shopcart and abort if not found
+    shopcart = Shopcart.find(shopcart_id)
+    if not shopcart:
+        error(
+            status.HTTP_404_NOT_FOUND,
+            f"Shopcart with id '{shopcart_id}' was not found.",
+        )
+    shopcart.calculate_total_price()
+
+    app.logger.info("Checked out Shopcart with id [%s], total price: %s", shopcart_id, shopcart.total_price)
+
+    return jsonify({
+        "id": shopcart.id,
+        "total_price": float(shopcart.total_price),
+    }), status.HTTP_200_OK
+
+
 # ---------------------------------------------------------------------
 #            S H O P C A R T   I T E M   M E T H O D S
 # ---------------------------------------------------------------------
