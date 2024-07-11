@@ -189,9 +189,6 @@ class TestShopcartService(TestCase):
         resp = self.client.delete(f"{BASE_URL}/{shopcart.id}")
         self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
 
-    #####################################################################
-    #  S H O P C A R T   I T E M   T E S T   C A S E S
-    ####################################################################
     def test_query_shopcart_with_item_product_id(self):
         """It should return a list of all Shopcarts filtered by Item product_id"""
         # Create a shopcart with items
@@ -232,7 +229,7 @@ class TestShopcartService(TestCase):
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]["id"], shopcarts[0].id)
 
-    def test_query_shopcart_with__item_product_id_and_name(self):
+    def test_query_shopcart_with_item_product_id_and_name(self):
         """It should return a list of all Shopcarts filtered by Item product_id and name"""
         # Create a shopcart with items
         shopcarts = self._create_shopcarts(2)
@@ -255,6 +252,32 @@ class TestShopcartService(TestCase):
         data = response.get_json()
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]["id"], shopcarts[0].id)
+
+    def test_checkout_shopcart(self):
+        """It should checkout a single Shopcart"""
+        shopcart = self._create_shopcarts(1)[0]
+        self._create_items(shopcart.id, 5)
+
+        response = self.client.get(f"{BASE_URL}/{shopcart.id}")
+        updated_shopcart = response.get_json()
+
+        response = self.client.get(f"{BASE_URL}/{shopcart.id}/checkout")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(data["id"], shopcart.id)
+        self.assertEqual(data["total_price"], updated_shopcart["total_price"])
+
+    def test_checkout_shopcart_when_shopcart_not_found(self):
+        """It should not checkout a Shopcart that's not found"""
+        response = self.client.get(f"{BASE_URL}/0/checkout")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        data = response.get_json()
+        self.assertIn("was not found", data["message"])
+
+    #####################################################################
+    #  S H O P C A R T   I T E M   T E S T   C A S E S
+    #####################################################################
 
     def test_list_all_items_in_shopcart(self):
         """It should return a list of all Items in a Shopcart"""
@@ -588,28 +611,6 @@ class TestShopcartService(TestCase):
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]["product_id"], items[0].product_id)
         self.assertEqual(data[0]["name"], items[0].name)
-
-    def test_checkout_shopcart(self):
-        """It should checkout a single Shopcart"""
-        shopcart = self._create_shopcarts(1)[0]
-        self._create_items(shopcart.id, 5)
-
-        response = self.client.get(f"{BASE_URL}/{shopcart.id}")
-        updated_shopcart = response.get_json()
-
-        response = self.client.get(f"{BASE_URL}/{shopcart.id}/checkout")
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = response.get_json()
-        self.assertEqual(data["id"], shopcart.id)
-        self.assertEqual(data["total_price"], updated_shopcart["total_price"])
-
-    def test_checkout_shopcart_when_shopcart_not_found(self):
-        """It should not checkout a Shopcart that's not found"""
-        response = self.client.get(f"{BASE_URL}/0/checkout")
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        data = response.get_json()
-        self.assertIn("was not found", data["message"])
 
     ######################################################################
     #  U T I L I T Y   F U N C T I O N   T E S T   C A S E S
