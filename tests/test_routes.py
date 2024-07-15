@@ -612,6 +612,12 @@ class TestShopcartService(TestCase):
         self.assertEqual(data[0]["product_id"], items[0].product_id)
         self.assertEqual(data[0]["name"], items[0].name)
 
+    def test_health(self):
+        """It should test health endpoint"""
+        resp = self.client.get("/health")
+        self.assertEqual(resp.status_code, 200)
+        data = resp.get_json()
+        self.assertEqual(data["status"], "OK")
     ######################################################################
     #  U T I L I T Y   F U N C T I O N   T E S T   C A S E S
     ######################################################################
