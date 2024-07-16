@@ -36,6 +36,12 @@ spec:
               secretKeyRef:
                 name: postgres-creds
                 key: database_uri
+        readinessProbe:
+          initialDelaySeconds: 10
+          periodSeconds: 60
+          httpGet:
+            path: /health
+            port: 8080
         resources:
           limits:
             cpu: "0.50"
