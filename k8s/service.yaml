@@ -8,9 +8,8 @@ spec:
   selector:
     app: shopcarts
   type: ClusterIP
-  internalTrafficPolicy: Cluster
   ports:
-    - name: 8080-tcp
+    - name: http
       protocol: TCP
       port: 8080
       targetPort: 8080
