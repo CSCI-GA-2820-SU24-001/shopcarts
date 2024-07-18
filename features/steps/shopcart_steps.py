@@ -36,8 +36,7 @@ def step_impl(context):
     # load the database with new shopcarts
     for row in context.table:
         payload = {
-            "id": row['id'],
-            "total_price": row['total_price'],
+            "total_price": float(row['total_price'])
         }
         context.resp = requests.post(rest_endpoint, json=payload, timeout=WAIT_TIMEOUT)
         expect(context.resp.status_code).equal_to(HTTP_201_CREATED)
@@ -52,18 +51,24 @@ def step_impl(context):
     context.resp = requests.get(rest_endpoint, timeout=WAIT_TIMEOUT)
     assert context.resp.status_code == HTTP_200_OK
     # and delete all shopcart items in the shopcarts one by one
+    shopcart_ids = []
     for shopcart in context.resp.json():
         context.resp = requests.delete(f"{rest_endpoint}/{shopcart['id']}/items", timeout=WAIT_TIMEOUT)
         expect(context.resp.status_code).equal_to(HTTP_204_NO_CONTENT)
+        shopcart_ids.append(shopcart["id"])
 
     # Load the database with new shopcart items
+    shopcart_index = 0  # Initialize index to assign shopcarts
     for row in context.table:
+        shopcart_id = shopcart_ids[shopcart_index]  # Get the shopcart ID by index
         payload = {
-            "product_id": row["product_id"],
-            "price": row["price"],
-            "quantity": row["quantity"],
+            "product_id": int(row["product_id"]),
+            "price": float(row["price"]),
+            "quantity": int(row["quantity"]),
             "name": row["name"],
-            "shopcart_id": row["customer_id"],
+            "shopcart_id": shopcart_id,
         }
-        context.resp = requests.post(f"{rest_endpoint}/shopcarts/{row['id']}/items", json=payload, timeout=WAIT_TIMEOUT)
+        context.resp = requests.post(f"{rest_endpoint}/{shopcart_id}/items", json=payload, timeout=WAIT_TIMEOUT)
         assert context.resp.status_code == HTTP_201_CREATED
+        # Move to the next shopcart after assigning an items to the current shopcart
+        shopcart_index = shopcart_index + 1

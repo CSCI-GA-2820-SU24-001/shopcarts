@@ -5,16 +5,17 @@ Feature: The shopcart service back-end
 
 Background:
     Given the following shopcarts
-        | id    | total_price |
-        | 1     | 1.0         |
-        | 2     | 2.0         |
-        | 3     | 3.0         |
+        | total_price |
+        | 0.0         |
+        | 0.0         |
+        | 0.0         |
+        | 0.0         |
     And the following shopcart items
-        | product_id  | price   | quantity | name        | shopcart_id |
-        | 1           | 1.0     | 2        | Apple       | 1           |
-        | 2           | 1.0     | 4        | Orange      | 1           |
-        | 3           | 3.0     | 3        | Chocolate   | 2           |
-        | 4           | 2.5     | 1        | Bread       | 3           |
+        | product_id  | price   | quantity | name        |
+        | 1           | 1.0     | 2        | Apple       |
+        | 2           | 1.0     | 4        | Orange      |
+        | 3           | 3.0     | 3        | Chocolate   |
+        | 4           | 2.5     | 1        | Bread       |
 
 Scenario: The server is running
     When I visit the "Home Page"
