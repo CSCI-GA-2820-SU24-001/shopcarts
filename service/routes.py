@@ -75,15 +75,8 @@ shopcartItem_args.add_argument(
 ######################################################################
 @app.route("/")
 def index():
-    """Root URL response"""
-    return (
-        jsonify(
-            name="Shopcart REST API Service",
-            version="1.0",
-            url=url_for("list_shopcarts", _external=True),
-        ),
-        status.HTTP_200_OK,
-    )
+    """Base URL for Shopcarts service"""
+    return app.send_static_file("index.html")
 
 
 # ---------------------------------------------------------------------
