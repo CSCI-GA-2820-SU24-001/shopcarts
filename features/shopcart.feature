@@ -1,7 +1,7 @@
 Feature: The shopcart service back-end
     As a shopcart manager
     I need a RESTful catalog service
-    So that I can keep track of all the shopcarts
+    So that I can keep track of all the shopcarts and shopcart items
 
 Background:
     Given the following shopcarts
