@@ -58,7 +58,32 @@ $(function () {
     // Create a Shopcart
     // ****************************************
 
+    $("#shopcart-create-btn").click(function () {
+        let total_price = $("#shopcart_total_price").val();
 
+        let data = {
+            "total_price": parseFloat(total_price)
+        };
+
+        $("#shopcart_search_results").empty();
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "POST",
+            url: "/shopcarts",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+        });
+
+        ajax.done(function (res) {
+            update_shopcart_form_data(res)
+            flash_message("Shopcart has been Created!")
+        });
+
+        ajax.fail(function (res) {
+            flash_message(res.responseJSON.message)
+        });
+    });
 
     // ****************************************
     // Retrieve a Shopcart
