@@ -33,7 +33,7 @@ Scenario: Create a Shopcart
     And the "Shopcart Item product ID" field should be empty
     And the "Shopcart Item name" field should be empty
     And the "Shopcart total price" field should be empty
-    When I paste the "Shopcart Id" field
+    When I paste the "Shopcart ID" field
     And I press the "Shopcart Retrieve" button
     Then I should see the message "Success"
     And I should see "10" in the "Shopcart total price" field
