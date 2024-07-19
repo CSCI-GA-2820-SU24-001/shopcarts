@@ -14,9 +14,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select, WebDriverWait
 from selenium.webdriver.support import expected_conditions
 
-ID_PREFIX = 'shopcart_'
-
-
 @when('I visit the "Home Page"')
 def step_impl(context):
     """ Make a call to the base URL """
@@ -36,26 +33,26 @@ def step_impl(context, text_string):
 
 @when('I set the "{element_name}" to "{text_string}"')
 def step_impl(context, element_name, text_string):
-    element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
+    element_id = element_name.lower().replace(' ', '_')
     element = context.driver.find_element(By.ID, element_id)
     element.clear()
     element.send_keys(text_string)
 
 @when('I select "{text}" in the "{element_name}" dropdown')
 def step_impl(context, text, element_name):
-    element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
+    element_id = element_name.lower().replace(' ', '_')
     element = Select(context.driver.find_element(By.ID, element_id))
     element.select_by_visible_text(text)
 
 @then('I should see "{text}" in the "{element_name}" dropdown')
 def step_impl(context, text, element_name):
-    element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
+    element_id = element_name.lower().replace(' ', '_')
     element = Select(context.driver.find_element(By.ID, element_id))
     assert element.first_selected_option.text == text
 
 @then('the "{element_name}" field should be empty')
 def step_impl(context, element_name):
-    element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
+    element_id = element_name.lower().replace(' ', '_')
     element = context.driver.find_element(By.ID, element_id)
     assert element.get_attribute('value') == ''
 
@@ -64,7 +61,7 @@ def step_impl(context, element_name):
 ##################################################################
 @when('I copy the "{element_name}" field')
 def step_impl(context, element_name):
-    element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
+    element_id = element_name.lower().replace(' ', '_')
     element = WebDriverWait(context.driver, context.wait_seconds).until(
         expected_conditions.presence_of_element_located((By.ID, element_id))
     )
@@ -73,7 +70,7 @@ def step_impl(context, element_name):
 
 @when('I paste the "{element_name}" field')
 def step_impl(context, element_name):
-    element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
+    element_id = element_name.lower().replace(' ', '_')
     element = WebDriverWait(context.driver, context.wait_seconds).until(
         expected_conditions.presence_of_element_located((By.ID, element_id))
     )
@@ -82,7 +79,7 @@ def step_impl(context, element_name):
 
 ##################################################################
 # This code works because of the following naming convention:
-# The buttons have an id in the html hat is the button text
+# The buttons have an id in the html that is the button text
 # in lowercase followed by '-btn' so the Clean button has an id of
 # id='clear-btn'. That allows us to lowercase the name and add '-btn'
 # to get the element id of any button
@@ -90,23 +87,25 @@ def step_impl(context, element_name):
 
 @when('I press the "{button}" button')
 def step_impl(context, button):
-    button_id = button.lower() + '-btn'
+    button_id = button.lower().replace(' ', '-') + '-btn'
     context.driver.find_element(By.ID, button_id).click()
 
-@then('I should see "{name}" in the results')
-def step_impl(context, name):
+@then('I should see "{name}" in the "{element_name}" results')
+def step_impl(context, name, element_name):
+    element_id = element_name.lower() + '_search_results'
     found = WebDriverWait(context.driver, context.wait_seconds).until(
         expected_conditions.text_to_be_present_in_element(
-            (By.ID, 'search_results'),
+            (By.ID, element_id),
             name
         )
     )
-    assert(found)
+    assert found
 
-@then('I should not see "{name}" in the results')
-def step_impl(context, name):
-    element = context.driver.find_element(By.ID, 'search_results')
-    assert(name not in element.text)
+@then('I should not see "{name}" in the "{element_name}" results')
+def step_impl(context, name, element_name):
+    element_id = element_name.lower() + '_search_results'
+    element = context.driver.find_element(By.ID, element_id)
+    assert name not in element.text
 
 @then('I should see the message "{message}"')
 def step_impl(context, message):
@@ -127,7 +126,7 @@ def step_impl(context, message):
 
 @then('I should see "{text_string}" in the "{element_name}" field')
 def step_impl(context, text_string, element_name):
-    element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
+    element_id = element_name.lower().replace(' ', '_')
     found = WebDriverWait(context.driver, context.wait_seconds).until(
         expected_conditions.text_to_be_present_in_element_value(
             (By.ID, element_id),
@@ -138,7 +137,7 @@ def step_impl(context, text_string, element_name):
 
 @when('I change "{element_name}" to "{text_string}"')
 def step_impl(context, element_name, text_string):
-    element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
+    element_id = element_name.lower().replace(' ', '_')
     element = WebDriverWait(context.driver, context.wait_seconds).until(
         expected_conditions.presence_of_element_located((By.ID, element_id))
     )
