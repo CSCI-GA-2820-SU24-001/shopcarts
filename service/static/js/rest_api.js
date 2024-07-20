@@ -58,13 +58,90 @@ $(function () {
     // Create a Shopcart
     // ****************************************
 
+    $("#shopcart-create-btn").click(function () {
+        let total_price = $("#shopcart_total_price").val();
 
+        let data = {
+            "total_price": parseFloat(total_price)
+        };
+
+        $("#shopcart_search_results").empty();
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "POST",
+            url: "/shopcarts",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+        });
+
+        ajax.done(function (res) {
+            update_shopcart_form_data(res)
+            flash_message("Shopcart has been Created!")
+        });
+
+        ajax.fail(function (res) {
+            flash_message(res.responseJSON.message)
+        });
+    });
 
     // ****************************************
     // Retrieve a Shopcart
     // ****************************************
 
+    $("#shopcart-retrieve-btn").click(function () {
+        let shopcart_id = $("#shopcart_id").val();
 
+        $("#shopcart_search_results").empty();
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "GET",
+            url: `/shopcarts/${shopcart_id}`,
+            contentType: "application/json",
+            data: ''
+        })
+
+        ajax.done(function (res) {
+            let table = '<table class="table table-striped" cellpadding="10">'
+            table += '<thead><tr>'
+            table += '<th class="col-md-2">Shopcart ID</th>'
+            table += '<th class="col-md-1">Total Price</th>'
+            table += '<th class="col-md-1">Item ID</th>'
+            table += '<th class="col-md-2">Item Product ID</th>'
+            table += '<th class="col-md-2">Item Name</th>'
+            table += '<th class="col-md-2">Item Quantity</th>'
+            table += '<th class="col-md-2">Item Price</th>'
+            table += '</tr></thead><tbody>'
+
+            let shopcart = res;
+            let items = shopcart['items'];
+            let rowspan = items.length || 1;
+
+            table += `<tr><td rowspan="${rowspan}">${shopcart.id}</td><td rowspan="${rowspan}">${shopcart.total_price}</td>`;
+
+            if (items.length != 0) {
+                table += `<td>${items[0]['id']}</td><td>${items[0]['product_id']}</td><td>${items[0]['name']}</td><td>${items[0]['quantity']}</td><td>${items[0]['price']}</td></tr>`;
+                for (let j = 1; j < items.length; j++) {
+                    table += `<tr><td>${items[j]['id']}</td><td>${items[j]['product_id']}</td><td>${items[j]['name']}</td><td>${items[j]['quantity']}</td><td>${items[j]['price']}</td></tr>`;
+                }
+            } else {
+                table += `<td colspan="4"></td></tr>`;
+            }
+
+            table += '</tbody></table>';
+            $("#shopcart_search_results").append(table);
+
+            update_shopcart_form_data(shopcart);
+            flash_message("Success");
+        });
+
+        ajax.fail(function (res) {
+            clear_form_data()
+            flash_message(res.responseJSON.message)
+        });
+
+    });
 
     // ****************************************
     // Update a Shopcart
