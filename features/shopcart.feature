@@ -89,3 +89,19 @@ Scenario: Search for Shopcart by Name
     And I should not see "Orange" in the "Shopcart" results
     And I should not see "Chocolate" in the "Shopcart" results
     And I should not see "Bread" in the "Shopcart" results
+
+Scenario: Clear a Shopcart
+    When I visit the "Home Page"
+    And I set the "Shopcart Item Name" to "Apple"
+    And I press the "Shopcart Search" button
+    Then I should see the message "Success"
+    When I copy the "Shopcart ID" field
+    And I press the "Shopcart Form Clear" button
+    And I paste the "Shopcart ID" field
+    And I press the "Clear Cart" button
+    Then I should see the message "Shopcart has been Cleared!"
+    When I press the "Shopcart Form Clear" button
+    And I paste the "Shopcart ID" field
+    And I press the "Shopcart Retrieve" button
+    Then I should see the message "Success"
+    And I should see "0" in the "Shopcart total price" field
