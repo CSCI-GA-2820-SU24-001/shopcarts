@@ -21,3 +21,34 @@ Scenario: The server is running
     When I visit the "Home Page"
     Then I should see "Shopcarts RESTful Service" in the title
     And I should not see "404 Not Found"
+
+Scenario: Search for Shopcart by Product ID
+    When I visit the "Home Page"
+    And I set the "Shopcart Item Product ID" to "1"
+    And I press the "Shopcart Search" button
+    Then I should see the message "Success"
+    And I should see "Apple" in the "Shopcart" results
+    And I should not see "Orange" in the "Shopcart" results
+    And I should not see "Chocolate" in the "Shopcart" results
+    And I should not see "Bread" in the "Shopcart" results
+
+Scenario: Search for Shopcart by Name
+    When I visit the "Home Page"
+    And I set the "Shopcart Item Name" to "Apple"
+    And I press the "Shopcart Search" button
+    Then I should see the message "Success"
+    And I should see "Apple" in the "Shopcart" results
+    And I should not see "Orange" in the "Shopcart" results
+    And I should not see "Chocolate" in the "Shopcart" results
+    And I should not see "Bread" in the "Shopcart" results
+
+Scenario: Search for Shopcart by Name
+    When I visit the "Home Page"
+    And I set the "Shopcart Item Product ID" to "1"
+    And I set the "Shopcart Item Name" to "Apple"
+    And I press the "Shopcart Search" button
+    Then I should see the message "Success"
+    And I should see "Apple" in the "Shopcart" results
+    And I should not see "Orange" in the "Shopcart" results
+    And I should not see "Chocolate" in the "Shopcart" results
+    And I should not see "Bread" in the "Shopcart" results
