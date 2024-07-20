@@ -82,7 +82,65 @@ $(function () {
     // List Shopcarts
     // ****************************************
 
+    $("#shopcart-list-btn").click(function () {
+        $("#shopcart_search_results").empty();
+        $("#flash_message").empty();
 
+        let ajax = $.ajax({
+            type: "GET",
+            url: `/shopcarts`,
+            contentType: "application/json",
+            data: ''
+        });
+
+        ajax.done(function (res) {
+            let table = '<table class="table table-striped" cellpadding="10">'
+            table += '<thead><tr>'
+            table += '<th class="col-md-2">Shopcart ID</th>'
+            table += '<th class="col-md-1">Total Price</th>'
+            table += '<th class="col-md-1">Item ID</th>'
+            table += '<th class="col-md-2">Item Product ID</th>'
+            table += '<th class="col-md-2">Item Name</th>'
+            table += '<th class="col-md-2">Item Quantity</th>'
+            table += '<th class="col-md-2">Item Price</th>'
+            table += '</tr></thead><tbody>'
+
+            let firstShopcart = "";
+            for (let i = 0; i < res.length; i++) {
+                let shopcart = res[i];
+                let items = shopcart['items'];
+                let rowspan = items.length || 1;
+
+                table += `<tr><td rowspan="${rowspan}">${shopcart.id}</td><td rowspan="${rowspan}">${shopcart.total_price}</td>`;
+
+                if (items.length != 0) {
+                    table += `<td>${items[0]['id']}</td><td>${items[0]['product_id']}</td><td>${items[0]['name']}</td><td>${items[0]['quantity']}</td><td>${items[0]['price']}</td></tr>`;
+                    for (let j = 1; j < items.length; j++) {
+                        table += `<tr><td>${items[j]['id']}</td><td>${items[j]['product_id']}</td><td>${items[j]['name']}</td><td>${items[j]['quantity']}</td><td>${items[j]['price']}</td></tr>`;
+                    }
+                } else {
+                    table += `<td colspan="4"></td></tr>`;
+                }
+
+                if (i == 0) {
+                    firstShopcart = shopcart;
+                }
+            }
+            table += '</tbody></table>';
+            $("#shopcart_search_results").append(table);
+
+            // Copy the first result to the form
+            if (firstShopcart != "") {
+                update_shopcart_form_data(firstShopcart)
+            }
+
+            flash_message("Success")
+        });
+
+        ajax.fail(function (res) {
+            flash_message(res.responseJSON.message)
+        });
+    });
 
     // ****************************************
     // Search Shopcarts
