@@ -303,7 +303,10 @@ $(function () {
     // ****************************************
     // Clear a Shopcart
     // ****************************************
-
+    $("#shopcart-form-clear-btn").click(function () {
+        $("#flash_message").empty();
+        clear_shopcart_form_data()
+    });
 
 
     // ****************************************
