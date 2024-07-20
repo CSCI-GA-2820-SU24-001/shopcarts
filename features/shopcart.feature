@@ -33,7 +33,7 @@ Scenario: Create a Shopcart
     And the "Shopcart Item product ID" field should be empty
     And the "Shopcart Item name" field should be empty
     And the "Shopcart total price" field should be empty
-    When I paste the "Shopcart ID" field
+    When I paste the "Shopcart Id" field
     And I press the "Shopcart Retrieve" button
     Then I should see the message "Success"
     And I should see "10" in the "Shopcart total price" field
@@ -47,6 +47,17 @@ Scenario: List all Shopcarts
     And I should see "Chocolate" in the "Shopcart" results
     And I should see "Bread" in the "Shopcart" results
     And I should not see "Random" in the "Shopcart" results
+
+Scenario: Retrieve a Shopcarts
+    When I visit the "Home Page"
+    And I press the "Shopcart List" button
+    Then I should see the message "Success"
+    When I copy the "Shopcart ID" field
+    And I press the "Shopcart Form Clear" button
+    And I paste the "Shopcart ID" field
+    And I press the "Shopcart Retrieve" button
+    Then I should see the message "Success"
+    And I should see "2" in the "Shopcart total price" field
 
 Scenario: Search for Shopcart by Product ID
     When I visit the "Home Page"
