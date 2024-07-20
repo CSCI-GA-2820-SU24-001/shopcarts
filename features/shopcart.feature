@@ -37,3 +37,14 @@ Scenario: Create a Shopcart
     And I press the "Shopcart Retrieve" button
     Then I should see the message "Success"
     And I should see "10" in the "Shopcart total price" field
+
+Scenario: Retrieve a Shopcarts
+    When I visit the "Home Page"
+    And I press the "Shopcart List" button
+    Then I should see the message "Success"
+    When I copy the "Shopcart ID" field
+    And I press the "Shopcart Form Clear" button
+    And I paste the "Shopcart ID" field
+    And I press the "Shopcart Retrieve" button
+    Then I should see the message "Success"
+    And I should see "2" in the "Shopcart total price" field
