@@ -22,21 +22,15 @@ Scenario: The server is running
     Then I should see "Shopcarts RESTful Service" in the title
     And I should not see "404 Not Found"
 
-Scenario: Create a Shopcart
+Scenario: List all Shopcarts
     When I visit the "Home Page"
-    And I set the "Shopcart total price" to "10"
-    And I press the "Shopcart Create" button
-    Then I should see the message "Shopcart has been Created!"
-    When I copy the "Shopcart ID" field
-    And I press the "Shopcart Form Clear" button
-    Then the "Shopcart ID" field should be empty
-    And the "Shopcart Item product ID" field should be empty
-    And the "Shopcart Item name" field should be empty
-    And the "Shopcart total price" field should be empty
-    When I paste the "Shopcart ID" field
-    And I press the "Shopcart Retrieve" button
+    And I press the "Shopcart List" button
     Then I should see the message "Success"
-    And I should see "10" in the "Shopcart total price" field
+    And I should see "Apple" in the "Shopcart" results
+    And I should see "Orange" in the "Shopcart" results
+    And I should see "Chocolate" in the "Shopcart" results
+    And I should see "Bread" in the "Shopcart" results
+    And I should not see "Random" in the "Shopcart" results
 
 Scenario: Retrieve a Shopcarts
     When I visit the "Home Page"
@@ -48,3 +42,34 @@ Scenario: Retrieve a Shopcarts
     And I press the "Shopcart Retrieve" button
     Then I should see the message "Success"
     And I should see "2" in the "Shopcart total price" field
+
+Scenario: Search for Shopcart by Product ID
+    When I visit the "Home Page"
+    And I set the "Shopcart Item Product ID" to "1"
+    And I press the "Shopcart Search" button
+    Then I should see the message "Success"
+    And I should see "Apple" in the "Shopcart" results
+    And I should not see "Orange" in the "Shopcart" results
+    And I should not see "Chocolate" in the "Shopcart" results
+    And I should not see "Bread" in the "Shopcart" results
+
+Scenario: Search for Shopcart by Name
+    When I visit the "Home Page"
+    And I set the "Shopcart Item Name" to "Apple"
+    And I press the "Shopcart Search" button
+    Then I should see the message "Success"
+    And I should see "Apple" in the "Shopcart" results
+    And I should not see "Orange" in the "Shopcart" results
+    And I should not see "Chocolate" in the "Shopcart" results
+    And I should not see "Bread" in the "Shopcart" results
+
+Scenario: Search for Shopcart by Name
+    When I visit the "Home Page"
+    And I set the "Shopcart Item Product ID" to "1"
+    And I set the "Shopcart Item Name" to "Apple"
+    And I press the "Shopcart Search" button
+    Then I should see the message "Success"
+    And I should see "Apple" in the "Shopcart" results
+    And I should not see "Orange" in the "Shopcart" results
+    And I should not see "Chocolate" in the "Shopcart" results
+    And I should not see "Bread" in the "Shopcart" results
