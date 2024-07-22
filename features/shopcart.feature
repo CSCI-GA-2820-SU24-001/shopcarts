@@ -120,3 +120,18 @@ Scenario: Clear a Shopcart
     And I press the "Shopcart Retrieve" button
     Then I should see the message "Success"
     And I should see "0" in the "Shopcart total price" field
+
+Scenario: List all Items in a Shopcart
+    When I visit the "Home Page"
+    And I press the "Shopcart List" button
+    And I copy the "Shopcart ID" field
+    And I paste the "Shopcart Item ID" field
+    And I press the "Item List" button
+    Then I should see the message "Success"
+    And I should see "1" in the "Item" results
+    And I should see "Apple" in the "Item" results
+    And I should see "2" in the "Item" results
+    And I should see "1" in the "Item" results
+    And I should not see "Orange" in the "Item" results
+    And I should not see "Chocolate" in the "Item" results
+    And I should not see "Bread" in the "Item" results
