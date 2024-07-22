@@ -153,6 +153,28 @@ $(function () {
     // Delete a Shopcart
     // ****************************************
 
+    $("#shopcart-delete-btn").click(function () {
+        let shopcart_id = $("#shopcart_id").val();
+
+        $("#shopcart_search_results").empty();
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "DELETE",
+            url: `/shopcarts/${shopcart_id}`,
+            contentType: "application/json",
+            data: '',
+        })
+
+        ajax.done(function (res) {
+            clear_shopcart_form_data()
+            flash_message("Shopcart has been Deleted!")
+        });
+
+        ajax.fail(function (res) {
+            flash_message("Server error!")
+        });
+    });
 
 
     // ****************************************

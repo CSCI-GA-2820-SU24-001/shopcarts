@@ -90,6 +90,21 @@ Scenario: Search for Shopcart by Name
     And I should not see "Chocolate" in the "Shopcart" results
     And I should not see "Bread" in the "Shopcart" results
 
+Scenario: Delete a Shopcart
+    When I visit the "Home Page"
+    And I set the "Shopcart Item Name" to "Apple"
+    And I press the "Shopcart Search" button
+    Then I should see the message "Success"
+    When I copy the "Shopcart ID" field
+    And I press the "Shopcart Form Clear" button
+    And I paste the "Shopcart ID" field
+    And I press the "Shopcart Delete" button
+    Then I should see the message "Shopcart has been Deleted!"
+    When I press the "Shopcart Form Clear" button
+    And I paste the "Shopcart ID" field
+    And I press the "Shopcart Retrieve" button
+    Then I should not see "Success"
+
 Scenario: Clear a Shopcart
     When I visit the "Home Page"
     And I set the "Shopcart Item Name" to "Apple"
