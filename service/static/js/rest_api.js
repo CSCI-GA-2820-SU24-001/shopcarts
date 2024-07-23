@@ -146,7 +146,34 @@ $(function () {
     // ****************************************
     // Update a Shopcart
     // ****************************************
+    $("#shopcart-update-btn").click(function () {
+        let shopcart_id = $("#shopcart_id").val();
+        let total_price = $("#shopcart_total_price").val();
 
+        let data = {
+            "total_price": parseFloat(total_price)
+        };
+
+        $("#shopcart_search_results").empty();
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "PUT",
+            url: `/shopcarts/${shopcart_id}`,
+            contentType: "application/json",
+            data: JSON.stringify(data)
+        })
+
+        ajax.done(function (res) {
+            update_shopcart_form_data(res)
+            flash_message("Shopcart has been Updated!")
+        });
+
+        ajax.fail(function (res) {
+            flash_message(res.responseJSON.message)
+        });
+
+    });
 
 
     // ****************************************
