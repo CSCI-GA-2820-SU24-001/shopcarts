@@ -396,7 +396,40 @@ $(function () {
     // ****************************************
     // Create a Shopcart Item
     // ****************************************
+    $("#item-create-btn").click(function () {
+        let shopcart_id = $("#item_shopcart_id").val();
+        let product_id = $("#item_product_id").val();
+        let name = $("#item_name").val();
+        let price = $("#item_price").val();
+        let quantity = $("#item_quantity").val();
 
+        let data = {
+            "shopcart_id": parseInt(shopcart_id),
+            "product_id": parseInt(product_id),
+            "name": name,
+            "price": parseFloat(price),
+            "quantity": parseInt(quantity)
+        };
+
+        $("#item_search_results").empty();
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "POST",
+            url: `/shopcarts/${shopcart_id}/items`,
+            contentType: "application/json",
+            data: JSON.stringify(data),
+        });
+
+        ajax.done(function (res) {
+            update_shopcart_item_form_data(res)
+            flash_message("Shopcart Item has been Created!")
+        });
+
+        ajax.fail(function (res) {
+            flash_message(res.responseJSON.message)
+        });
+    });
 
 
     // ****************************************
