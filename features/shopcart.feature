@@ -137,6 +137,33 @@ Scenario: Clear a Shopcart
     Then I should see the message "Success"
     And I should see "0" in the "Shopcart total price" field
 
+Scenario: Create a Shopcart Item
+    When I visit the "Home Page"
+    And I press the "Shopcart List" button
+    And I copy the "Shopcart ID" field
+    And I paste the "Item Shopcart ID" field
+    And I set the "Item Product ID" to "4"
+    And I set the "Item Name" to "Cereal"
+    And I set the "Item Quantity" to "1"
+    And I set the "Item Price" to "6.5"
+    And I press the "Item Create" button
+    Then I should see the message "Shopcart Item has been Created!"
+    When I copy the "Item Shopcart ID" and "Item ID" fields
+    And I press the "Item Form Clear" button
+    Then the "Item Shopcart ID" field should be empty
+    And the "Item ID" field should be empty
+    And the "Item Product ID" field should be empty
+    And the "Item Name" field should be empty
+    And the "Item Quantity" field should be empty
+    And the "Item Price" field should be empty
+    When I paste the "Shopcart Item ID" and "Item ID" fields
+    And I press the "Item Retrieve" button
+    Then I should see the message "Success"
+    And I should see "4" in the "Item Product ID" field
+    And I should see "Cereal" in the "Item Name" field
+    And I should see "1" in the "Item Quantity" field
+    And I should see "6.5" in the "Item Price" field
+
 Scenario: List all Items in a Shopcart
     When I visit the "Home Page"
     And I press the "Shopcart List" button
@@ -175,29 +202,34 @@ Scenario: Retrieve a Shopcart Item
     And I should see "2" in the "Item" results
     And I should see "1" in the "Item" results
 
-Scenario: Create a Shopcart Item
+Scenario: Search for Shopcart Item by Product ID
     When I visit the "Home Page"
     And I press the "Shopcart List" button
     And I copy the "Shopcart ID" field
-    And I paste the "Item Shopcart ID" field
-    And I set the "Item Product ID" to "4"
-    And I set the "Item Name" to "Cereal"
-    And I set the "Item Quantity" to "1"
-    And I set the "Item Price" to "6.5"
-    And I press the "Item Create" button
-    Then I should see the message "Shopcart Item has been Created!"
-    When I copy the "Item Shopcart ID" and "Item ID" fields
-    And I press the "Item Form Clear" button
-    Then the "Item Shopcart ID" field should be empty
-    And the "Item ID" field should be empty
-    And the "Item Product ID" field should be empty
-    And the "Item Name" field should be empty
-    And the "Item Quantity" field should be empty
-    And the "Item Price" field should be empty
-    When I paste the "Shopcart Item ID" and "Item ID" fields
-    And I press the "Item Retrieve" button
+    And I paste the "Shopcart Item ID" field
+    And I press the "Item List" button
     Then I should see the message "Success"
-    And I should see "4" in the "Item Product ID" field
-    And I should see "Cereal" in the "Item Name" field
-    And I should see "1" in the "Item Quantity" field
-    And I should see "6.5" in the "Item Price" field
+    When I copy the "Item Shopcart ID" and "Item Product ID" fields
+    And I paste the "Shopcart Item ID" and "Item Product ID" fields
+    And I press the "Item Search" button
+    Then I should see the message "Success"
+    And I should see "Apple" in the "Item" results
+    And I should not see "Orange" in the "Item" results
+    And I should not see "Chocolate" in the "Item" results
+    And I should not see "Bread" in the "Item" results
+
+Scenario: Search for Shopcart Item by Name
+    When I visit the "Home Page"
+    And I press the "Shopcart List" button
+    And I copy the "Shopcart ID" field
+    And I paste the "Shopcart Item ID" field
+    And I press the "Item List" button
+    Then I should see the message "Success"
+    When I copy the "Item Shopcart ID" and "Item Name" fields
+    And I paste the "Shopcart Item ID" and "Item Name" fields
+    And I press the "Item Search" button
+    Then I should see the message "Success"
+    And I should see "Apple" in the "Item" results
+    And I should not see "Orange" in the "Item" results
+    And I should not see "Chocolate" in the "Item" results
+    And I should not see "Bread" in the "Item" results
