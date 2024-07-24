@@ -152,6 +152,29 @@ Scenario: List all Items in a Shopcart
     And I should not see "Chocolate" in the "Item" results
     And I should not see "Bread" in the "Item" results
 
+Scenario: Retrieve a Shopcart Item
+    When I visit the "Home Page"
+    And I press the "Shopcart List" button
+    And I copy the "Shopcart ID" field
+    And I paste the "Shopcart Item ID" field
+    And I press the "Item List" button
+    Then I should see the message "Success"
+    When I copy the "Item Shopcart ID" and "Item ID" fields
+    And I press the "Item Form Clear" button
+    Then the "Item Shopcart ID" field should be empty
+    And the "Item ID" field should be empty
+    And the "Item Product ID" field should be empty
+    And the "Item Name" field should be empty
+    And the "Item Quantity" field should be empty
+    And the "Item Price" field should be empty
+    When I paste the "Shopcart Item ID" and "Item ID" fields
+    And I press the "Item Retrieve" button
+    Then I should see the message "Success"
+    And I should see "1" in the "Item" results
+    And I should see "Apple" in the "Item" results
+    And I should see "2" in the "Item" results
+    And I should see "1" in the "Item" results
+
 Scenario: Create a Shopcart Item
     When I visit the "Home Page"
     And I press the "Shopcart List" button
@@ -172,11 +195,9 @@ Scenario: Create a Shopcart Item
     And the "Item Quantity" field should be empty
     And the "Item Price" field should be empty
     When I paste the "Shopcart Item ID" and "Item ID" fields
-
-    # Please uncomment the following lines after finishing retrieve item functionality
-    # And I press the "Item Retrieve" button
-    # Then I should see the message "Success"
-    # And I should see "4" in the "Item Product ID" field
-    # And I should see "Cereal" in the "Item Name" field
-    # And I should see "1" in the "Item Quantity" field
-    # And I should see "6.5" in the "Item Price" field
+    And I press the "Item Retrieve" button
+    Then I should see the message "Success"
+    And I should see "4" in the "Item Product ID" field
+    And I should see "Cereal" in the "Item Name" field
+    And I should see "1" in the "Item Quantity" field
+    And I should see "6.5" in the "Item Price" field

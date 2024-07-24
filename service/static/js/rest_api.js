@@ -436,6 +436,47 @@ $(function () {
     // Retrieve a Shopcart Item
     // ****************************************
 
+    $("#item-retrieve-btn").click(function () {
+        let shopcart_id = $("#shopcart_item_id").val();
+        let item_id = $("#item_id").val();
+
+        $("#item_search_results").empty();
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "GET",
+            url: `/shopcarts/${shopcart_id}/items/${item_id}`,
+            contentType: "application/json",
+            data: ''
+        })
+
+        ajax.done(function (res) {
+            let table = '<table class="table table-striped" cellpadding="10">';
+            table += '<thead><tr>';
+            table += '<th class="col-md-2">Item ID</th>';
+            table += '<th class="col-md-2">Shopcart ID</th>';
+            table += '<th class="col-md-2">Item Product ID</th>';
+            table += '<th class="col-md-2">Item Name</th>';
+            table += '<th class="col-md-2">Item Quantity</th>';
+            table += '<th class="col-md-2">Item Price</th>';
+            table += '</tr></thead><tbody>';
+
+            let item = res;
+            table += `<tr><td>${item['id']}</td><td>${item['shopcart_id']}</td><td>${item['product_id']}</td><td>${item['name']}</td><td>${item['quantity']}</td><td>${item['price']}</td></tr>`;
+
+            table += '</tbody></table>';
+            $("#item_search_results").append(table);
+
+            update_shopcart_item_form_data(item);
+            flash_message("Success");
+        });
+
+        ajax.fail(function (res) {
+            clear_shopcart_item_form_data()
+            flash_message(res.responseJSON.message)
+        });
+
+    });
 
 
     // ****************************************
