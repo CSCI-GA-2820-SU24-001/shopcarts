@@ -542,6 +542,72 @@ $(function () {
         });
     });
 
+    // ****************************************
+    // Search Shopcart Items
+    // ****************************************
+
+    $("#item-search-btn").click(function () {
+        let shopcart_id = $("#shopcart_item_id").val();
+        let product_id = $("#item_product_id").val();
+        let name = $("#item_name").val();
+
+        $("#item_search_results").empty();
+        $("#flash_message").empty();
+
+        if (!product_id && !name) {
+            flash_message("Please enter a search query.");
+            return;
+        }
+
+        let queryString = "";
+        if (product_id) {
+            queryString += 'product_id=' + product_id + '&';
+        }
+        if (name) {
+            queryString += 'name=' + name;
+        }
+
+        let ajax = $.ajax({
+            type: "GET",
+            url: `/shopcarts/${shopcart_id}/items?${queryString}`,
+            contentType: "application/json",
+            data: ''
+        });
+
+        ajax.done(function (res) {
+            let table = '<table class="table table-striped" cellpadding="10">';
+            table += '<thead><tr>';
+            table += '<th class="col-md-2">Item ID</th>';
+            table += '<th class="col-md-2">Shopcart ID</th>';
+            table += '<th class="col-md-2">Item Product ID</th>';
+            table += '<th class="col-md-2">Item Name</th>';
+            table += '<th class="col-md-2">Item Quantity</th>';
+            table += '<th class="col-md-2">Item Price</th>';
+            table += '</tr></thead><tbody>';
+
+            let firstItem = "";
+            for (let i = 0; i < res.length; i++) {
+                let item = res[i];
+                table += `<tr><td>${item['id']}</td><td>${item['shopcart_id']}</td><td>${item['product_id']}</td><td>${item['name']}</td><td>${item['quantity']}</td><td>${item['price']}</td></tr>`;
+
+                if (i == 0) {
+                    firstItem = item;
+                }
+            }
+            table += '</tbody></table>';
+            $("#item_search_results").append(table);
+
+            if (firstItem != "") {
+                update_shopcart_item_form_data(firstItem);
+            }
+
+            flash_message("Success");
+        });
+
+        ajax.fail(function (res) {
+            flash_message(res.responseJSON.message)
+        });
+    });
 
     // ****************************************
     // Clear the Shopcart Item form
