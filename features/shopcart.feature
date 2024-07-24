@@ -178,4 +178,3 @@ Scenario: Create a Shopcart Item
     And I should see "Cereal" in the "Item Name" field
     And I should see "1" in the "Item Quantity" field
     And I should see "6.5" in the "Item Price" field
-
