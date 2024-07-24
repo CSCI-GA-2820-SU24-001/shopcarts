@@ -488,7 +488,29 @@ $(function () {
     // ****************************************
     // Delete a Shopcart Item
     // ****************************************
+    $("#item-delete-btn").click(function () {
+        let shopcart_id = $("#shopcart_item_id").val();
+        let item_id = $("#item_id").val();
 
+        $("#item_search_results").empty();
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "DELETE",
+            url: `/shopcarts/${shopcart_id}/items/${item_id}`,
+            contentType: "application/json",
+            data: '',
+        })
+
+        ajax.done(function (res) {
+            clear_shopcart_item_form_data()
+            flash_message("Shopcart Item has been Deleted!")
+        });
+
+        ajax.fail(function (res) {
+            flash_message("Server error!")
+        });
+    });
 
 
     // ****************************************
