@@ -375,7 +375,46 @@ $(function () {
     // ****************************************
     // Checkout a Shopcart
     // ****************************************
+    $("#checkout-btn").click(function () {
+        let shopcart_id = $("#shopcart_id").val();
 
+        // Ensure shopcart_id is provided
+        if (!shopcart_id) {
+            flash_message("Please enter a Shopcart ID");
+            return;
+        }
+
+        $("#shopcart_search_results").empty();
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "GET",
+            url: `/shopcarts/${shopcart_id}/checkout`,
+            contentType: "application/json",
+            data: ''
+        })
+
+        ajax.done(function (res) {
+            let table = '<table class="table table-striped" cellpadding="10">'
+            table += '<thead><tr>'
+            table += '<th class="col-md-1">Shopcart ID</th>'
+            table += '<th class="col-md-2">Total Price</th>'
+            table += '</tr></thead><tbody>'
+
+            let shopcart = res;
+            table += `<tr><td>${shopcart.id}</td><td>${shopcart.total_price}</td></tr>`;
+            table += '</tbody></table>';
+            $("#shopcart_search_results").append(table);
+
+            update_shopcart_form_data(shopcart);
+            flash_message("Shopcart has been Checked Out!");
+        });
+
+        ajax.fail(function (res) {
+            clear_form_data()
+            flash_message(res.responseJSON.message)
+        });
+    });
 
 
     // ****************************************
