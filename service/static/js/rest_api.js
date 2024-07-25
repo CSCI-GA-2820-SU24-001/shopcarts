@@ -57,7 +57,6 @@ $(function () {
     // ****************************************
     // Create a Shopcart
     // ****************************************
-
     $("#shopcart-create-btn").click(function () {
         let total_price = $("#shopcart_total_price").val();
 
@@ -88,7 +87,6 @@ $(function () {
     // ****************************************
     // Retrieve a Shopcart
     // ****************************************
-
     $("#shopcart-retrieve-btn").click(function () {
         let shopcart_id = $("#shopcart_id").val();
 
@@ -179,7 +177,6 @@ $(function () {
     // ****************************************
     // Delete a Shopcart
     // ****************************************
-
     $("#shopcart-delete-btn").click(function () {
         let shopcart_id = $("#shopcart_id").val();
 
@@ -207,7 +204,6 @@ $(function () {
     // ****************************************
     // List Shopcarts
     // ****************************************
-
     $("#shopcart-list-btn").click(function () {
         $("#shopcart_search_results").empty();
         $("#flash_message").empty();
@@ -271,7 +267,6 @@ $(function () {
     // ****************************************
     // Search Shopcarts
     // ****************************************
-    
     $("#shopcart-search-btn").click(function () {
         let item_product_id = $("#shopcart_item_product_id").val();
         let item_name = $("#shopcart_item_name").val();
@@ -420,7 +415,6 @@ $(function () {
     // ****************************************
     // Clear the Shopcart form
     // ****************************************
-
     $("#shopcart-form-clear-btn").click(function () {
         $("#flash_message").empty();
         clear_shopcart_form_data()
@@ -474,7 +468,6 @@ $(function () {
     // ****************************************
     // Retrieve a Shopcart Item
     // ****************************************
-
     $("#item-retrieve-btn").click(function () {
         let shopcart_id = $("#shopcart_item_id").val();
         let item_id = $("#item_id").val();
@@ -606,7 +599,6 @@ $(function () {
     // ****************************************
     // Search Shopcart Items
     // ****************************************
-
     $("#item-search-btn").click(function () {
         let shopcart_id = $("#shopcart_item_id").val();
         let product_id = $("#item_product_id").val();
@@ -673,7 +665,6 @@ $(function () {
     // ****************************************
     // Clear the Shopcart Item form
     // ****************************************
-
     $("#item-form-clear-btn").click(function () {
         $("#flash_message").empty();
         clear_shopcart_item_form_data()
