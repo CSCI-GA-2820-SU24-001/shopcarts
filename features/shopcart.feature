@@ -137,6 +137,19 @@ Scenario: Clear a Shopcart
     Then I should see the message "Success"
     And I should see "0" in the "Shopcart total price" field
 
+Scenario: Checkout a Shopcart
+    When I visit the "Home Page"
+    And I set the "Shopcart Item Name" to "Apple"
+    And I press the "Shopcart Search" button
+    Then I should see the message "Success"
+    When I copy the "Shopcart ID" field
+    And I press the "Shopcart Form Clear" button
+    And I paste the "Shopcart ID" field
+    And I press the "Checkout" button
+    Then I should see the message "Shopcart has been Checked Out!"
+    And I should see "2" in the "Shopcart total price" field
+    And I should not see "Apple" in the "Shopcart" results
+
 Scenario: Create a Shopcart Item
     When I visit the "Home Page"
     And I press the "Shopcart List" button
