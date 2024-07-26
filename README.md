@@ -112,13 +112,13 @@ docker build -t shopcarts:1.0 .
 * Tag the Docker image:
 
 ```bash
-docker tag shopcarts:1.0 cluster-registry:5000/shopcarts:1.0
+docker tag shopcarts:1.0 cluster-registry:5000/shopcarts:latest
 ```
 
 * Push the Docker image to the cluster registry:
 
 ```bash
-docker push cluster-registry:5000/shopcarts:1.0
+docker push cluster-registry:5000/shopcarts:latest
 ```
 
 * Apply the Kubernetes configurations:
