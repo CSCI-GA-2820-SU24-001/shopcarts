@@ -18,6 +18,7 @@ The project contains the following:
 .gitattributes      - File to gix Windows CRLF issues
 
 .devcontainers/     - Folder with support for VSCode Remote Containers
+.tekton/            - Tekton CI/CD pipeline files
 k8s/                - Kubernetes deployment files
 Dockerfile          - Docker configuration file
 
@@ -28,20 +29,35 @@ wsgi.py             - WSGI entry point for the application
 
 thunder/            - Thunder Client collection for testing APIs
 
-service/                   - service python package
-├── __init__.py            - package initializer
-├── config.py              - configuration parameters
-├── routes.py              - module with service routes
-├── common                 - common code package
-│   ├── cli_commands.py    - Flask command to recreate all tables
-│   ├── error_handlers.py  - HTTP error handling code
-│   ├── log_handlers.py    - logging setup code
-│   └── status.py          - HTTP status constants
-└── models                 - models package
-    ├── __init__.py        - package initializer
-    ├── persistent_base.py - base class for persistence
-    ├── shopcart_item.py   - model for shopcart items
-    └── shopcart.py        - model for shopcarts
+features/                  - BDD features package
+├── steps                  - step definitions for BDD
+│   ├── shopcart_steps.py  - BDD steps for shopcarts
+│   ├── web_steps.py       - BDD steps for web interactions
+├── environment.py         - BDD environment setup
+└── shopcart.feature       - BDD feature file
+
+service/                        - service python package
+├── __init__.py                 - package initializer
+├── config.py                   - configuration parameters
+├── routes.py                   - module with service routes
+├── common                      - common code package
+│   ├── cli_commands.py         - Flask command to recreate all tables
+│   ├── error_handlers.py       - HTTP error handling code
+│   ├── log_handlers.py         - logging setup code
+│   └── status.py               - HTTP status constants
+│── models                      - models package
+│   ├── __init__.py             - package initializer
+│   ├── persistent_base.py      - base class for persistence
+│   ├── shopcart_item.py        - model for shopcart items
+│   └── shopcart.py             - model for shopcarts
+└── static                      - static files package
+    ├── css                     - CSS files
+    ├── images                  - Image files
+    ├── js                      - JavaScript files
+    │   ├── bootstrap.min.js    - Bootstrap library for responsive design
+    │   ├── jquery-3.6.0.min.js - jQuery library for simplified JavaScript operations
+    │   └── rest_api.js         - JavaScript file for interacting with the REST API
+    └── index.html              - Main HTML file for the web interface
 
 tests/                     - test cases package
 ├── __init__.py            - package initializer
@@ -106,13 +122,13 @@ make cluster
 * Build the Docker image:
 
 ```bash
-docker build -t shopcarts:1.0 .
+docker build -t shopcarts:latest .
 ```
 
 * Tag the Docker image:
 
 ```bash
-docker tag shopcarts:1.0 cluster-registry:5000/shopcarts:latest
+docker tag shopcarts:latest cluster-registry:5000/shopcarts:latest
 ```
 
 * Push the Docker image to the cluster registry:
