@@ -247,6 +247,30 @@ Scenario: Search for Shopcart Item by Name
     And I should not see "Chocolate" in the "Item" results
     And I should not see "Bread" in the "Item" results
 
+Scenario: Update a Shopcart Item
+    When I visit the "Home Page"
+    And I press the "Shopcart List" button
+    And I copy the "Shopcart ID" field
+    And I paste the "Shopcart Item ID" field
+    And I press the "Item List" button
+    Then I should see the message "Success"
+    When I copy the "Item Shopcart ID" and "Item Name" fields
+    And I paste the "Shopcart Item ID" and "Item Name" fields
+    And I press the "Item Search" button
+    Then I should see the message "Success"
+    And I should see "Apple" in the "Item Name" field
+    When I change "Item Name" to "Banana"
+    And I press the "Item Update" button
+    Then I should see the message "Shopcart Item has been Updated!"
+    When I copy the "Item Shopcart ID" and "Item ID" fields
+    And I press the "Item Form Clear" button
+    And I paste the "Shopcart Item ID" and "Item ID" fields
+    And I press the "Item Retrieve" button
+    Then I should see the message "Success"
+    And I should see "Banana" in the "Item Name" field
+    And I should see "2" in the "Item Quantity" field
+    And I should see "1" in the "Item Price" field
+
 Scenario: Delete a Shopcart Item
     When I visit the "Home Page"
     And I press the "Shopcart List" button
