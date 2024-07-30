@@ -81,6 +81,25 @@ spec:
       workspaces:
         - name: source
           workspace: pipeline-workspace
+    - name: testing
+      params:
+        - name: pytest-args
+          value:
+            - '--pspec'
+            - '--cov=service'
+            - '--cov-fail-under=95'
+        - name: secret-name
+          value: postgres-creds
+        - name: secret-key
+          value: database_uri
+      runAfter:
+        - git-clone
+      taskRef:
+        kind: Task
+        name: pytest-env
+      workspaces:
+        - name: source
+          workspace: pipeline-workspace
     - name: buildah
       params:
         - name: IMAGE
