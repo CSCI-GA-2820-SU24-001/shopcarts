@@ -84,6 +84,7 @@ $(function () {
         });
     });
 
+
     // ****************************************
     // Retrieve a Shopcart
     // ****************************************
@@ -140,6 +141,7 @@ $(function () {
         });
 
     });
+
 
     // ****************************************
     // Update a Shopcart
@@ -263,6 +265,7 @@ $(function () {
             flash_message(res.responseJSON.message)
         });
     });
+
 
     // ****************************************
     // Search Shopcarts
@@ -514,7 +517,6 @@ $(function () {
     // ****************************************
     // Update a Shopcart Item
     // ****************************************
-
     $("#item-update-btn").click(function () {
         let shopcart_id = $("#shopcart_item_id").val();
         let item_id = $("#item_id").val();
@@ -698,6 +700,7 @@ $(function () {
         });
     });
 
+    
     // ****************************************
     // Clear the Shopcart Item form
     // ****************************************
