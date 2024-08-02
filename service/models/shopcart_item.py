@@ -42,7 +42,7 @@ class ShopcartItem(db.Model, PersistentBase):
             "name": self.name,
             "product_id": self.product_id,
             "quantity": int(self.quantity),
-            "price": float(self.price),
+            "price": float(f"{self.price:.2f}"),
         }
 
     def deserialize(self, data):

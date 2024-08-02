@@ -31,7 +31,7 @@ class Shopcart(db.Model, PersistentBase):
         """Converts a Shopcart into a dictionary"""
         shopcart = {
             "id": self.id,
-            "total_price": float(self.total_price),
+            "total_price": float(f"{self.total_price:.2f}"),
             "items": [],
         }
         for item in self.items:
