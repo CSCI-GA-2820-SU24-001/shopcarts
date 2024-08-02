@@ -25,7 +25,7 @@ def step_impl(context):
     """ Delete all Shopcarts and load new ones """
 
     # Get a list all of the shopcarts
-    rest_endpoint = f"{context.base_url}/shopcarts"
+    rest_endpoint = f"{context.base_url}/api/shopcarts"
     context.resp = requests.get(rest_endpoint, timeout=WAIT_TIMEOUT)
     expect(context.resp.status_code).equal_to(HTTP_200_OK)
     # and delete them one by one
@@ -47,7 +47,7 @@ def step_impl(context):
     """ Delete all Shopcarts Items and load new ones """
 
     # Get a list all of the shopcarts
-    rest_endpoint = f"{context.base_url}/shopcarts"
+    rest_endpoint = f"{context.base_url}/api/shopcarts"
     context.resp = requests.get(rest_endpoint, timeout=WAIT_TIMEOUT)
     assert context.resp.status_code == HTTP_200_OK
     # and delete all shopcart items in the shopcarts one by one
