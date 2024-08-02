@@ -4,6 +4,7 @@ Models for Shopcarts
 The models for Shopcarts are stored in this module
 """
 
+from decimal import Decimal
 from .persistent_base import db, logger, PersistentBase, DataValidationError
 from .shopcart_item import ShopcartItem
 
@@ -51,7 +52,7 @@ class Shopcart(db.Model, PersistentBase):
                         "Invalid value for [total_price], must be non-negative: "
                         + str(data["total_price"])
                     )
-                self.total_price = data["total_price"]
+                self.total_price = round(Decimal(data["total_price"]), 2)
             else:
                 raise TypeError(
                     "Invalid type for int/float [total_price]: "
