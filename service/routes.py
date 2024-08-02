@@ -38,14 +38,14 @@ shopcart_args.add_argument(
     type=int,
     location="args",
     required=False,
-    help="Product ID of the Items in the Shopcart",
+    help="Product ID of the Items in the Shopcart"
 )
 shopcart_args.add_argument(
     "name",
     type=str,
     location="args",
     required=False,
-    help="Name of the Items in the Shopcart",
+    help="Name of the Items in the Shopcart"
 )
 
 shopcartItem_args = reqparse.RequestParser()
@@ -54,14 +54,14 @@ shopcartItem_args.add_argument(
     type=int,
     location="args",
     required=False,
-    help="Product ID of the Item",
+    help="Product ID of the Item"
 )
 shopcartItem_args.add_argument(
     "name",
     type=str,
     location="args",
     required=False,
-    help="Name of the Item",
+    help="Name of the Item"
 )
 
 
@@ -248,7 +248,7 @@ def checkout_shopcart(shopcart_id):
 
     return jsonify({
         "id": shopcart.id,
-        "total_price": float(shopcart.total_price),
+        "total_price": float(shopcart.total_price)
     }), status.HTTP_200_OK
 
 
@@ -308,7 +308,7 @@ def get_shopcart_items(shopcart_id, item_id):
     app.logger.info(
         "Request to Retrieve a Item with id [%s] from Shopcart with id [%s]",
         item_id,
-        shopcart_id,
+        shopcart_id
     )
 
     # Attempt to find the Shopcart and abort if not found
@@ -398,7 +398,7 @@ def update_shopcart_items(shopcart_id, item_id):
     """
     app.logger.info(
         "Request to update Item with id %s in Shopcart with id %s",
-        (item_id, shopcart_id),
+        (item_id, shopcart_id)
     )
     check_content_type("application/json")
 
@@ -449,7 +449,7 @@ def delete_all_shopcart_items(shopcart_id):
     """
     app.logger.info(
         "Request to delete all Items in Shopcart with id: %s",
-        (shopcart_id),
+        (shopcart_id)
     )
 
     # See if the shopcart exists and abort if it doesn't
@@ -481,7 +481,7 @@ def delete_shopcart_items(shopcart_id, item_id):
     """
     app.logger.info(
         "Request to delete Item with id %s in Shopcart with id %s",
-        (item_id, shopcart_id),
+        (item_id, shopcart_id)
     )
 
     # See if the shopcart exists and abort if it doesn't
