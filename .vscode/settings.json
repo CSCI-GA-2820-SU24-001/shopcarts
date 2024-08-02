@@ -4,6 +4,8 @@
         "CSCI",
         "devcontainers",
         "dunder",
+        "gunicorn",
+        "apidocs",
         "jsonify",
         "psycopg",
         "pyproject",
