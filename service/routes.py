@@ -18,7 +18,7 @@
 Shopcart Service
 
 This service implements a REST API that allows you to Create, Read, Update
-and Delete Shopcarts
+and Delete Shopcarts and Shopcart Items
 """
 
 from flask import jsonify, request, url_for, abort
@@ -99,11 +99,14 @@ def list_shopcarts():
 
     shopcarts = []
     if product_id:
+        app.logger.info("Filtering by product ID: %s", product_id)
         shopcarts = Shopcart.find_by_item_product_id(product_id)
     elif name:
+        app.logger.info("Filtering by product name: %s", name)
         shopcarts = Shopcart.find_by_item_name(name)
     else:
         shopcarts = Shopcart.all()
+        app.logger.info("Returning unfiltered list")
     shopcarts = [shopcart.serialize() for shopcart in shopcarts]
 
     app.logger.info("Returning %d shopcarts", len(shopcarts))
@@ -282,9 +285,14 @@ def list_shopcart_items(shopcart_id):
 
     items = shopcart.items
     if product_id:
+        app.logger.info("Filtering by product ID: %s", product_id)
         items = [item for item in items if item.product_id == product_id]
     if name:
+        app.logger.info("Filtering by product name: %s", name)
         items = [item for item in items if item.name == name]
+
+    if not product_id and not name:
+        app.logger.info("Returning unfiltered list.")
 
     items = [item.serialize() for item in items]
 
