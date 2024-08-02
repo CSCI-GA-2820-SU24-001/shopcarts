@@ -52,11 +52,11 @@ def create_app():
     api = Api(
         app,
         version="1.0.0",
-        title="Pet Demo REST API Service",
-        description="This is a sample server Pet store server.",
-        default="pets",
-        default_label="Pet shop operations",
-        doc="/apidocs",  # default also could use doc='/apidocs/'
+        title="Shopcart REST API Service",
+        description="This is the REST API for the Shopcart Service",
+        default="shopcarts",
+        default_label="Shopcart operations",
+        doc="/apidocs",
         prefix="/api",
     )
 
