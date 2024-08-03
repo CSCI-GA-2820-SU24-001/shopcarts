@@ -15,7 +15,7 @@ DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql+psycopg://postgres:postgres@localhost:5432/testdb"
 )
 
-BASE_URL = "/shopcarts"
+BASE_URL = "/api/shopcarts"
 
 
 ######################################################################
@@ -178,7 +178,7 @@ class TestShopcartService(TestCase):
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         self.assertIn(
-            f"Shopcart with id '{test_shopcart.id}' was not found.",
+            f"Shopcart with id [{test_shopcart.id}] was not found.",
             resp.data.decode(),
         )
 
@@ -298,7 +298,7 @@ class TestShopcartService(TestCase):
         resp = self.client.get(f"{BASE_URL}/{test_shopcart.id}/items")
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         self.assertIn(
-            f"Shopcart with id '{test_shopcart.id}' was not found.",
+            f"Shopcart with id [{test_shopcart.id}] was not found.",
             resp.data.decode(),
         )
 
@@ -428,7 +428,7 @@ class TestShopcartService(TestCase):
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         self.assertIn(
-            f"Shopcart with id '{test_shopcart.id}' was not found.",
+            f"Shopcart with id [{test_shopcart.id}] was not found.",
             resp.data.decode(),
         )
 
@@ -482,7 +482,7 @@ class TestShopcartService(TestCase):
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         self.assertIn(
-            f"Shopcart with id '{test_shopcart.id}' was not found.",
+            f"Shopcart with id [{test_shopcart.id}] was not found.",
             resp.data.decode(),
         )
 
@@ -499,7 +499,7 @@ class TestShopcartService(TestCase):
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         self.assertIn(
-            f"Item with id '{test_item.id}' was not found in Shopcart with id '{test_shopcart.id}'.",
+            f"Item with id [{test_item.id}] was not found in Shopcart with id [{test_shopcart.id}].",
             resp.data.decode(),
         )
 
@@ -526,7 +526,7 @@ class TestShopcartService(TestCase):
         resp = self.client.delete(f"{BASE_URL}/{test_shopcart.id}/items")
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         self.assertIn(
-            f"Shopcart with id '{test_shopcart.id}' was not found.",
+            f"Shopcart with id [{test_shopcart.id}] was not found.",
             resp.data.decode(),
         )
 
@@ -565,7 +565,7 @@ class TestShopcartService(TestCase):
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         self.assertIn(
-            f"Shopcart with id '{test_shopcart.id}' was not found.",
+            f"Shopcart with id [{test_shopcart.id}] was not found.",
             resp.data.decode(),
         )
 

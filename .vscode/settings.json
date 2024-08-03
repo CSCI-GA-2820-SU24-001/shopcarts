@@ -4,6 +4,8 @@
         "CSCI",
         "devcontainers",
         "dunder",
+        "gunicorn",
+        "apidocs",
         "jsonify",
         "psycopg",
         "pyproject",
@@ -13,6 +15,8 @@
         "Shopcart",
         "Shopcarts",
         "sqlalchemy",
-        "testdb"
+        "testdb",
+        "codecov",
+        "apidocs"
     ]
 }
