@@ -9,6 +9,7 @@ from unittest.mock import patch
 from wsgi import app
 from service.models import Shopcart, ShopcartItem, DataValidationError, db
 from tests.factories import ShopcartFactory, ShopcartItemFactory
+from decimal import Decimal
 
 # pylint: disable=duplicate-code
 DATABASE_URI = os.getenv(
@@ -164,7 +165,7 @@ class TestShopcartModel(TestCaseBase):
         new_shopcart.deserialize(serial_shopcart)
         self.assertNotEqual(new_shopcart, None)
         self.assertEqual(new_shopcart.id, None)
-        self.assertEqual(new_shopcart.total_price, shopcart.total_price)
+        self.assertEqual(new_shopcart.total_price, round(Decimal(shopcart.total_price), 2))
         self.assertNotEqual(new_shopcart.items, None)
         self.assertEqual(new_shopcart.items[0].name, shopcart_item.name)
 
