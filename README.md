@@ -29,13 +29,6 @@ wsgi.py             - WSGI entry point for the application
 
 thunder/            - Thunder Client collection for testing APIs
 
-features/                  - BDD features package
-├── steps                  - step definitions for BDD
-│   ├── shopcart_steps.py  - BDD steps for shopcarts
-│   ├── web_steps.py       - BDD steps for web interactions
-├── environment.py         - BDD environment setup
-└── shopcart.feature       - BDD feature file
-
 service/                        - service python package
 ├── __init__.py                 - package initializer
 ├── config.py                   - configuration parameters
@@ -59,6 +52,13 @@ service/                        - service python package
     │   └── rest_api.js         - JavaScript file for interacting with the REST API
     └── index.html              - Main HTML file for the web interface
 
+features/                  - BDD features package
+├── steps                  - step definitions for BDD
+│   ├── shopcart_steps.py  - BDD steps for shopcarts
+│   ├── web_steps.py       - BDD steps for web interactions
+├── environment.py         - BDD environment setup
+└── shopcart.feature       - BDD feature file
+
 tests/                     - test cases package
 ├── __init__.py            - package initializer
 ├── factories.py           - Factory for testing with fake objects
@@ -74,20 +74,20 @@ The shopcarts service provides the following API endpoints:
 
 | Operation                         | Method | URL                                          |
 |-----------------------------------|--------|----------------------------------------------|
-| **Create a new shopcart**         | POST   | `/shopcarts`                                 |
-| **Get a shopcart**                | GET    | `/shopcarts/{shopcart_id}`                   |
-| **List all shopcarts**            | GET    | `/shopcarts`                                 |
-| **Update a shopcart**             | PUT    | `/shopcarts/{shopcart_id}`                   |
-| **Delete a shopcart**             | DELETE | `/shopcarts/{shopcart_id}`                   |
-| **Add an item to a shopcart**     | POST   | `/shopcarts/{shopcart_id}/items`             |
-| **Get an item from a shopcart**   | GET    | `/shopcarts/{shopcart_id}/items/{item_id}`   |
-| **List all items in a shopcart**  | GET    | `/shopcarts/{shopcart_id}/items`             |
-| **Update a shopcart item**        | PUT    | `/shopcarts/{shopcart_id}/items/{item_id}`   |
-| **Delete a shopcart item**        | DELETE | `/shopcarts/{shopcart_id}/items/{item_id}`   |
-| **Delete all items in a shopcart**| DELETE | `/shopcarts/{shopcart_id}/items`             |
-| **Query shopcarts**               | GET    | `/shopcarts?product_id={product_id}&name={name}` |
-| **Query item**                    | GET    | `/shopcarts/{shopcart_id}/items?product_id={product_id}&name={name}` |
-| **Checkout a shopcart**           | GET    | `/checkout`                                  |
+| **Create a new shopcart**         | POST   | `/api/shopcarts`                                 |
+| **Get a shopcart**                | GET    | `/api/shopcarts/{shopcart_id}`                   |
+| **List all shopcarts**            | GET    | `/api/shopcarts`                                 |
+| **Update a shopcart**             | PUT    | `/api/shopcarts/{shopcart_id}`                   |
+| **Delete a shopcart**             | DELETE | `/api/shopcarts/{shopcart_id}`                   |
+| **Add an item to a shopcart**     | POST   | `/api/shopcarts/{shopcart_id}/items`             |
+| **Get an item from a shopcart**   | GET    | `/api/shopcarts/{shopcart_id}/items/{item_id}`   |
+| **List all items in a shopcart**  | GET    | `/api/shopcarts/{shopcart_id}/items`             |
+| **Update a shopcart item**        | PUT    | `/api/shopcarts/{shopcart_id}/items/{item_id}`   |
+| **Delete a shopcart item**        | DELETE | `/api/shopcarts/{shopcart_id}/items/{item_id}`   |
+| **Delete all items in a shopcart**| DELETE | `/api/shopcarts/{shopcart_id}/items`             |
+| **Query shopcarts**               | GET    | `/api/shopcarts?product_id={product_id}&name={name}` |
+| **Query item**                    | GET    | `/api/shopcarts/{shopcart_id}/items?product_id={product_id}&name={name}` |
+| **Checkout a shopcart**           | GET    | `/api/shopcarts/{shopcart_id}/checkout`                                  |
 
 ## Running the Tests
 
@@ -144,6 +144,16 @@ kc apply -f k8s/
 ```
 
 The service will start and be accessible at `http://localhost:8080`.
+
+## OpenShift Deployment
+
+The shopcarts service is also deployed using an OpenShift pipeline. The deployed application can be accessed at the following URL:
+
+[https://shopcarts-manishagoyal-dev.apps.sandbox-m2.ll9k.p1.openshiftapps.com/](https://shopcarts-manishagoyal-dev.apps.sandbox-m2.ll9k.p1.openshiftapps.com/)
+
+## Swagger API Documentation
+
+The shopcarts service includes Swagger API documentation to help you understand and interact with the API. You can access the Swagger UI at the `/apidocs` endpoint of the deployed service.
 
 ## License
 
