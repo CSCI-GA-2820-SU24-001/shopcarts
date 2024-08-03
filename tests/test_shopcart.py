@@ -6,10 +6,10 @@ import logging
 import os
 from unittest import TestCase
 from unittest.mock import patch
+from decimal import Decimal
 from wsgi import app
 from service.models import Shopcart, ShopcartItem, DataValidationError, db
 from tests.factories import ShopcartFactory, ShopcartItemFactory
-from decimal import Decimal
 
 # pylint: disable=duplicate-code
 DATABASE_URI = os.getenv(
