@@ -108,14 +108,14 @@ shopcart_args.add_argument(
     type=int,
     location="args",
     required=False,
-    help="Product ID of the Items in the Shopcart",
+    help="Product ID of the Items in the Shopcart"
 )
 shopcart_args.add_argument(
     "name",
     type=str,
     location="args",
     required=False,
-    help="Name of the Items in the Shopcart",
+    help="Name of the Items in the Shopcart"
 )
 
 shopcartItem_args = reqparse.RequestParser()
@@ -124,10 +124,14 @@ shopcartItem_args.add_argument(
     type=int,
     location="args",
     required=False,
-    help="Product ID of the Item",
+    help="Product ID of the Item"
 )
 shopcartItem_args.add_argument(
-    "name", type=str, location="args", required=False, help="Name of the Item"
+    "name",
+    type=str,
+    location="args",
+    required=False,
+    help="Name of the Item"
 )
 
 
@@ -169,7 +173,7 @@ class ShopcartResource(Resource):
         if not shopcart:
             error(
                 status.HTTP_404_NOT_FOUND,
-                f"Shopcart with id [{shopcart_id}] was not found.",
+                f"Shopcart with id [{shopcart_id}] was not found."
             )
 
         app.logger.info("Returning Shopcart with id [%s]", shopcart_id)
@@ -196,7 +200,7 @@ class ShopcartResource(Resource):
         if not shopcart:
             error(
                 status.HTTP_404_NOT_FOUND,
-                f"Shopcart with id [{shopcart_id}] was not found.",
+                f"Shopcart with id [{shopcart_id}] was not found."
             )
 
         app.logger.info("Processing: %s", api.payload)
@@ -291,9 +295,7 @@ class ShopcartCollection(Resource):
         app.logger.info("Shopcart with id [%s] saved!", shopcart.id)
 
         # Return the location of the new item
-        location_url = api.url_for(
-            ShopcartResource, shopcart_id=shopcart.id, _external=True
-        )
+        location_url = api.url_for(ShopcartResource, shopcart_id=shopcart.id, _external=True)
 
         return shopcart.serialize(), status.HTTP_201_CREATED, {"Location": location_url}
 
@@ -321,19 +323,15 @@ class CheckoutResource(Resource):
         if not shopcart:
             error(
                 status.HTTP_404_NOT_FOUND,
-                f"Shopcart with id [{shopcart_id}] was not found.",
+                f"Shopcart with id [{shopcart_id}] was not found."
             )
         shopcart.calculate_total_price()
 
-        app.logger.info(
-            "Checked out Shopcart with id [%s], total price is [%s]",
-            shopcart_id,
-            shopcart.total_price,
-        )
+        app.logger.info("Checked out Shopcart with id [%s], total price is [%s]", shopcart_id, shopcart.total_price)
 
         return {
             "id": shopcart.id,
-            "total_price": float(shopcart.total_price),
+            "total_price": float(shopcart.total_price)
         }, status.HTTP_200_OK
 
 
@@ -367,7 +365,7 @@ class ShopcartItemResource(Resource):
         app.logger.info(
             "Request to Retrieve a Item with id [%s] from Shopcart with id [%s]",
             item_id,
-            shopcart_id,
+            shopcart_id
         )
 
         # Attempt to find the Shopcart and abort if not found
@@ -375,14 +373,14 @@ class ShopcartItemResource(Resource):
         if not shopcart:
             error(
                 status.HTTP_404_NOT_FOUND,
-                f"Shopcart with id [{shopcart_id}] was not found.",
+                f"Shopcart with id [{shopcart_id}] was not found."
             )
 
         item = ShopcartItem.find(item_id)
         if not item or item.shopcart_id != shopcart_id:
             error(
                 status.HTTP_404_NOT_FOUND,
-                f"Item with id [{item_id}] was not found in Shopcart [{shopcart_id}].",
+                f"Item with id [{item_id}] was not found in Shopcart [{shopcart_id}]."
             )
 
         app.logger.info(
@@ -407,7 +405,7 @@ class ShopcartItemResource(Resource):
         app.logger.info(
             "Request to update Item with id [%s] in Shopcart with id [%s]",
             item_id,
-            shopcart_id,
+            shopcart_id
         )
 
         # See if the shopcart exists and abort if it doesn't
@@ -415,7 +413,7 @@ class ShopcartItemResource(Resource):
         if not shopcart:
             error(
                 status.HTTP_404_NOT_FOUND,
-                f"Shopcart with id [{shopcart_id}] was not found.",
+                f"Shopcart with id [{shopcart_id}] was not found."
             )
 
         app.logger.info("Processing: %s", api.payload)
@@ -425,7 +423,7 @@ class ShopcartItemResource(Resource):
         if not item:
             error(
                 status.HTTP_404_NOT_FOUND,
-                f"Item with id [{item_id}] was not found in Shopcart with id [{shopcart_id}].",
+                f"Item with id [{item_id}] was not found in Shopcart with id [{shopcart_id}]."
             )
 
         # Update the item with the new data
@@ -456,7 +454,7 @@ class ShopcartItemResource(Resource):
         app.logger.info(
             "Request to delete Item with id [%s] in Shopcart with id [%s]",
             item_id,
-            shopcart_id,
+            shopcart_id
         )
 
         # See if the shopcart exists and abort if it doesn't
@@ -464,7 +462,7 @@ class ShopcartItemResource(Resource):
         if not shopcart:
             error(
                 status.HTTP_404_NOT_FOUND,
-                f"Shopcart with id [{shopcart_id}] was not found.",
+                f"Shopcart with id [{shopcart_id}] was not found."
             )
 
         # See if the item exists and delete it if it does
@@ -475,7 +473,7 @@ class ShopcartItemResource(Resource):
             app.logger.info(
                 "Item with id [%s] deleted from Shopcart with id [%s]!",
                 item_id,
-                shopcart_id,
+                shopcart_id
             )
 
         return "", status.HTTP_204_NO_CONTENT
@@ -505,7 +503,7 @@ class ShopcartItemCollection(Resource):
         if not shopcart:
             error(
                 status.HTTP_404_NOT_FOUND,
-                f"Shopcart with id [{shopcart_id}] was not found.",
+                f"Shopcart with id [{shopcart_id}] was not found."
             )
 
         # Get the query parameters
@@ -551,16 +549,14 @@ class ShopcartItemCollection(Resource):
         if not shopcart:
             error(
                 status.HTTP_404_NOT_FOUND,
-                f"Shopcart with id [{shopcart_id}] was not found.",
+                f"Shopcart with id [{shopcart_id}] was not found."
             )
 
         data = api.payload
 
         app.logger.info("Processing: %s", data)
 
-        item = ShopcartItem.find_by_product_id_shopcart_id(
-            data["product_id"], shopcart_id
-        )
+        item = ShopcartItem.find_by_product_id_shopcart_id(data["product_id"], shopcart_id)
         if item:
             # Update quantity if the item exists in the shopcart
             item.quantity += data["quantity"]
@@ -581,10 +577,7 @@ class ShopcartItemCollection(Resource):
 
         # Return the location of the new item
         location_url = api.url_for(
-            ShopcartItemResource,
-            item_id=item.id,
-            shopcart_id=shopcart_id,
-            _external=True,
+            ShopcartItemResource, item_id=item.id, shopcart_id=shopcart_id, _external=True
         )
 
         return item.serialize(), status.HTTP_201_CREATED, {"Location": location_url}
@@ -608,7 +601,7 @@ class ShopcartItemCollection(Resource):
         if not shopcart:
             error(
                 status.HTTP_404_NOT_FOUND,
-                f"Shopcart with id [{shopcart_id}] was not found.",
+                f"Shopcart with id [{shopcart_id}] was not found."
             )
 
         for item in shopcart.items:
