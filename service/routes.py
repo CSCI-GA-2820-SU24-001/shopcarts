@@ -22,7 +22,7 @@ and Delete Shopcarts and Shopcart Items
 """
 
 from flask import current_app as app  # Import Flask application
-from flask_restx import Resource, reqparse
+from flask_restx import Resource, reqparse, fields
 from service.models import Shopcart, ShopcartItem
 from service.common import status  # HTTP Status Codes
 from . import api
@@ -46,6 +46,61 @@ def health():
     return {"status": "OK"}, status.HTTP_200_OK
 
 
+# Define the models so that the docs reflect what can be sent
+create_shopcartItem_model = api.model(
+    "ShopcartItem",
+    {
+        "shopcart_id": fields.Integer(required=True, description="ID of the shopcart"),
+        "name": fields.String(required=True, description="Name of the shopcart item"),
+        "product_id": fields.Integer(required=True, description="ID of the product"),
+        "quantity": fields.Integer(
+            required=True, description="Quantity of shopcart item"
+        ),
+        "price": fields.Float(required=True, description="Price of the product"),
+    },
+)
+
+shopcartItem_model = api.inherit(
+    "ShopcartItemModel",
+    create_shopcartItem_model,
+    {
+        "id": fields.Integer(
+            readOnly=True,
+            description="The unique ID of the shopcart item assigned internally by the service",
+        ),
+        "shopcart_id": fields.Integer(
+            readOnly=True,
+            description="The ID of the shopcart to which the shopcart item belongs",
+        ),
+    },
+)
+
+create_shopcart_model = api.model(
+    "Shopcart",
+    {
+        "total_price": fields.Float(
+            required=True, description="Total price of the shopcart"
+        ),
+        "items": fields.List(
+            fields.Nested(shopcartItem_model),
+            required=False,
+            description="Items in the shopcart",
+        ),
+    },
+)
+
+shopcart_model = api.inherit(
+    "ShopcartModel",
+    create_shopcart_model,
+    {
+        "id": fields.Integer(
+            readOnly=True,
+            description="The unique ID of the shopcart assigned internally by the service",
+        ),
+    },
+)
+
+
 # query string arguments
 shopcart_args = reqparse.RequestParser()
 shopcart_args.add_argument(
@@ -53,14 +108,14 @@ shopcart_args.add_argument(
     type=int,
     location="args",
     required=False,
-    help="Product ID of the Items in the Shopcart"
+    help="Product ID of the Items in the Shopcart",
 )
 shopcart_args.add_argument(
     "name",
     type=str,
     location="args",
     required=False,
-    help="Name of the Items in the Shopcart"
+    help="Name of the Items in the Shopcart",
 )
 
 shopcartItem_args = reqparse.RequestParser()
@@ -69,14 +124,14 @@ shopcartItem_args.add_argument(
     type=int,
     location="args",
     required=False,
-    help="Product ID of the Item"
+    help="Product ID of the Item",
 )
 shopcartItem_args.add_argument(
     "name",
     type=str,
     location="args",
     required=False,
-    help="Name of the Item"
+    help="Name of the Item",
 )
 
 
@@ -104,6 +159,7 @@ class ShopcartResource(Resource):
     # RETRIEVE A SHOPCART
     # ------------------------------------------------------------------
     @api.response(404, "Shopcart not found")
+    @api.marshal_with(shopcart_model)
     def get(self, shopcart_id):
         """
         Retrieve a single Shopcart
@@ -129,6 +185,8 @@ class ShopcartResource(Resource):
     # ------------------------------------------------------------------
     @api.response(404, "Shopcart not found")
     @api.response(400, "The posted Shopcart data was not valid")
+    @api.expect(shopcart_model)
+    @api.marshal_with(shopcart_model)
     def put(self, shopcart_id):
         """
         Update a Shopcart
@@ -188,6 +246,7 @@ class ShopcartCollection(Resource):
     # LIST ALL SHOPCARTS
     # ------------------------------------------------------------------
     @api.expect(shopcart_args, validate=True)
+    @api.marshal_list_with(shopcart_model)
     def get(self):
         """Returns all of the Shopcarts"""
         app.logger.info("Request for Shopcarts list")
@@ -217,6 +276,8 @@ class ShopcartCollection(Resource):
     # CREATE A NEW SHOPCART
     # ------------------------------------------------------------------
     @api.response(400, "The posted Shopcart data was not valid")
+    @api.expect(create_shopcart_model)
+    @api.marshal_with(shopcart_model, code=201)
     def post(self):
         """
         Creates a Shopcart
@@ -266,11 +327,15 @@ class CheckoutResource(Resource):
             )
         shopcart.calculate_total_price()
 
-        app.logger.info("Checked out Shopcart with id [%s], total price is [%s]", shopcart_id, shopcart.total_price)
+        app.logger.info(
+            "Checked out Shopcart with id [%s], total price is [%s]",
+            shopcart_id,
+            shopcart.total_price,
+        )
 
         return {
             "id": shopcart.id,
-            "total_price": float(shopcart.total_price)
+            "total_price": float(shopcart.total_price),
         }, status.HTTP_200_OK
 
 
@@ -294,6 +359,7 @@ class ShopcartItemResource(Resource):
     # RETRIEVE AN ITEM FROM A SHOPCART
     # ------------------------------------------------------------------
     @api.response(404, "Shopcart Item not found")
+    @api.marshal_with(shopcartItem_model)
     def get(self, shopcart_id, item_id):
         """
         Retrieve a single Item from Shopcart
@@ -301,7 +367,9 @@ class ShopcartItemResource(Resource):
         This endpoint will return a Item from Shopcart based on it's id
         """
         app.logger.info(
-            "Request to Retrieve a Item with id [%s] from Shopcart with id [%s]", item_id, shopcart_id,
+            "Request to Retrieve a Item with id [%s] from Shopcart with id [%s]",
+            item_id,
+            shopcart_id,
         )
 
         # Attempt to find the Shopcart and abort if not found
@@ -320,7 +388,9 @@ class ShopcartItemResource(Resource):
             )
 
         app.logger.info(
-            "Returning Item with id [%s] in Shopcart with id [%s]", item_id, shopcart_id
+            "Returning Item with id [%s] in Shopcart with id [%s]",
+            item_id,
+            shopcart_id,
         )
 
         return item.serialize(), status.HTTP_200_OK
@@ -330,6 +400,8 @@ class ShopcartItemResource(Resource):
     # ------------------------------------------------------------------
     @api.response(404, "Shopcart Item not found")
     @api.response(400, "The posted Shopcart Item data was not valid")
+    @api.expect(shopcartItem_model)
+    @api.marshal_with(shopcartItem_model)
     def put(self, shopcart_id, item_id):
         """
         Update an Item in a Shopcart
@@ -337,7 +409,9 @@ class ShopcartItemResource(Resource):
         This endpoint will update an Item in a Shopcart based on the body that is posted
         """
         app.logger.info(
-            "Request to update Item with id [%s] in Shopcart with id [%s]", item_id, shopcart_id
+            "Request to update Item with id [%s] in Shopcart with id [%s]",
+            item_id,
+            shopcart_id,
         )
 
         # See if the shopcart exists and abort if it doesn't
@@ -368,7 +442,9 @@ class ShopcartItemResource(Resource):
         shopcart.calculate_total_price()
 
         app.logger.info(
-            "Item with id [%s] in Shopcart with id [%s] updated!", item_id, shopcart_id
+            "Item with id [%s] in Shopcart with id [%s] updated!",
+            item_id,
+            shopcart_id,
         )
 
         return item.serialize(), status.HTTP_200_OK
@@ -384,7 +460,9 @@ class ShopcartItemResource(Resource):
         This endpoint will delete an Item based on the id specified in the path
         """
         app.logger.info(
-            "Request to delete Item with id [%s] in Shopcart with id [%s]", item_id, shopcart_id
+            "Request to delete Item with id [%s] in Shopcart with id [%s]",
+            item_id,
+            shopcart_id,
         )
 
         # See if the shopcart exists and abort if it doesn't
@@ -400,7 +478,11 @@ class ShopcartItemResource(Resource):
         if item:
             item.delete()
             shopcart.calculate_total_price()
-            app.logger.info("Item with id [%s] deleted from Shopcart with id [%s]!", item_id, shopcart_id)
+            app.logger.info(
+                "Item with id [%s] deleted from Shopcart with id [%s]!",
+                item_id,
+                shopcart_id,
+            )
 
         return "", status.HTTP_204_NO_CONTENT
 
@@ -417,6 +499,7 @@ class ShopcartItemCollection(Resource):
     # LIST ALL ITEMS IN A SHOPCART
     # ------------------------------------------------------------------
     @api.expect(shopcartItem_args, validate=True)
+    @api.marshal_list_with(shopcartItem_model)
     def get(self, shopcart_id):
         """
         Retrieve all Items in a Shopcart
@@ -450,7 +533,9 @@ class ShopcartItemCollection(Resource):
         items = [item.serialize() for item in items]
 
         app.logger.info(
-            "Returning [%s] Items in Shopcart with id [%s]", len(items), shopcart_id
+            "Returning [%s] Items in Shopcart with id [%s]",
+            len(items),
+            shopcart_id,
         )
 
         return items, status.HTTP_200_OK
@@ -459,6 +544,8 @@ class ShopcartItemCollection(Resource):
     # ADD AN ITEM TO A SHOPCART
     # ------------------------------------------------------------------
     @api.response(400, "The posted Shopcart Item data was not valid")
+    @api.expect(create_shopcartItem_model)
+    @api.marshal_with(shopcartItem_model, code=201)
     def post(self, shopcart_id):
         """
         Add an Item in a Shopcart
@@ -494,11 +581,16 @@ class ShopcartItemCollection(Resource):
 
         # update the total price of the shopcart
         shopcart.calculate_total_price()
-        app.logger.info("Item with id [%s] saved in Shopcart with id [%s]!", item.id, shopcart_id)
+        app.logger.info(
+            "Item with id [%s] saved in Shopcart with id [%s]!", item.id, shopcart_id
+        )
 
         # Return the location of the new item
         location_url = api.url_for(
-            ShopcartItemResource, item_id=item.id, shopcart_id=shopcart_id, _external=True
+            ShopcartItemResource,
+            item_id=item.id,
+            shopcart_id=shopcart_id,
+            _external=True,
         )
 
         return item.serialize(), status.HTTP_201_CREATED, {"Location": location_url}
@@ -514,7 +606,8 @@ class ShopcartItemCollection(Resource):
         This endpoint will delete all Items from a Shopcart based on the id specified in the path
         """
         app.logger.info(
-            "Request to delete all Items in Shopcart with id [%s]", shopcart_id
+            "Request to delete all Items in Shopcart with id [%s]",
+            shopcart_id,
         )
 
         # See if the shopcart exists and abort if it doesn't
@@ -537,6 +630,7 @@ class ShopcartItemCollection(Resource):
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
+
 
 # ------------------------------------------------------------------
 # Logs error messages before aborting
