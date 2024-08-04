@@ -329,7 +329,7 @@ class CheckoutResource(Resource):
 
         app.logger.info(
             "Checked out Shopcart with id [%s], total price is [%s]",
-            shopcart_id, 
+            shopcart_id,
             shopcart.total_price,
         )
 
@@ -388,7 +388,7 @@ class ShopcartItemResource(Resource):
             )
 
         app.logger.info(
-            "Returning Item with id [%s] in Shopcart with id [%s]", 
+            "Returning Item with id [%s] in Shopcart with id [%s]",
             item_id,
             shopcart_id,
         )
@@ -442,8 +442,8 @@ class ShopcartItemResource(Resource):
         shopcart.calculate_total_price()
 
         app.logger.info(
-            "Item with id [%s] in Shopcart with id [%s] updated!", 
-            item_id, 
+            "Item with id [%s] in Shopcart with id [%s] updated!",
+            item_id,
             shopcart_id,
         )
 
@@ -533,8 +533,8 @@ class ShopcartItemCollection(Resource):
         items = [item.serialize() for item in items]
 
         app.logger.info(
-            "Returning [%s] Items in Shopcart with id [%s]", 
-            len(items), 
+            "Returning [%s] Items in Shopcart with id [%s]",
+            len(items),
             shopcart_id,
         )
 
@@ -606,7 +606,7 @@ class ShopcartItemCollection(Resource):
         This endpoint will delete all Items from a Shopcart based on the id specified in the path
         """
         app.logger.info(
-            "Request to delete all Items in Shopcart with id [%s]", 
+            "Request to delete all Items in Shopcart with id [%s]",
             shopcart_id,
         )
 
