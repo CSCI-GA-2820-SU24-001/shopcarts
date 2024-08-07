@@ -1,12 +1,14 @@
 {
     "cSpell.words": [
+        "apidocs",
         "backref",
+        "codecov",
         "CSCI",
         "devcontainers",
         "dunder",
         "gunicorn",
-        "apidocs",
         "jsonify",
+        "mediatype",
         "psycopg",
         "pyproject",
         "reqparse",
@@ -15,8 +17,6 @@
         "Shopcart",
         "Shopcarts",
         "sqlalchemy",
-        "testdb",
-        "codecov",
-        "apidocs"
+        "testdb"
     ]
 }
