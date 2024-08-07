@@ -49,14 +49,14 @@ class Shopcart(db.Model, PersistentBase):
             if isinstance(data["total_price"], (int, float)):
                 if data["total_price"] < 0:
                     raise ValueError(
-                        "Invalid value for [total_price], must be non-negative: "
-                        + str(data["total_price"])
+                        "Invalid value for [total_price], must be non-negative: ["
+                        + str(data["total_price"]) + "]"
                     )
                 self.total_price = round(Decimal(data["total_price"]), 2)
             else:
                 raise TypeError(
-                    "Invalid type for int/float [total_price]: "
-                    + str(type(data["total_price"]))
+                    "Invalid type for int/float [total_price]: ["
+                    + str(type(data["total_price"])) + "]"
                 )
 
             item_list = data.get("items")
@@ -73,12 +73,12 @@ class Shopcart(db.Model, PersistentBase):
             ) from error
         except TypeError as error:
             raise DataValidationError(
-                "Invalid Shopcart: body of request contained bad or no data "
+                "Invalid Shopcart: body of request contained bad or no data. "
                 + str(error)
             ) from error
         except ValueError as error:
             raise DataValidationError(
-                "Invalid Shopcart: body of request contained bad or no data "
+                "Invalid Shopcart: body of request contained bad or no data. "
                 + str(error)
             ) from error
 

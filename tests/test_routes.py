@@ -618,6 +618,7 @@ class TestShopcartService(TestCase):
         self.assertEqual(resp.status_code, 200)
         data = resp.get_json()
         self.assertEqual(data["status"], "OK")
+
     ######################################################################
     #  U T I L I T Y   F U N C T I O N   T E S T   C A S E S
     ######################################################################

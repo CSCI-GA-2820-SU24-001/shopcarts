@@ -60,25 +60,25 @@ class ShopcartItem(db.Model, PersistentBase):
             if isinstance(data["quantity"], int):
                 if data["quantity"] < 0:
                     raise ValueError(
-                        "Invalid value for [quantity], must be non-negative: "
-                        + str(data["quantity"])
+                        "Invalid value for [quantity], must be non-negative: ["
+                        + str(data["quantity"]) + "]"
                     )
                 self.quantity = data["quantity"]
             else:
                 raise TypeError(
-                    "Invalid type for int [quantity]: " + str(type(data["quantity"]))
+                    "Invalid type for int [quantity]: [" + str(type(data["quantity"]) + "]")
                 )
 
             if isinstance(data["price"], (int, float)):
                 if data["price"] < 0:
                     raise ValueError(
-                        "Invalid value for [price], must be non-negative: "
-                        + str(type(data["price"]))
+                        "Invalid value for [price], must be non-negative: ["
+                        + str(type(data["price"]) + "]")
                     )
                 self.price = round(Decimal(data["price"]), 2)
             else:
                 raise TypeError(
-                    "Invalid type for int/float [price]: " + str(type(data["price"]))
+                    "Invalid type for int/float [price]: [" + str(type(data["price"]) + "]")
                 )
         except AttributeError as error:
             raise DataValidationError("Invalid attribute: " + error.args[0]) from error
@@ -88,12 +88,12 @@ class ShopcartItem(db.Model, PersistentBase):
             ) from error
         except TypeError as error:
             raise DataValidationError(
-                "Invalid ShopcartItem: body of request contained bad or no data "
+                "Invalid ShopcartItem: body of request contained bad or no data. "
                 + str(error)
             ) from error
         except ValueError as error:
             raise DataValidationError(
-                "Invalid ShopcartItem: body of request contained bad or no data "
+                "Invalid ShopcartItem: body of request contained bad or no data. "
                 + str(error)
             ) from error
 

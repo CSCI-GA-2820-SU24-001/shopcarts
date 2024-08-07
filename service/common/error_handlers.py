@@ -17,10 +17,10 @@
 Module: error_handlers
 """
 
-from service import api
 from flask import current_app as app  # Import Flask application
 from service.models import DataValidationError
-from . import status
+from service import api
+from . import status  # pylint: disable=E0611
 
 
 ######################################################################
