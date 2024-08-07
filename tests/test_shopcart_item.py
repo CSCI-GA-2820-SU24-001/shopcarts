@@ -169,7 +169,6 @@ class TestShopcartItemModel(TestCaseBase):
     def test_deserialize_a_shopcart_item(self):
         """It should deserialize a ShopcartItem"""
         data = ShopcartItemFactory().serialize()
-        data["shopcart_id"] = 1
         shopcart_item = ShopcartItem()
         shopcart_item.deserialize(data)
         self.assertNotEqual(shopcart_item, None)

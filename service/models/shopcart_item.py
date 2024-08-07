@@ -97,12 +97,12 @@ class ShopcartItem(db.Model, PersistentBase):
             raise ValueError("Missing value for [price]")
         if not isinstance(data["price"], (int, float)):
             raise TypeError(
-                "Invalid type for [price], must be a decimal: [ "
+                "Invalid type for [price], must be a decimal: ["
                 + str(type(data["price"])) + "]"
             )
         if data["price"] < 0:
             raise ValueError(
-                "Invalid value for [price], must be non-negative: [ "
+                "Invalid value for [price], must be non-negative: ["
                 + str(data["price"]) + "]"
             )
         self.price = round(Decimal(data["price"]), 2)
@@ -118,12 +118,12 @@ class ShopcartItem(db.Model, PersistentBase):
             raise ValueError("Missing value for [quantity]")
         if not isinstance(data["quantity"], int):
             raise TypeError(
-                "Invalid type for [quantity], must be an integer: [ "
+                "Invalid type for [quantity], must be an integer: ["
                 + str(type(data["quantity"]) + "]")
             )
         if data["quantity"] < 0:
             raise ValueError(
-                "Invalid value for [quantity], must be non-negative: [ "
+                "Invalid value for [quantity], must be non-negative: ["
                 + str(data["quantity"])
                 + "]"
             )

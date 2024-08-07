@@ -93,12 +93,12 @@ class Shopcart(db.Model, PersistentBase):
             raise ValueError("Missing value for [total_price]")
         if not isinstance(data["total_price"], (int, float)):
             raise TypeError(
-                "Invalid type for [total_price], must be a decimal: [ "
+                "Invalid type for [total_price], must be a decimal: ["
                 + str(type(data["total_price"])) + "]"
             )
         if data["total_price"] < 0:
             raise ValueError(
-                "Invalid value for [total_price], must be non-negative: [ "
+                "Invalid value for [total_price], must be non-negative: ["
                 + str(data["total_price"]) + "]"
             )
         self.total_price = round(Decimal(data["total_price"]), 2)
