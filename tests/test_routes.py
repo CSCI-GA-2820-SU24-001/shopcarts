@@ -648,5 +648,10 @@ class TestShopcartService(TestCase):
 
     def test_method_not_allowed(self):
         """It should not allow an illegal method call"""
-        resp = self.client.put(BASE_URL, json={"not": "today"})
+        resp = self.client.delete(BASE_URL, json={"not": "today"})
         self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_invalid_url(self):
+        """It should not allow an illegal method call"""
+        resp = self.client.get(f"{BASE_URL}//checkout")
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)

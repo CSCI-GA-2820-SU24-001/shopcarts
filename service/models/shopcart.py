@@ -46,19 +46,7 @@ class Shopcart(db.Model, PersistentBase):
             data (dict): A dictionary containing the resource data
         """
         try:
-            if isinstance(data["total_price"], (int, float)):
-                if data["total_price"] < 0:
-                    raise ValueError(
-                        "Invalid value for [total_price], must be non-negative: ["
-                        + str(data["total_price"]) + "]"
-                    )
-                self.total_price = round(Decimal(data["total_price"]), 2)
-            else:
-                raise TypeError(
-                    "Invalid type for int/float [total_price]: ["
-                    + str(type(data["total_price"])) + "]"
-                )
-
+            self.validate_price(data)
             item_list = data.get("items")
             if item_list:
                 for json_item in item_list:
@@ -73,12 +61,12 @@ class Shopcart(db.Model, PersistentBase):
             ) from error
         except TypeError as error:
             raise DataValidationError(
-                "Invalid Shopcart: body of request contained bad or no data. "
+                "Invalid Shopcart: "
                 + str(error)
             ) from error
         except ValueError as error:
             raise DataValidationError(
-                "Invalid Shopcart: body of request contained bad or no data. "
+                "Invalid Shopcart: "
                 + str(error)
             ) from error
 
@@ -93,6 +81,27 @@ class Shopcart(db.Model, PersistentBase):
 
         self.total_price = total_price
         self.update()
+
+    def validate_price(self, data):
+        """
+        Validates the total_price field.
+
+        Args:
+            data (dict): A dictionary containing the 'total_price' to be validated.
+        """
+        if "total_price" not in data or data["total_price"] is None:
+            raise ValueError("Missing value for [total_price]")
+        if not isinstance(data["total_price"], (int, float)):
+            raise TypeError(
+                "Invalid type for [total_price], must be a decimal: [ "
+                + str(type(data["total_price"])) + "]"
+            )
+        if data["total_price"] < 0:
+            raise ValueError(
+                "Invalid value for [total_price], must be non-negative: [ "
+                + str(data["total_price"]) + "]"
+            )
+        self.total_price = round(Decimal(data["total_price"]), 2)
 
     ##################################################
     # Class Methods

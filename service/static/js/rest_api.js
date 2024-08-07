@@ -277,11 +277,6 @@ $(function () {
         $("#shopcart_search_results").empty();
         $("#flash_message").empty();
 
-        if (!item_product_id && !item_name) {
-            flash_message("Please enter a search query.");
-            return;
-        }
-
         let queryString = "";
         if (item_product_id) {
             queryString += 'product_id=' + item_product_id + '&';
@@ -375,12 +370,6 @@ $(function () {
     // ****************************************
     $("#checkout-btn").click(function () {
         let shopcart_id = $("#shopcart_id").val();
-
-        // Ensure shopcart_id is provided
-        if (!shopcart_id) {
-            flash_message("Please enter a Shopcart ID");
-            return;
-        }
 
         $("#shopcart_search_results").empty();
         $("#flash_message").empty();
@@ -644,11 +633,6 @@ $(function () {
 
         $("#item_search_results").empty();
         $("#flash_message").empty();
-
-        if (!product_id && !name) {
-            flash_message("Please enter a search query.");
-            return;
-        }
 
         let queryString = "";
         if (product_id) {

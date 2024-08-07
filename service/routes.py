@@ -315,7 +315,6 @@ class CheckoutResource(Resource):
 
     @api.doc("checkout_shopcarts")
     @api.response(404, "Shopcart not found")
-    @api.response(409, "The Shopcart is not available for checkout")
     def get(self, shopcart_id):
         """
         Checkout a Shopcart
