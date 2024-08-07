@@ -643,8 +643,10 @@ class TestShopcartService(TestCase):
 
     def test_bad_request(self):
         """It should not create when sending the wrong data"""
-        resp = self.client.post(BASE_URL, json={"name": "not enough data"})
-        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        with self.assertLogs(app.logger, level='ERROR') as log:
+            resp = self.client.post(BASE_URL, json={"name": "not enough data"})
+            self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+            self.assertTrue(any("Invalid Shopcart: Missing value for [total_price]" in message for message in log.output))
 
     def test_method_not_allowed(self):
         """It should not allow an illegal method call"""
@@ -653,5 +655,7 @@ class TestShopcartService(TestCase):
 
     def test_invalid_url(self):
         """It should not allow an illegal method call"""
-        resp = self.client.get(f"{BASE_URL}//checkout")
-        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+        with self.assertLogs(app.logger, level='WARNING') as log:
+            resp = self.client.get(f"{BASE_URL}//checkout")
+            self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+            self.assertTrue(any("404" in message for message in log.output))
