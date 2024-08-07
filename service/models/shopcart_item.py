@@ -53,33 +53,20 @@ class ShopcartItem(db.Model, PersistentBase):
             data (dict): A dictionary containing the resource data
         """
         try:
+            if data["shopcart_id"] is None:
+                raise ValueError("Missing value for [shopcart_id]")
             self.shopcart_id = data["shopcart_id"]
+
+            if data["name"] is None:
+                raise ValueError("Missing value for [name]")
             self.name = data["name"]
+
+            if data["product_id"] is None:
+                raise ValueError("Missing value for [product_id]")
             self.product_id = data["product_id"]
 
-            if isinstance(data["quantity"], int):
-                if data["quantity"] < 0:
-                    raise ValueError(
-                        "Invalid value for [quantity], must be non-negative: "
-                        + str(data["quantity"])
-                    )
-                self.quantity = data["quantity"]
-            else:
-                raise TypeError(
-                    "Invalid type for int [quantity]: " + str(type(data["quantity"]))
-                )
-
-            if isinstance(data["price"], (int, float)):
-                if data["price"] < 0:
-                    raise ValueError(
-                        "Invalid value for [price], must be non-negative: "
-                        + str(type(data["price"]))
-                    )
-                self.price = round(Decimal(data["price"]), 2)
-            else:
-                raise TypeError(
-                    "Invalid type for int/float [price]: " + str(type(data["price"]))
-                )
+            self.validate_quantity(data)
+            self.validate_price(data)
         except AttributeError as error:
             raise DataValidationError("Invalid attribute: " + error.args[0]) from error
         except KeyError as error:
@@ -88,16 +75,59 @@ class ShopcartItem(db.Model, PersistentBase):
             ) from error
         except TypeError as error:
             raise DataValidationError(
-                "Invalid ShopcartItem: body of request contained bad or no data "
+                "Invalid ShopcartItem: "
                 + str(error)
             ) from error
         except ValueError as error:
             raise DataValidationError(
-                "Invalid ShopcartItem: body of request contained bad or no data "
+                "Invalid ShopcartItem: "
                 + str(error)
             ) from error
 
         return self
+
+    def validate_price(self, data):
+        """
+        Validates the price field.
+
+        Args:
+            data (dict): A dictionary containing the 'price' to be validated.
+        """
+        if data["price"] is None:
+            raise ValueError("Missing value for [price]")
+        if not isinstance(data["price"], (int, float)):
+            raise TypeError(
+                "Invalid type for [price], must be a decimal: ["
+                + str(type(data["price"])) + "]"
+            )
+        if data["price"] < 0:
+            raise ValueError(
+                "Invalid value for [price], must be non-negative: ["
+                + str(data["price"]) + "]"
+            )
+        self.price = round(Decimal(data["price"]), 2)
+
+    def validate_quantity(self, data):
+        """
+        Validates the quantity field.
+
+        Args:
+            data (dict): A dictionary containing the 'quantity' to be validated.
+        """
+        if data["quantity"] is None:
+            raise ValueError("Missing value for [quantity]")
+        if not isinstance(data["quantity"], int):
+            raise TypeError(
+                "Invalid type for [quantity], must be an integer: ["
+                + str(type(data["quantity"]) + "]")
+            )
+        if data["quantity"] < 0:
+            raise ValueError(
+                "Invalid value for [quantity], must be non-negative: ["
+                + str(data["quantity"])
+                + "]"
+            )
+        self.quantity = data["quantity"]
 
     ##################################################
     # Class Methods

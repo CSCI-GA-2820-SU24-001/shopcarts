@@ -243,6 +243,23 @@ class TestDeserializeExceptionHandlers(TestCaseBase):
         shopcart = Shopcart()
         self.assertRaises(DataValidationError, shopcart.deserialize, data)
 
+    def test_deserialize_null_total_price(self):
+        """It should not deserialize a Shopcart with null total_price"""
+        data = {
+            "total_price": None,
+            "items": [
+                {
+                    "shopcart_id": 1,
+                    "name": "Product1",
+                    "product_id": 101,
+                    "quantity": 2,
+                    "price": 20.0,
+                }
+            ]
+        }
+        shopcart = Shopcart()
+        self.assertRaises(DataValidationError, shopcart.deserialize, data)
+
     def test_deserialize_missing_items(self):
         """It should deserialize a Shopcart with missing items"""
         data = {"total_price": 100.0}

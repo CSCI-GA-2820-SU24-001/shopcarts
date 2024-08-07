@@ -91,6 +91,12 @@ $(function () {
     $("#shopcart-retrieve-btn").click(function () {
         let shopcart_id = $("#shopcart_id").val();
 
+        // Ensure shopcart_id is provided
+        if (!shopcart_id) {
+            flash_message("Please enter a Shopcart ID");
+            return;
+        }
+
         $("#shopcart_search_results").empty();
         $("#flash_message").empty();
 
@@ -136,7 +142,7 @@ $(function () {
         });
 
         ajax.fail(function (res) {
-            clear_form_data()
+            clear_shopcart_form_data()
             flash_message(res.responseJSON.message)
         });
 
@@ -198,7 +204,7 @@ $(function () {
         });
 
         ajax.fail(function (res) {
-            flash_message("Server error!")
+            flash_message(res.responseJSON.message)
         });
     });
 
@@ -274,13 +280,13 @@ $(function () {
         let item_product_id = $("#shopcart_item_product_id").val();
         let item_name = $("#shopcart_item_name").val();
 
-        $("#shopcart_search_results").empty();
-        $("#flash_message").empty();
-
         if (!item_product_id && !item_name) {
             flash_message("Please enter a search query.");
             return;
         }
+
+        $("#shopcart_search_results").empty();
+        $("#flash_message").empty();
 
         let queryString = "";
         if (item_product_id) {
@@ -365,7 +371,7 @@ $(function () {
             flash_message("Shopcart has been Cleared!")
         });
         ajax.fail(function (res) {
-            flash_message("Server error!")
+            flash_message(res.responseJSON.message)
         });
     });
 
@@ -375,12 +381,6 @@ $(function () {
     // ****************************************
     $("#checkout-btn").click(function () {
         let shopcart_id = $("#shopcart_id").val();
-
-        // Ensure shopcart_id is provided
-        if (!shopcart_id) {
-            flash_message("Please enter a Shopcart ID");
-            return;
-        }
 
         $("#shopcart_search_results").empty();
         $("#flash_message").empty();
@@ -409,7 +409,7 @@ $(function () {
         });
 
         ajax.fail(function (res) {
-            clear_form_data()
+            clear_shopcart_form_data()
             flash_message(res.responseJSON.message)
         });
     });
@@ -474,6 +474,12 @@ $(function () {
     $("#item-retrieve-btn").click(function () {
         let shopcart_id = $("#shopcart_item_id").val();
         let item_id = $("#item_id").val();
+
+        // Ensure shopcart_id is provided
+        if (!shopcart_id || !item_id) {
+            flash_message("Please enter a Shopcart ID and Item ID");
+            return;
+        }
 
         $("#item_search_results").empty();
         $("#flash_message").empty();
@@ -578,7 +584,7 @@ $(function () {
         });
 
         ajax.fail(function (res) {
-            flash_message("Server error!")
+            flash_message(res.responseJSON.message)
         });
     });
 
@@ -642,13 +648,13 @@ $(function () {
         let product_id = $("#item_product_id").val();
         let name = $("#item_name").val();
 
-        $("#item_search_results").empty();
-        $("#flash_message").empty();
-
-        if (!product_id && !name) {
+        if (shopcart_id && !product_id && !name) {
             flash_message("Please enter a search query.");
             return;
         }
+
+        $("#item_search_results").empty();
+        $("#flash_message").empty();
 
         let queryString = "";
         if (product_id) {

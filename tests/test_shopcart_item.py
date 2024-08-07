@@ -218,6 +218,12 @@ class TestShopcartItemModel(TestCaseBase):
         shopcart_item = ShopcartItemFactory()
         self.assertRaises(DataValidationError, shopcart_item.delete)
 
+    def test_deserialize_bad_total_price(self):
+        """It should not deserialize a bad price attribute"""
+        shopcart_item = ShopcartItemFactory()
+        shopcart_item.price = "None"
+        self.assertRaises(DataValidationError, shopcart_item.create)
+
 
 ########################################################################
 # T E S T   D E S E R I A L I Z E   E X C E P T I O N   H A N D L E R S
@@ -235,9 +241,21 @@ class TestDeserializeExceptionHandlers(TestCaseBase):
         shopcart_item = ShopcartItem()
         self.assertRaises(DataValidationError, shopcart_item.deserialize, data)
 
+    def test_deserialize_null_shopcart_id(self):
+        """It should not deserialize a ShopcartItem with null shopcart_id"""
+        data = {"shopcart_id": None, "name": "Product1", "product_id": 101, "quantity": 2, "price": 20.0}
+        shopcart_item = ShopcartItem()
+        self.assertRaises(DataValidationError, shopcart_item.deserialize, data)
+
     def test_deserialize_missing_name(self):
         """It should not deserialize a ShopcartItem with missing name"""
         data = {"shopcart_id": 1, "product_id": 101, "quantity": 2, "price": 20.0}
+        shopcart_item = ShopcartItem()
+        self.assertRaises(DataValidationError, shopcart_item.deserialize, data)
+
+    def test_deserialize_null_name(self):
+        """It should not deserialize a ShopcartItem with null name"""
+        data = {"name": None, "shopcart_id": 1, "product_id": 101, "quantity": 2, "price": 20.0}
         shopcart_item = ShopcartItem()
         self.assertRaises(DataValidationError, shopcart_item.deserialize, data)
 
@@ -247,15 +265,33 @@ class TestDeserializeExceptionHandlers(TestCaseBase):
         shopcart_item = ShopcartItem()
         self.assertRaises(DataValidationError, shopcart_item.deserialize, data)
 
+    def test_deserialize_null_product_id(self):
+        """It should not deserialize a ShopcartItem with null product_id"""
+        data = {"shopcart_id": 1, "name": "Product1", "quantity": 2, "price": 20.0, "product_id": None}
+        shopcart_item = ShopcartItem()
+        self.assertRaises(DataValidationError, shopcart_item.deserialize, data)
+
     def test_deserialize_missing_quantity(self):
         """It should not deserialize a ShopcartItem with missing quantity"""
         data = {"shopcart_id": 1, "name": "Product1", "product_id": 101, "price": 20.0}
         shopcart_item = ShopcartItem()
         self.assertRaises(DataValidationError, shopcart_item.deserialize, data)
 
+    def test_deserialize_null_quantity(self):
+        """It should not deserialize a ShopcartItem with null quantity"""
+        data = {"shopcart_id": 1, "name": "Product1", "product_id": 101, "price": 20.0, "quantity": None}
+        shopcart_item = ShopcartItem()
+        self.assertRaises(DataValidationError, shopcart_item.deserialize, data)
+
     def test_deserialize_missing_price(self):
         """It should not deserialize a ShopcartItem with missing price"""
         data = {"shopcart_id": 1, "name": "Product1", "product_id": 101, "quantity": 2}
+        shopcart_item = ShopcartItem()
+        self.assertRaises(DataValidationError, shopcart_item.deserialize, data)
+
+    def test_deserialize_null_price(self):
+        """It should not deserialize a ShopcartItem with null price"""
+        data = {"shopcart_id": 1, "name": "Product1", "product_id": 101, "quantity": 2, "price": None}
         shopcart_item = ShopcartItem()
         self.assertRaises(DataValidationError, shopcart_item.deserialize, data)
 

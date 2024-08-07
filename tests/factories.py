@@ -41,7 +41,7 @@ class ShopcartItemFactory(Factory):
         model = ShopcartItem
 
     id = Sequence(lambda n: n)
-    shopcart_id = None
+    shopcart_id = Sequence(lambda n: n)
     product_id = Sequence(lambda n: n)
     name = Sequence(lambda n: f"i-{n}")
     quantity = FuzzyInteger(1, 10)
