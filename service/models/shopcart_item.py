@@ -53,9 +53,18 @@ class ShopcartItem(db.Model, PersistentBase):
             data (dict): A dictionary containing the resource data
         """
         try:
+            if data["shopcart_id"] is None:
+                raise ValueError("Missing value for [shopcart_id]")
             self.shopcart_id = data["shopcart_id"]
+
+            if data["name"] is None:
+                raise ValueError("Missing value for [name]")
             self.name = data["name"]
+
+            if data["product_id"] is None:
+                raise ValueError("Missing value for [product_id]")
             self.product_id = data["product_id"]
+
             self.validate_quantity(data)
             self.validate_price(data)
         except AttributeError as error:
@@ -84,7 +93,7 @@ class ShopcartItem(db.Model, PersistentBase):
         Args:
             data (dict): A dictionary containing the 'price' to be validated.
         """
-        if "price" not in data or data["price"] is None:
+        if data["price"] is None:
             raise ValueError("Missing value for [price]")
         if not isinstance(data["price"], (int, float)):
             raise TypeError(
@@ -105,7 +114,7 @@ class ShopcartItem(db.Model, PersistentBase):
         Args:
             data (dict): A dictionary containing the 'quantity' to be validated.
         """
-        if "quantity" not in data or data["quantity"] is None:
+        if data["quantity"] is None:
             raise ValueError("Missing value for [quantity]")
         if not isinstance(data["quantity"], int):
             raise TypeError(

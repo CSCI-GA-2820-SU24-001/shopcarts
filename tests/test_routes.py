@@ -646,7 +646,7 @@ class TestShopcartService(TestCase):
         with self.assertLogs(app.logger, level='ERROR') as log:
             resp = self.client.post(BASE_URL, json={"name": "not enough data"})
             self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
-            self.assertTrue(any("Invalid Shopcart: Missing value for [total_price]" in message for message in log.output))
+            self.assertTrue(any("Invalid Shopcart: missing " in message for message in log.output))
 
     def test_method_not_allowed(self):
         """It should not allow an illegal method call"""

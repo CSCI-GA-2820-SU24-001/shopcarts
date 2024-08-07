@@ -89,7 +89,7 @@ class Shopcart(db.Model, PersistentBase):
         Args:
             data (dict): A dictionary containing the 'total_price' to be validated.
         """
-        if "total_price" not in data or data["total_price"] is None:
+        if data["total_price"] is None:
             raise ValueError("Missing value for [total_price]")
         if not isinstance(data["total_price"], (int, float)):
             raise TypeError(
